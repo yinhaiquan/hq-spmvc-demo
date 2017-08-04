@@ -42,6 +42,7 @@ requirejs.config({
         css:'resource/lib/requirejs/css',
         webuploader:'resource/lib/webuploader/0.1.5/webuploader.min',
         lightbox2:'resource/lib/lightbox2/2.8.1/js/lightbox',
+        prettify:'resource/lib/prettify/prettify',
 
         /*自定义插件扩展*/
         constant:'resource/js/base/constant',
@@ -63,7 +64,8 @@ requirejs.config({
         jqueryztreestyle:'resource/lib/zTree/v3/css/metroStyle/metroStyle',
         laypagestyle:'resource/lib/laypage/1.2/skin/laypage',
         webuploaderstyle:'resource/lib/webuploader/0.1.5/webuploader',
-        lightbox2style:'resource/lib/lightbox2/2.8.1/css/lightbox'
+        lightbox2style:'resource/lib/lightbox2/2.8.1/css/lightbox',
+        prettifystyle:'resource/lib/prettify/prettify'
     },
     shim:{
         'tmpl':{
@@ -141,6 +143,9 @@ requirejs.config({
         },
         'lightbox2':{
             deps:['jquery','css!lightbox2style']
+        },
+        'prettify':{
+            deps:['jquery','css!prettifystyle']
         }
     }
 });
