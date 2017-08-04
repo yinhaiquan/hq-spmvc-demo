@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/mvc 
+http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+    <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+    <mvc:annotation-driven>
+        <!--配置@ResponseBody由fastjson解析-->
+        <mvc:message-converters register-defaults="true">
+            <!-- 配置Fastjson 替换原来的jackson支持 -->
+            <bean class="hq.com.converter.ResponseJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>application/x-www-form-urlencoded;charset=UTF-8</value>
+                    </list>
+                </property>
+                <property name="serializerFeature">
+                    <array>
+                        <value>WriteMapNullValue</value>
+                        <value>QuoteFieldNames</value>
+                    </array>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!-- 自动扫描controller包下的所有类，使其认为spring mvc的控制器 -->
+    <context:component-scan base-package="hq.com.control,hq.com.handler"/>
+    <!-- 另外最好还要加入DefaultAnnotationHandlerMapping，不然会被 XML或其它的映射覆盖！ -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+
+    <!-- 支持上传文件 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <description>文件上传大小限制</description>
+        <property name="maxUploadSize" value="1024000000"></property>
+    </bean>
+
+
+    <!-- 获取本地 -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
+    <!--end 定义国际化消息 -->
+
+    <!-- 国际化操作拦截器 如果采用基于（请求/Session/Cookie）则必需配置 -->
+    <mvc:interceptors>
+        <!-- Changes the locale when a 'locale' request parameter is sent; e.g.  /?locale=de -->
+        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="locale"/>
+        </bean>
+    </mvc:interceptors>
+</beans>

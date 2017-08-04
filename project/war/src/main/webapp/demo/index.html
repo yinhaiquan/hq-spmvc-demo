@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script typet="text/javascript" src="../resource/jquery/jquery-latest.js"></script>
+    <script>
+        var url = "../handler/shiroUserSvc/findUserInfo.do"
+        $(function ($) {
+            $.ajax({
+                type: 'post',
+                url: url,
+                cache: false,
+                dataType: "json",
+                data: {
+                    root: {
+                        route: {
+                            fk: "fuck",
+                            lang: "cn_ZH"
+                        },
+                        msg: {
+//                            name:"sdf",
+                            shirouserInfo: {
+                                number: "123",
+                                password: "123456"
+                            }
+                        }
+                    }
+                },
+                timeout: 100000, //超时时间，毫秒
+                complete: function (json) {
+                    console.log(json);
+                    var obj = eval('(' + json.responseText + ')');
+                    console.log(obj.code);
+                    console.log(obj.content);
+                    if(obj.content !=null){
+                        console.log(obj.content.name);
+                    }
+                    alert(obj.desc);
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>

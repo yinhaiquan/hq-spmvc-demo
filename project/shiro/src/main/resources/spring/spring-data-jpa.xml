@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+    <!--<context:component-scan base-package="hq.com"/>-->
+    <!--<context:property-placeholder location="classpath*:config/*.properties" />-->
+
+    <bean id="jpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="generateDdl" value="true"/>
+        <property name="showSql" value="true"/>
+    </bean>
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="persistenceUnitName" value="shiro_service"/>
+        <property name="persistenceXmlLocation" value="classpath*:META-INF/persistence.xml"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+    </bean>
+
+    <bean id="jpaTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    <!--<tx:annotation-driven/>-->
+
+    <jpa:repositories base-package="hq.com.jpa.dao"
+                      query-lookup-strategy="create-if-not-found" repository-impl-postfix="JpaImpl"
+                      entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="jpaTransactionManager">
+    </jpa:repositories>
+
+    <!--用于junit测试，正式环境删除，包括spring-datasource.xml文件-->
+    <!--<import resource="spring-datasource.xml"/>-->
+</beans>

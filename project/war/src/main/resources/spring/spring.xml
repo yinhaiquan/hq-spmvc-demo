@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 引入属性文件 -->
+    <context:property-placeholder location="classpath*:config/*.properties"/>
+    <!--auto proxy method scan-->
+    <bean id="methodInterceptor" class="hq.com.interceptor.MethodRequestInterceptor"/>
+
+    <!--start 定义国际化消息 -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <!-- 其中basename用来指定properties文件的通用名 如实例中的messages_en.properties,messages_ja.properties通用名都是messages -->
+        <property name="basenames">
+            <list>
+                <value>i18n.messages</value>
+                <value>i18n.exception</value>
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+    <!--验证码-->
+    <bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+        <property name="config">
+            <bean class="com.google.code.kaptcha.util.Config">
+                <constructor-arg>
+                    <props>
+                        <prop key="kaptcha.border">yes</prop>
+                        <!--边框颜色   默认为Color.BLACK-->
+                        <prop key="kaptcha.border.color">105,179,90</prop>
+                        <!--验证码文本字符颜色  默认为Color.BLACK-->
+                        <prop key="kaptcha.textproducer.font.color">blue</prop>
+                        <!--验证码文本字符内容范围  默认为abcde2345678gfynmnpwx-->
+                        <prop key="kaptcha.textproducer.char.string">abcde2345678gfynmnpwx</prop>
+                        <prop key="kaptcha.image.width">125</prop>
+                        <!--验证码文本字符大小  默认为40-->
+                        <prop key="kaptcha.image.height">45</prop>
+                        <prop key="kaptcha.textproducer.font.size">45</prop>
+                        <!--验证码session key-->
+                        <prop key="kaptcha.session.key">code</prop>
+                        <!--验证码文本字符长度  默认为5-->
+                        <prop key="kaptcha.textproducer.char.length">4</prop>
+                        <!--验证码文本字体样式  默认为new Font("Arial", 1, fontSize), new Font("Courier", 1, fontSize) -->
+                        <prop key="kaptcha.textproducer.font.names">宋体,楷体,微软雅黑</prop>
+                        <!--验证码文本字符间距  默认为2-->
+                        <prop key="kaptcha.textproducer.char.space">2</prop>
+                        <!--验证码噪点颜色   默认为Color.BLACK-->
+                        <prop key="kaptcha.noise.color">red</prop>
+                    </props>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+</beans>

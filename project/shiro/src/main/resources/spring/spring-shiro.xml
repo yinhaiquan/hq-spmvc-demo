@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+       default-lazy-init="false">
+    <!-- shiro sessionDAO -->
+    <!--<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO" />-->
+
+    <!--自定义session管理，解决集群下shiro session共享-->
+    <bean id="sessionDAO" class="hq.com.session.RedisSessionDao">
+        <constructor-arg name="redisManager" ref="redisManager"/>
+    </bean>
+    <!--redis 客户端-->
+    <bean id="redisManager" class="hq.com.base.RedisManager">
+        <!--30分钟-->
+        <constructor-arg name="expire" value="1800"/>
+        <constructor-arg name="jedisTemplate" ref="redisClusterTemplate"/>
+    </bean>
+    <!-- 配置session管理器 -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!--删除失效的session-->
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <!-- 设置全局会话超时时间，默认30分钟(1800000) -->
+        <property name="globalSessionTimeout" value="1800000"/>
+        <property name="sessionValidationInterval" value="1800000"/>
+        <property name="sessionDAO" ref="sessionDAO"/>
+        <property name="sessionIdCookie.name" value="JSID"/>
+        <property name="sessionListeners" ref="sessionListener"/>
+    </bean>
+
+    <bean id="sessionListener" class="hq.com.listener.ShiroSessionListener">
+        <constructor-arg name="redisManager" ref="redisManager"/>
+    </bean>
+    <!--自定义认证处理器-->
+    <bean id="realm" class="hq.com.realm.AuthoriztionHandlerRealm">
+        <property name="credentialsMatcher" ref="limitMatcher"/>
+    </bean>
+
+    <!--自定义匹配器，校验用户登录失败次数-->
+    <bean id="limitMatcher" class="hq.com.matcher.LimitRetryHashedMatcher">
+        <!--超过失败登陆次数后，10分钟内禁止登陆-->
+        <constructor-arg name="expire" value="600"/>
+        <constructor-arg name="redisManager" ref="redisManager"/>
+        <constructor-arg name="times" value="2"/>
+        <property name="hashAlgorithmName" value="MD5"/>
+        <property name="hashIterations" value="2"/>
+        <property name="storedCredentialsHexEncoded" value="true"/>
+    </bean>
+
+    <!--shiro认证权限缓存管理器-->
+    <bean id="redisCacheManager" class="hq.com.cache.AuthenticationCacheManager">
+        <constructor-arg name="keyPrefix" value="shiro_redis_cache:"/>
+        <constructor-arg name="redisManager" ref="redisManager"/>
+    </bean>
+
+    <!--安全管理器-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 配置一个real -->
+        <property name="realm" ref="realm"/>
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="cacheManager" ref="redisCacheManager"/>
+    </bean>
+    <!-- 配置shiro的过滤器工厂类，id- shiroFilter要和我们在web.xml中配置的过滤器一致 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- 调用我们配置的权限管理器 -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 配置我们的登录请求地址 -->
+        <property name="loginUrl" value="/html/fk.html"/>
+        <!-- 配置我们在登录页登录成功后的跳转地址，如果你访问的是非/login地址，则跳到您访问的地址 -->
+        <property name="successUrl" value="/html/fk.html"/>
+        <!-- 如果您请求的资源不再您的权限范围，则跳转到/403请求地址 -->
+        <property name="unauthorizedUrl" value="/handler/error.jsp"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /index.jsp* =anon
+                /login/codec.do* =anon
+                /login/login.do* =anon
+                /login/logout.do* =anon
+                /html/login.html* =anon
+                /html/**=anon
+                /demo/**=anon
+                /favicon.ico*=anon
+                <!--/**/fk.html*=authc,roles[fuck]-->
+                /handler/**=anon
+                /file/**=anon
+                /resource/**=anon
+                /** = authc
+            </value>
+        </property>
+    </bean>
+</beans>
