@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--邮件发送配置-->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.exmail.qq.com"/>
+        <property name="username" value="yinhaiquan@juzix.io"/>
+        <property name="password" value="yhq123456"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--邮件发送模板-->
+    <bean id="tmpl1" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="yinhaiquan@juzix.io"/>
+        <property name="subject" value="FK"/>
+    </bean>
+
+    <!--配置发送邮件模板-->
+    <bean id="freeMarkerConfiguer"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <!-- 模板路径位置 -->
+        <property name="templateLoaderPaths" value="classpath:template/"/>
+        <property name="freemarkerSettings">
+            <props>
+                <!-- 模板更新延时 -->
+                <prop key="template_update_delay">1800</prop>
+                <prop key="default_encoding">UTF-8</prop>
+                <prop key="locale">zh_CN</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="mailHandler" class="hq.com.email.TemplateMailHandler">
+        <property name="sender" ref="mailSender"/>
+        <property name="freeMarkerConfigurer" ref="freeMarkerConfiguer"/>
+    </bean>
+</beans>

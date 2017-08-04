@@ -1,0 +1,179 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="../../favicon.ico" >
+<link rel="Shortcut Icon" href="../../favicon.ico" />
+<link rel="stylesheet" type="text/css" href="../../resource/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../../resource/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="../../resource/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="../../resource/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="../../resource/static/h-ui.admin/css/style.css" />
+<style>
+	/*设置弹窗外边距*/
+	.modal{
+		margin-top: 3.5%;
+	}
+</style>
+<title> Management System </title>
+<meta name="keywords" content="yinhaiquan common system">
+<meta name="description" content="yinhaiquan common system">
+</head>
+<body>
+<!-- header -->
+<div id="main_header"></div>
+<!-- header -->
+
+<!-- menu -->
+<aside class="Hui-aside"></aside>
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<!-- menu -->
+<!-- content -->
+<section class="Hui-article-box">
+	<div id="nav_menu">
+		<!--<nav class="breadcrumb">
+			<i class="Hui-iconfont"></i>
+			<a href="/" class="maincolor">首页</a>
+			<span class="c-999 en">&gt;</span>
+			<a href="/" class="maincolor">test</a>
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+				<i class="Hui-iconfont">&#xe68f;</i>
+			</a>
+		</nav>-->
+	</div>
+	<div class="Hui-article">
+		<input id="scrollTop1" name="" type="hidden" value="0">
+		<input id="scrollTop2" name="" type="hidden" value="0">
+		<article class="cl pd-20" id="main_content">
+			<!--待填充内容<i18n key="name">呵呵</i18n><i18n key="name">呵呵</i18n><i18n key="name">呵呵</i18n>-->
+		</article>
+	</div>
+</section>
+<!--require js 库 -->
+<script type="text/javascript" src="../../resource/lib/requirejs/require-2.1.17.min.js"></script>
+<!--require js config 配置信息-->
+<script type="text/javascript" src="../../resource/js/config.js"></script>
+<!-- content -->
+<script type="text/javascript" language="JavaScript">
+	/**
+	 * 加载h-ui核心js库 jQuery jQueryi18n等初始js库
+	 */
+    require([
+            'jquery',
+			'layer',
+			'hui',
+			'hui_admin_page',
+			'validate_methods',
+			'messages_',
+			'validat',
+			'jqueryi18n'
+		],function($,l_,hui,huiadminpage,validate_methods,messages,v,jqueryi18n){
+    })
+	/**
+	 * 加载面板内容
+	 */
+    require([
+        'jquery',
+		'url',
+		'stringUtils',
+		'constant',
+		'ajax',
+		'text!header',
+		'text!menu',
+		'tmpl'],function($,URLs,StringUtils,Constant,AJAX,header,menu,tmpl){
+		/*头部*/
+        $('#main_header').html($(header).tmpl());
+		/*左侧菜单*/
+		/*通过AJAX请求http获取菜单列表信息*/
+		console.info("--------菜单信息-------")
+		console.info(AJAX.Constant.Menus);
+        $('.Hui-aside').html($(menu).tmpl(AJAX.Constant));
+    })
+
+	/**
+	 * 加载i18n国际化js库
+	 */
+	require(['i18nUtils'],function(i18nUtils){
+	    //第一步：获取当前浏览器语言类型，并执行初始化
+        i18nUtils.initI18n(i18nUtils.language());
+        //第二步：执行国际化渲染
+        i18nUtils.excutei18n();
+
+//        alert(i18nUtils.getMessages('hehe','张山','2016-1-1'));
+	})
+    /**
+	 * 右侧页面加载函数
+	 *
+	 * url需要在requirejs中配置页面路径，采用text!test方式访问,也可以采用http/https访问
+     * @param url
+     */
+	function skip_forward_page(url,title){
+        console.info(url);
+        $('#nav_menu').find('nav').remove();
+        console.info($('#nav_menu'));
+        var nav_menu = '<nav class="breadcrumb"><i class="Hui-iconfont"></i><a href="/" class="maincolor">首页</a>' +
+			'<span class="c-999 en">&gt;</span><a href="/" class="maincolor">'+title+
+			'</a><a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >' +
+			'<i class="Hui-iconfont">&#xe68f;</i></a></nav>';
+        $('#nav_menu').append(nav_menu);
+		require(['stringUtils'],function(StringUtils){
+            if(StringUtils.startWith(url,'http://')||StringUtils.startWith(url,'https://')){
+                window.open(url);
+			}else{
+                require([url],function(skiPage){
+                    $('#main_content').html($(skiPage).html());
+                })
+			}
+		})
+	}
+	require(['stringUtils'],function(StringUtils){
+        var etc = {};
+        etc.obj = {
+            name:'123',
+            age : null
+        }
+        etc['obj'].pages=129;
+//        alert(etc['sdf']!='undefined');
+//        alert(etc['sdf']!=undefined);
+        console.info(StringUtils.getKeys(etc.obj));
+	})
+
+//	require(['jquery','ajax','stringUtils'],function($,ajax,stringUtils){
+////        alert(stringUtils.startWith('///sdf','/'));
+////alert(stringUtils.isEmpty(null));
+////		alert(stringUtils.endWith('sdlkfjksdfj/uy','/'));
+////		alert(ajax.formartURL('123sdfsaf'));
+////		alert(ajax.URLS.test.test1);
+////		alert(ajax.Constant.Characters.C_BACK_SLASH);
+////		console.info(ajax.Constant.Characters);
+//        return ;
+//        var type = 'post';
+//        var url = ajax.formartURL(ajax.URLS.findUserInfo);
+//		var dataType = 'json';
+//		ajax.ajaxParam.root.msg = {
+//            shirouserInfo: {
+//                number: "123",
+//                password: "123456"
+//            }
+//		}
+//		var data = ajax.ajaxParam;
+//		ajax.ajax(false,type,url,false,dataType,data,1000,function(json){
+//            console.log(json);
+//            var obj = eval('(' + json.responseText + ')');
+//            console.log(obj.code);
+//            console.log(obj.content);
+//            if(obj.content !=null){
+//                console.log(obj.content.name);
+//            }
+//		},null,null);
+//		ajax.ajaxSimple(type,url,dataType,data,1000,function(data){
+//            console.log(data);
+//		})
+//    })
+</script>
+</body>
+</html>

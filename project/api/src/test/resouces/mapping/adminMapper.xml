@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hq.com.moudle.dao.AdminDao">
+    <resultMap type="hq.com.moudle.po.Admin" id="adminMap">
+        <id jdbcType="INTEGER" property="id" column="n_id"/>
+        <result jdbcType="VARCHAR" property="name" column="c_name"/>
+        <result jdbcType="VARCHAR" property="password" column="c_password"/>
+        <result jdbcType="VARCHAR" property="sex" column="sex"/>
+        <result jdbcType="TIMESTAMP" property="time" column="createtime"/>
+    </resultMap>
+    <select id="findUsers" parameterType="map" resultMap="adminMap">
+        SELECT * FROM T_SHIRO_USER
+    </select>
+    <select id="find" parameterType="int" resultMap="adminMap">
+        SELECT * FROM T_SHIRO_USER WHERE n_id=#{id}
+    </select>
+</mapper>

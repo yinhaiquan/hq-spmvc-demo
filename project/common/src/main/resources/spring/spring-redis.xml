@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder location="classpath*:config/*.properties"/>
+
+    <!--redis 客户端 -->
+    <!--redis单节点配置 start -->
+    <bean id="jedisTemplate" class="hq.com.redis.client.jedis.JedisTemplate">
+        <constructor-arg index="0" name="host" value="${jedis.host}"/>
+        <constructor-arg index="1" name="password" value="${jedis.password}"/>
+        <constructor-arg index="2" name="port" value="${jedis.port}"/>
+        <property name="max_active" value="${jedis.max.active}"/>
+        <property name="max_idle" value="${jedis.max.idle}"/>
+        <property name="max_wait" value="${jedis.max.wait}"/>
+        <property name="timeout" value="${jedis.timeout}"/>
+        <property name="times" value="${jedis.times}"/>
+    </bean>
+    <!--redis单节点配置 end -->
+
+    <!--redis集群连接池配置 start-->
+    <bean id="jedisCluster" class="hq.com.redis.client.cluster.JedisClusterFactory">
+        <property name="addressProperty">
+            <props>
+                <prop key="redis1">${redis.cluster.ip.port.1}</prop>
+                <prop key="redis2">${redis.cluster.ip.port.2}</prop>
+                <prop key="redis3">${redis.cluster.ip.port.3}</prop>
+            </props>
+        </property>
+        <property name="addressKeyPrefix" value="redis"/>
+        <property name="timeout" value="30000"/>
+        <property name="maxRedirections" value="2"/>
+        <property name="genericObjectPoolConfig" ref="genericObjectPoolConfig"/>
+    </bean>
+    <bean id="redisClusterTemplate" class="hq.com.redis.client.cluster.RedisClusterTemplate">
+        <property name="jedisCluster" ref="jedisCluster"/>
+    </bean>
+    <!--redis集群连接池配置 end-->
+
+    <!--redis HA 集群连接池配置 start-->
+    <!--<bean id="redisSentinelTemplate" class="hq.com.redis.client.sentinel.RedisSentinelTemplate">
+        <property name="ips" value="${redis.sentinel.server}"/>
+        <property name="password" value="${redis.sentinel.password}"/>
+        <property name="genericObjectPoolConfig" ref="genericObjectPoolConfig"/>
+    </bean>-->
+    <!--redis HA 集群连接池配置 end-->
+
+    <!--redis集群连接池公共配置（redis 3.0 分布式集群或者基于sentinel HA集群配置）-->
+    <bean name="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+        <property name="maxWaitMillis" value="-1"/>
+        <property name="maxTotal" value="1024"/>
+        <property name="minIdle" value="6"/>
+        <property name="maxIdle" value="32"/>
+    </bean>
+
+
+    <!--redis API 工具包 -->
+    <!--非集群API-->
+    <bean id="jedisDao" class="hq.com.redis.dao.impl.JedisDaoImpl">
+        <property name="jedisTemplate" ref="jedisTemplate"/>
+    </bean>
+
+    <!--集群API -->
+    <bean id="jedisClusterDao" class="hq.com.redis.dao.impl.JedisClusterDaoImpl">
+        <property name="jedisCluster" ref="jedisCluster"/>
+    </bean>
+
+    <!--对象API -->
+    <bean id="jedisObjectDao" class="hq.com.redis.dao.impl.jedisObjectDaoImpl">
+        <property name="redisClientTemplate" ref="redisClusterTemplate"/>
+    </bean>
+
+    <!--redis事物API-->
+    <bean id="jedisTranscationDao" class="hq.com.redis.dao.impl.JedisTransactionDaoImpl">
+        <property name="jedisTemplate" ref="jedisTemplate"/>
+    </bean>
+
+    <!--zk客户端连接管理配置-->
+    <bean id="config" class="hq.com.zk.client.curator.ZookeeperBuilderFactoryConfig">
+        <property name="ips" value="127.0.0.1:2181"/>
+        <property name="connectionTimeoutMs" value="6000"/>
+        <property name="sessionTimeoutMs" value="6000"/>
+        <property name="baseSleepTimesMs" value="2000"/>
+        <property name="canBeReadOnly" value="false"/>
+        <property name="maxRetries" value="1"/>
+        <property name="namespace" value="foo"/>
+        <!--zk权限认证开关，建议关闭false,不使用权限认证zk性能甚佳-->
+        <property name="auth" value="false"/>
+        <property name="scheme" value="digest"/>
+        <property name="username_password">
+            <array>
+                <value>admin:admin</value>
+            </array>
+        </property>
+    </bean>
+
+    <!--zk API-->
+    <bean id="zkDao" class="hq.com.zk.dao.impl.ZookeeperDaoImpl">
+        <property name="builder" ref="config"/>
+    </bean>
+
+    <!--分布式锁zk连接单例-->
+    <bean id="client" class="hq.com.zk.client.curator.ZookeeperSingletonFactory">
+        <property name="builder" ref="config"/>
+    </bean>
+</beans>
