@@ -2,7 +2,7 @@
  * 自定义ajax通用插件，基于requirejs插件
  * Created by yinhaiquan on 2017/7/21.
  */
-define('ajax',['jquery','url','stringUtils','constant'],function($,url,stringUtils,constant){
+define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant){
         var ajaxContent = {
             /**
              * 请求地址集合

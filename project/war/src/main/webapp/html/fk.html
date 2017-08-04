@@ -1,4 +1,36 @@
 <div class="page-container">
+    <b>demo</b>
+    <b>图片样式css</b>
+    <style>
+        .travel-pic{ width:1020px}
+        .travel-pic li{display: inline;float: left;margin-right: 20px;overflow: hidden;width: 235px}
+        .travel-pic img{border:0; width:235px; height:157px;vertical-align:top;display:block;transition: all .3s ease;-webkit-transition: all .3s ease;-moz-transition: all .3s ease;-ms-transition: all .3s ease;-o-transition: all .3s ease}
+        .travel-pic a:hover img{transform:scale(1.04,1.04);-ms-transform:scale(1.04,1.04); -webkit-transform:scale(1.04,1.04)}
+    </style>
+    <div style="width:1000px; margin:0 auto; overflow:hidden">
+        <ul class="travel-pic cl">
+            <li><a href="#"><img src="http://www.h-ui.net/ext/1405081144/images/001.jpg"></a></li>
+            <li><a href="#"><img src="http://www.h-ui.net/ext/1405081144/images/003.jpg"></a></li>
+            <li><a href="#"><img src="http://www.h-ui.net/ext/1405081144/images/003.jpg"></a></li>
+            <li><a href="#"><img src="http://www.h-ui.net/ext/1405081144/images/004.jpg"></a></li>
+        </ul>
+    </div>
+
+    <b>按钮</b>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡入" data-tra="hui-fadein"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡入-从上" data-tra="hui-fadeinT"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡入-从右" data-tra="hui-fadeinR"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡入-从下" data-tra="hui-fadeinB"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡入-从左" data-tra="hui-fadeinL"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡出" data-tra="hui-fadeout"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡出-向上" data-tra="hui-fadeoutT"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡出-向右" data-tra="hui-fadeoutR"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡出-向下" data-tra="hui-fadeoutB"/>
+    <input class="btn btn-primary radius hui-animation" type="button" value="淡出-向左" data-tra="hui-fadeoutL"/>
+
+    <div class="text-c mt-30"><input id="text" class="" type="button" value="测试效果"></div>
+
+    <b>代码高亮显示</b>
     <script>
         require(['jquery','css!prettifystyle','prettify'],function ($,prttifstyle,prettify) {
             prettyPrint();
@@ -22,6 +54,7 @@
         pre ol.linenums{list-style:decimal outside none;margin:0 0 0 33px}
         pre ol.linenums li{padding-left:12px;color:#bbb;line-height:18px;text-shadow:0 1px 0 #fff}
     </pre>
+    <b>树形结构展示</b>
     <div class="zTreeDemoBackground right">
         多棵树之间 的 数据交互
         <ul id="treeDemo2" class="ztree"></ul>
@@ -99,7 +132,7 @@
 //
 //        })
     </script>
-
+    <b>表格展示</b>
     <table class="table table-border table-bordered table-bg radius">
         <thead>
         <tr>
@@ -127,8 +160,11 @@
         </tbody>
     </table>
     <div id="page3"></div>
-    测试国际化
+
+    <b>测试国际化</b>
     <i18n key="name">呵呵</i18n><i18n key="name">呵呵</i18n><i18n key="name">呵呵</i18n>
+
+    <b>表单</b>
     <form action="" method="post" class="form form-horizontal" id="form-member-add">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span><i18n key="name">呵呵</i18n>用户名：</label>
@@ -198,9 +234,12 @@
         </div>
     </form>
 
+    <b>弹窗</b>
     <a href="javascript:$.Huimodalalert('哈哈',0);"><div class="maskWraper" style="width:300px; height:250px; border:solid 1px #ddd;"> <img src="http://images.h-ui.net/www/2.png" width="300" height="250">
         <div class="maskBar text-c">遮罩条</div>
     </div></a>
+
+    <b>流动</b>
     <div id="marquee" class="marquee">
         <div id="holder">
             <ul>
@@ -230,13 +269,13 @@
 <button class="btn radius btn-primary size-L ml-20" onclick="modalalertdemo()">消息框，2秒钟自动消失</button>
    <!-- <div class="codeView docs-example">-->
         <p>成功状态</p>
-        <div class="Huialert Huialert-success"><i class="Hui-iconfont">&#xe6a6;</i>成功状态提示</div>
+        <div class="Huialert Huialert-success">成功状态提示</div>
         <p>危险状态</p>
-        <div class="Huialert Huialert-danger"><i class="Hui-iconfont">&#xe6a6;</i>危险状态提示</div>
+        <div class="Huialert Huialert-danger">危险状态提示</div>
         <p>错误状态</p>
-        <div class="Huialert Huialert-error"><i class="Hui-iconfont">&#xe6a6;</i>错误状态提示</div>
+        <div class="Huialert Huialert-error">错误状态提示</div>
         <p>信息状态</p>
-        <div class="Huialert Huialert-info"><i class="Hui-iconfont">&#xe6a6;</i>信息状态提示</div>
+        <div class="Huialert Huialert-info">信息状态提示</div>
   <!--  </div>-->
     <div id="modal-demo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
