@@ -40,6 +40,7 @@
         <comons.codec.version>1.10</comons.codec.version>
         <alibaba.fastjson.version>1.2.20</alibaba.fastjson.version>
         <zookeeper.curator.recipes>2.11.1</zookeeper.curator.recipes>
+        <quartz.all.version>1.6.3</quartz.all.version>
     </properties>
 
     <dependencies>
@@ -122,6 +123,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>quartz-all</artifactId>
+            <version>${quartz.all.version}</version>
         </dependency>
         <!--log4j-->
         <dependency>
