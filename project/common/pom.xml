@@ -41,9 +41,15 @@
         <alibaba.fastjson.version>1.2.20</alibaba.fastjson.version>
         <zookeeper.curator.recipes>2.11.1</zookeeper.curator.recipes>
         <quartz.all.version>1.6.3</quartz.all.version>
+        <commons.configuration.version>1.9</commons.configuration.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>${commons.configuration.version}</version>
+        </dependency>
         <!--zookeeper client-->
         <dependency>
             <groupId>org.apache.curator</groupId>

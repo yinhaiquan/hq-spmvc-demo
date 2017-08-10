@@ -21,6 +21,20 @@ public final class StringUtils {
     public final static String POINT = ".";
     public final static String RAIL = "-";
 
+    public final static boolean isEmpty(List list) {
+        if (null == list || list.size() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public final static boolean isNotEmpty(List list) {
+        if (null != list && list.size() != 0) {
+            return true;
+        }
+        return false;
+    }
+
     public final static boolean isEmpty(String str) {
         if (null == str || "".equals(str)) {
             return true;

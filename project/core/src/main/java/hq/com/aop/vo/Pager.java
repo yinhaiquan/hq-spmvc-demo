@@ -55,4 +55,14 @@ public class Pager implements Serializable {
     public void setTotal(long total) {
         this.total = total;
     }
+
+    @Override
+    public String toString() {
+        return "Pager{" +
+                "pages=" + pages +
+                ", pageSize=" + pageSize +
+                ", rows=" + rows +
+                ", total=" + total +
+                '}';
+    }
 }

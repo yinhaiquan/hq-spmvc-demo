@@ -19,8 +19,28 @@ import java.util.concurrent.ConcurrentMap;
  * <p>
  *     <b>note:</b>
  *     机房灾难、服务宕机等导致服务需要重启情形：
- *     <1 : 定时任务未存储于表中集成管理时，可重新添加定时任务并启动
- *     <2 : 定时任务存储于表中集成管理时，可在服务重启时根据表中定时任务列表初始化至定时任务存储容器
+ *              <1 : 定时任务未存储于表中集成管理时，可重新添加定时任务并启动
+ *              <2 : 定时任务存储于表中集成管理时，可在服务重启时根据表中定时任务列表初始化至定时任务存储容器
+ *
+ *     注意【任务状态】：
+ *     a. 启动前状态：
+ *           isStarted: false
+ *           isShutdown: false
+ *           isInStandbyMode: true
+ *
+ *     b. 启动后状态：
+ *           isStarted: true
+ *           isShutdown: false
+ *           isInStandbyMode: false
+ *
+ *     c. 关闭后状态：
+ *           isStarted: true
+ *           isShutdown: true
+ *           isInStandbyMode: true
+ *     d. 暂停后状态：
+ *           isStarted: true
+ *           isShutdown: false
+ *           isInStandbyMode: false
  * </p>
  * Create By yinhaiquan
  * @date 2017/8/8 17:03 星期二
@@ -29,10 +49,10 @@ public final class QuartzManager {
     private static Logger log = LoggerFactory.getLogger(QuartzManager.class);
     /**定时任务总调度器*/
     private static StdSchedulerFactory factory = new StdSchedulerFactory();
-    private static String DEFAULT_JOB_GROUP_NAME = "DEFAULT";
-    private static String DEFAULT_TRIGGER_GROUP_NAME = "DEFAULT";
-    private static String JOB_LISTENER_SUFFIX = "_JobListener";
-    private static String TRIGGER_LISTENER_SUFFIX = "_TriggerListener";
+    public static String DEFAULT_JOB_GROUP_NAME = "DEFAULT";
+    public static String DEFAULT_TRIGGER_GROUP_NAME = "DEFAULT";
+    public static String JOB_LISTENER_SUFFIX = "_JobListener";
+    public static String TRIGGER_LISTENER_SUFFIX = "_TriggerListener";
 
     /** 所有集成定时任务存储容器,重启服务可将定时任务列表初始化至此*/
     public static ConcurrentMap<String,Scheduler> map = new ConcurrentHashMap<>();
@@ -41,7 +61,7 @@ public final class QuartzManager {
      * 添加定时任务
      * @param schedulerId       任务ID 必须唯一 通过此ID开启任务等操作
      * @param jobName           任务名称
-     * @param cls               任务Class
+     * @param cls               任务类全包名+类名
      * @param time              触发时间
      * @param jobGroupName      任务组名
      * @param triggerGroupName  触发器组名
@@ -111,7 +131,7 @@ public final class QuartzManager {
                     Class cls = jobDetail.getJobClass();
                     removeJob(schedulerId,jobName,jobGroupName,triggerGroupName);
                     addJob(schedulerId,jobName,jobGroupName,triggerGroupName,cls,time);
-                    startAll();
+                    start(schedulerId);
                 }
             }else{
                 log.info("定时任务存储容器中暂无数据...");
@@ -149,26 +169,38 @@ public final class QuartzManager {
 
     /**
      * 启动指定定时任务
+     *
+     * @description:前提：关闭或者未启动(isShutdown)或者非暂停(isInStandbyMode)
      * @param schedulerId 任务ID 必须唯一 通过此ID开启任务等操作
      * @throws SchedulerException
      */
     public static void start(String schedulerId) throws SchedulerException {
         if (StringUtils.isNotEmpty(map)){
             Scheduler scheduler = map.get(schedulerId);
-            if (!scheduler.isShutdown()){
+            System.out.println("启动前状态：");
+            System.out.println("isStarted: "+scheduler.isStarted());
+            System.out.println("isShutdown: "+scheduler.isShutdown());
+            System.out.println("isInStandbyMode: "+scheduler.isInStandbyMode());
+            if (!scheduler.isStarted()&&!scheduler.isShutdown()&&scheduler.isInStandbyMode()){
                 scheduler.start();
             }
+            System.out.println("启动后状态：");
+            System.out.println("isStarted: "+scheduler.isStarted());
+            System.out.println("isShutdown: "+scheduler.isShutdown());
+            System.out.println("isInStandbyMode: "+scheduler.isInStandbyMode());
         }
     }
 
     /**
      * 启动所有定时任务
+     *
+     * @description:前提：关闭或者未启动(isShutdown)或者非暂停(isInStandbyMode)
      */
     public final static void startAll() throws SchedulerException {
         if (StringUtils.isNotEmpty(map)){
             Collection<Scheduler> schedulers = map.values();
             for (Scheduler scheduler : schedulers) {
-                if (!scheduler.isShutdown()){
+                if (!scheduler.isStarted()&&!scheduler.isShutdown()&&scheduler.isInStandbyMode()){
                     scheduler.start();
                 }
             }
@@ -176,29 +208,48 @@ public final class QuartzManager {
     }
 
     /**
-     * 关闭定时任务
-     * 注意：调用此方法后此定时任务不可用，亦不可重启
+     * 关闭指定定时任务
+     * 注意：关闭后的任务将永久不可用，且不可重启
+     * @description:前提：已启动任务
      * @param schedulerId
      * @throws SchedulerException
      */
     public final static void shutdown(String schedulerId) throws SchedulerException {
         if (StringUtils.isNotEmpty(map)){
             Scheduler scheduler = map.get(schedulerId);
-            if (!scheduler.isShutdown()){
+            if (scheduler.isStarted()&&!scheduler.isShutdown()){
                 scheduler.shutdown();
             }
         }
     }
 
     /**
-     * 暂停指定定时任务
+     * 关闭所有定时任务
+     * 注意：关闭后的任务将永久不可用，且不可重启
+     * @description:前提：已启动任务
+     * @throws SchedulerException
+     */
+    public final static void shutdownAll() throws SchedulerException {
+        if (StringUtils.isNotEmpty(map)){
+            Collection<Scheduler> schedulers = map.values();
+            for (Scheduler scheduler : schedulers) {
+                if (scheduler.isStarted()&&!scheduler.isShutdown()){
+                    scheduler.shutdown();
+                }
+            }
+        }
+    }
+
+    /**
+     * 临时暂停指定定时任务
      * @param schedulerId 任务ID 必须唯一 通过此ID开启任务等操作
+     * @description:前提：已启动后任务
      * @throws SchedulerException
      */
     public final static void stop(String schedulerId,String jobName,String triggerGroupName,String jobGroupName) throws SchedulerException {
         if (StringUtils.isNotEmpty(map)){
             Scheduler scheduler = map.get(schedulerId);
-            if (!scheduler.isShutdown()){
+            if (scheduler.isStarted()&&!scheduler.isShutdown()){
                 scheduler.pauseJob(jobName,StringUtils.isNotEmpty(jobGroupName)?jobGroupName:DEFAULT_JOB_GROUP_NAME);
                 scheduler.pauseTrigger(jobName,StringUtils.isNotEmpty(triggerGroupName)?triggerGroupName:DEFAULT_TRIGGER_GROUP_NAME);
             }
@@ -206,13 +257,15 @@ public final class QuartzManager {
     }
 
     /**
-     * 暂停所有定时任务
+     * 临时暂停所有定时任务
+     *
+     * @description:前提：已启动后任务
      */
     public final static void stopAll() throws SchedulerException {
         if (StringUtils.isNotEmpty(map)){
             Collection<Scheduler> schedulers = map.values();
             for (Scheduler scheduler : schedulers) {
-                if (!scheduler.isShutdown()){
+                if (scheduler.isStarted()&&!scheduler.isShutdown()){
                     scheduler.pauseAll();
                 }
             }
@@ -222,11 +275,14 @@ public final class QuartzManager {
     /**
      * 重启指定定时任务
      * @param schedulerId 任务ID 必须唯一 通过此ID开启任务等操作
+     *
+     * @description:前提：已暂停后任务
      */
     public final static void resume(String schedulerId,String jobName,String triggerGroupName,String jobGroupName) throws SchedulerException {
         if (StringUtils.isNotEmpty(map)){
             Scheduler scheduler = map.get(schedulerId);
-            if (!scheduler.isShutdown()){
+            if (scheduler.isStarted()&&!scheduler.isInStandbyMode()){
+                //暂停后重启
                 scheduler.resumeJob(jobName,StringUtils.isNotEmpty(jobGroupName)?jobGroupName:DEFAULT_JOB_GROUP_NAME);
                 scheduler.resumeTrigger(jobName,StringUtils.isNotEmpty(triggerGroupName)?triggerGroupName:DEFAULT_TRIGGER_GROUP_NAME);
             }
@@ -235,12 +291,15 @@ public final class QuartzManager {
 
     /**
      * 重启所有定时任务
+     *
+     * @description:前提：已暂停后任务
      */
     public final static void resumeAll() throws SchedulerException {
         if (StringUtils.isNotEmpty(map)){
             Collection<Scheduler> schedulers = map.values();
             for (Scheduler scheduler : schedulers) {
-                if (!scheduler.isShutdown()){
+                if (scheduler.isStarted()&&!scheduler.isInStandbyMode()){
+                    //暂停后重启
                     scheduler.resumeAll();
                 }
             }

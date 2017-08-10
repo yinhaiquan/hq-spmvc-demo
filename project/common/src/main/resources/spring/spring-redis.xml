@@ -9,6 +9,7 @@
     <!--测试quartz集成使用-start-->
     <context:component-scan base-package="hq.com.quartz"/>
     <bean id="springContextHelper" class="hq.com.quartz.SpringApplicationContext"/>
+    <bean id="quartzDao" class="hq.com.quartz.dao.impl.QuartzDaoImpl"/>
     <!--测试quartz集成使用-end-->
 
 
