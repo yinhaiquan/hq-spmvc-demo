@@ -18,6 +18,9 @@ define('fileUploadUtils',
             fileList : "#fileList",         //[必选]文件列表
             btn:"#btn-star",                //[可选]上传按钮 若auto=true则可不用此参数
             filepick:"#filePicker",         //[必选]文件选择按钮。内部根据当前运行是创建，可能是input元素，也可能是flash.
+            formData_ : {
+                uid: 123
+            },
             thumbnailWidth:110,             //[可选]缩略图宽度
             thumbnailHeight:110,            //[可选]缩略图高度
             isAuto:false,                   //[必选]是否自动上传，[默认值：false] 设置为 true 后，不需要手动调用上传，有文件选择即开始上传。
@@ -90,6 +93,7 @@ define('fileUploadUtils',
                     swf: AjaxUtils.URLS.baseUrl+'/resource/lib/webuploader/0.1.5/Uploader.swf',
                     server: AjaxUtils.URLS.baseUrl+AjaxUtils.URLS.fileUpload,
                     pick: settting.filepick,
+                    formData: settting.formData_,
                     resize: false, // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
                     fileNumLimit:settting.fileTotal,
                     fileSizeLimit:settting.fileSizeTotal,
