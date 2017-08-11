@@ -8,13 +8,10 @@ import hq.com.quartz.base.SwitchTypeEnum;
 import hq.com.quartz.dao.QuartzDao;
 import hq.com.quartz.service.QuartzService;
 import hq.com.quartz.vo.QuartzInParam;
-import hq.com.quartz.vo.SchedulerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @title : quartz任务集成业务实现层

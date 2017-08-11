@@ -20,7 +20,7 @@ import java.util.UUID;
  * Create By yinhaiquan
  * @date 2017/8/10 10:41 星期四
  */
-public class PropertyConfigHelper {
+public final class PropertyConfigHelper {
     private static Logger log = LoggerFactory.getLogger(PropertyConfigHelper.class);
     /**用于定时任务schedulerId列表存储*/
     public static final String KEY_PREFIX = "scheduler.key";
