@@ -59,6 +59,7 @@ requirejs.config({
         header:'html/base/header.html',
         menu:'html/base/menu.tpl',
         uploader:'html/uploader.html',
+        quartz:"html/base/quartz.html",
 
         /*css路径配置*/
         jqueryztreestyle:'resource/lib/zTree/v3/css/metroStyle/metroStyle',
@@ -75,7 +76,8 @@ requirejs.config({
                 'text!menu',
                 'ajax',
                 'text!testfk',
-                'text!uploader'
+                'text!uploader',
+                'text!quartz'
             ],
             exports:'tmpl'
         },

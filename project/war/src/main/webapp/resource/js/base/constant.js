@@ -61,6 +61,15 @@ define({
                     'name': '意见反馈123',
                     'url': 'http://www.baidu.com'}
                 ]
+        },
+        {
+            'theme': '任务容器',
+            'icon': '&#xe690;',
+            'childrens': [
+                {
+                    'name': '任务列表',
+                    'url': 'text!quartz'}
+            ]
         }
     ]
 })
