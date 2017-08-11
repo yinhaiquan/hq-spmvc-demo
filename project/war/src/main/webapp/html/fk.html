@@ -1,5 +1,38 @@
 <div class="page-container">
     <b>demo</b>
+    <b>wangeditor</b>
+    <style type="text/css">
+        .toolbar {
+            border: 1px solid #ccc;
+        }
+        .text {
+            border: 1px solid #ccc;
+            height: 200px;
+        }
+    </style>
+    <div id="editor1" class="toolbar"></div>
+    <div style="padding: 5px 0; color: #ccc">中间隔离带</div>
+    <div id="editor2" class="text">
+        <p>欢迎使用 wangEditor 富文本编辑器</p>
+    </div>
+    <div id="editor">
+        <p>欢迎使用 wangEditor 富文本编辑器</p>
+    </div>
+    <div id="mySwitch" class="switch">
+        <input type="checkbox" checked />
+    </div>
+    <script>
+        require(['editorUtils','bootstrapswitch','css!bootstrapswitchstyle'],function(EditorUitls){
+
+            var editor = EditorUitls.create("#editor");
+            EditorUitls.create("#editor1","#editor2");
+            $('#mySwitch').on('switch-change', function (e, data) {
+                var $el = $(data.el)
+                    , value = data.value;
+                EditorUitls.switchOpenOrClose(editor,value);
+            });
+        })
+    </script>
     <b>图片样式css</b>
     <style>
         .travel-pic{ width:1020px}

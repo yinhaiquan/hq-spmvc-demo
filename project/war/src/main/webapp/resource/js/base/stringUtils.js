@@ -43,7 +43,7 @@ define('stringUtils',function(){
          * @returns {boolean}
          */
         isEmpty_:function(obj){
-            if(obj === undefined){
+            if(typeof obj === undefined){
                 return true;
             }
             if(null==obj||''==obj){

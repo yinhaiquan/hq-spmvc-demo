@@ -19,8 +19,8 @@ requirejs.config({
 
 */
 requirejs.config({
-    // baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
-    baseUrl: 'http://localhost:8080/',
+    baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
+    // baseUrl: 'http://localhost:8080/',
     paths: {
         /*js配置路径*/
         tmpl:'resource/lib/requirejs/jquery.tmpl.min',
@@ -43,6 +43,8 @@ requirejs.config({
         webuploader:'resource/lib/webuploader/0.1.5/webuploader.min',
         lightbox2:'resource/lib/lightbox2/2.8.1/js/lightbox',
         prettify:'resource/lib/prettify/prettify',
+        wangeditor:'resource/lib/wangeditor/3.0.7/wangEditor',
+        bootstrapswitch:'resource/lib/switch/bootstrapSwitch',
 
         /*自定义插件扩展*/
         constant:'resource/js/base/constant',
@@ -53,6 +55,7 @@ requirejs.config({
         fileUploadUtils:'resource/js/base/fileUploadUtils',
         ztreeUtils:'resource/js/base/ztreeUtils',
         layPageUtils:'resource/js/base/layPageUtils',
+        editorUtils:'resource/js/base/editorUtils',
 
         /*html、tpl路径配置*/
         testfk:'html/fk.html',
@@ -66,7 +69,8 @@ requirejs.config({
         laypagestyle:'resource/lib/laypage/1.2/skin/laypage',
         webuploaderstyle:'resource/lib/webuploader/0.1.5/webuploader',
         lightbox2style:'resource/lib/lightbox2/2.8.1/css/lightbox',
-        prettifystyle:'resource/lib/prettify/prettify'
+        prettifystyle:'resource/lib/prettify/prettify',
+        bootstrapswitchstyle:'resource/lib/switch/bootstrapSwitch'
     },
     shim:{
         'tmpl':{
@@ -148,6 +152,15 @@ requirejs.config({
         },
         'prettify':{
             deps:['jquery','css!prettifystyle']
+        },
+        'wangeditor':{
+            deps:['jquery']
+        },
+        'editorUtils':{
+            deps:['jquery','wangeditor']
+        },
+        'bootstrapswitch':{
+            deps:['jquery','css!bootstrapswitchstyle']
         }
     }
 });
