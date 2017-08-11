@@ -432,7 +432,7 @@
             LayPageUtils.AjaxUtils.ajaxParam.root.msg = {adminInfo: {}}
             LayPageUtils.dataGride({
                 data_:data_,
-                url : LayPageUtils.AjaxUtils.URLS.findUsers,
+//                url : LayPageUtils.AjaxUtils.URLS.findUsers,
                 params :LayPageUtils.AjaxUtils.ajaxParam,
                 type:'json',
                 method : 'post',
@@ -458,8 +458,8 @@
                         align:'text-c',
                         width:'20%',
                         iShow:true,
-                        formartVal:function(value){
-                            return value;
+                        formartVal:function(value,data){
+                            return value+data.sex;
                         }
                     },{
                         name:'性别',
@@ -467,7 +467,7 @@
                         align:'text-c',
                         width:'20%',
                         iShow:true,
-                        formartVal:function(value){
+                        formartVal:function(value,data){
                             return value;
                         }
                     },{

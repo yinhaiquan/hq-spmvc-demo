@@ -20,7 +20,7 @@ requirejs.config({
 */
 requirejs.config({
     baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
-    // baseUrl: 'http://localhost:8085/',
+    // baseUrl: 'http://localhost:8080/',
     paths: {
         /*js配置路径*/
         tmpl:'resource/lib/requirejs/jquery.tmpl.min',
@@ -59,7 +59,7 @@ requirejs.config({
         header:'html/base/header.html',
         menu:'html/base/menu.tpl',
         uploader:'html/uploader.html',
-        quartz:"html/base/quartz.html",
+        quartz:"html/quartz/quartz.html",
 
         /*css路径配置*/
         jqueryztreestyle:'resource/lib/zTree/v3/css/metroStyle/metroStyle',

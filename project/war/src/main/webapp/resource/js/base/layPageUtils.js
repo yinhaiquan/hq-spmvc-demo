@@ -111,7 +111,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             })
         },
         dataOption:function(setting,curr){
-            var pager ={};
+            var pager =null;
             if(setting.url){
                 /**
                  * 分页请求参数格式
@@ -155,6 +155,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                          */
                         if(data&&data.code==0){
                             if(!StringUtils.isEmpty_(data.content)){
+                                pager ={};
                                 pager.pages = data.content.pages;
                                 pager.rows = data.content.rows;
                                 pager.total = data.content.total;
@@ -212,7 +213,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                             }
                             if(val_obj[obj_.value]!= undefined){
                                 if(obj_.formartVal){
-                                    str += obj_.formartVal(val_obj[obj_.value]);
+                                    str += obj_.formartVal(val_obj[obj_.value],val_obj);
                                 }else{
                                     str += val_obj[obj_.value];
                                 }

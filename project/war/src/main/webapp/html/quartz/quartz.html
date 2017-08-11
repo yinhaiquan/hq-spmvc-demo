@@ -1,3 +1,111 @@
 <div class="page-container">
-    <div class="bk-gray radius">圆角边框</div>
+    <div class="bk-gray radius">
+        <div id="quartz_list"></div>
+    </div>
+    <div class="bk-gray radius">
+        <div id="pager_index"></div>
+    </div>
+    <script>
+        require(['layPageUtils'],function(LayPageUtils){
+            LayPageUtils.AjaxUtils.ajaxParam.root.msg = {
+                quartzInfo: {
+                    "schedulerId": "d43ff64a173d4c4f9c125a501c4f5b73",
+                    "jobName": "test1",
+                    "jobClass": "hq.com.quartz.QuartzDemo",
+                    "jobGroupName": "",
+                    "triggerGroupName": "",
+                    "time": "0/1 * * * * ?",
+                    "switchType": "33",
+                    "page": "1",
+                    "pageSize": "10"
+                }
+            }
+            LayPageUtils.dataGride({
+                url : LayPageUtils.AjaxUtils.URLS.quartzURLS.getSchedulerList,
+                params :LayPageUtils.AjaxUtils.ajaxParam,
+                type:'json',
+                method : 'post',
+                tableId:'quartz_list',
+                cont: document.getElementById('pager_index'),
+                skip: true,
+                skin: '#00AA91',
+                groups: 5 ,
+                first:"首页",
+                last:"尾页",
+                prev:"<",
+                next:">",
+                data:[
+                    {
+                        name:'任务ID',
+                        value:'schedulerId',
+                        align:'text-c',
+                        width:'10%',
+                        iShow:true
+                    },{
+                        name:'任务名称',
+                        value:'jobName',
+                        align:'text-c',
+                        width:'5%',
+                        iShow:true,
+                        formartVal:function(value){
+                            return value;
+                        }
+                    },{
+                        name:'任务包名+类名',
+                        value:'jobClass',
+                        align:'text-c',
+                        width:'15%',
+                        iShow:true,
+                        formartVal:function(value){
+                            return value;
+                        }
+                    },{
+                        name:'任务组名',
+                        value:'jobGroupName',
+                        align:'text-c',
+                        width:'10%',
+                        iShow:true,
+                        formartVal:function(value){
+                            return value;
+                        }
+                    },{
+                        name:'触发器组名',
+                        value:'triggerGroupName',
+                        align:'text-c',
+                        width:'10%',
+                        iShow:true,
+                        formartVal:function(value){
+                            return value;
+                        }
+                    },{
+                        name:'触发时间',
+                        value:'time',
+                        align:'text-c',
+                        width:'5%',
+                        iShow:true,
+                        formartVal:function(value){
+                            return value;
+                        }
+                    },{
+                        name:'任务状态',
+                        value:'statusEnum',
+                        align:'text-c',
+                        width:'10%',
+                        iShow:true,
+                        formartVal:function(value){
+                            return value;
+                        }
+                    },{
+                        name:'操作',
+                        value:'option',
+                        align:'text-l',
+                        iShow:true,
+                        formartVal:function(data){
+                            return '<input class="btn btn-success radius" type="button" onclick="alert('+data.jobName+')" value="成功">';
+                        }
+                    }
+                ]
+            });
+        })
+    </script>
 </div>
