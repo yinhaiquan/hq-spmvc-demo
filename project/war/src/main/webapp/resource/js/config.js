@@ -19,8 +19,8 @@ requirejs.config({
 
 */
 requirejs.config({
-    baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
-    // baseUrl: 'http://localhost:8080/',
+    // baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
+    baseUrl: 'http://localhost:8080/',
     paths: {
         /*js配置路径*/
         tmpl:'resource/lib/requirejs/jquery.tmpl.min',
