@@ -1,7 +1,6 @@
 package hq.com.quartz.vo;
 
 import hq.com.quartz.base.StatusEnum;
-import org.quartz.Scheduler;
 
 import java.io.Serializable;
 
@@ -28,8 +27,12 @@ public class SchedulerInfo implements Serializable {
     private String time;
     /*任务实时状态*/
     private StatusEnum statusEnum;
-    /*任务实体类*/
-    private Scheduler scheduler;
+    /*是否开启 true 已启动 false 未启动*/
+    private boolean started;
+    /*是否关闭 true 已关闭 false 未关闭*/
+    private boolean shutdown;
+    /*是否暂停 true 已暂停、启动前 false 暂停后、启动后*/
+    private boolean inStandbyMode;
 
     public SchedulerInfo() {
     }
@@ -90,12 +93,28 @@ public class SchedulerInfo implements Serializable {
         this.statusEnum = statusEnum;
     }
 
-    public Scheduler getScheduler() {
-        return scheduler;
+    public boolean isStarted() {
+        return started;
     }
 
-    public void setScheduler(Scheduler scheduler) {
-        this.scheduler = scheduler;
+    public void setStarted(boolean started) {
+        this.started = started;
+    }
+
+    public boolean isShutdown() {
+        return shutdown;
+    }
+
+    public void setShutdown(boolean shutdown) {
+        this.shutdown = shutdown;
+    }
+
+    public boolean isInStandbyMode() {
+        return inStandbyMode;
+    }
+
+    public void setInStandbyMode(boolean inStandbyMode) {
+        this.inStandbyMode = inStandbyMode;
     }
 
     @Override
@@ -108,7 +127,9 @@ public class SchedulerInfo implements Serializable {
                 ", triggerGroupName='" + triggerGroupName + '\'' +
                 ", time='" + time + '\'' +
                 ", statusEnum=" + statusEnum +
-                ", scheduler=" + scheduler +
+                ", started=" + started +
+                ", shutdown=" + shutdown +
+                ", inStandbyMode=" + inStandbyMode +
                 '}';
     }
 }

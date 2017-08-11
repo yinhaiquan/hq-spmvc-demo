@@ -30,21 +30,30 @@ public class PropertyConfigHelper {
     public static final String TRIGGER_GROUP_NAME_SUFFIX = ".triggerGroupName";
     public static final String CRON_EXPRESSION_TIME_SUFFIX = ".time";
     public static final String JOB_RUNNING_STATE_SUFFIX =".state";
+    private PropertiesConfiguration configuration;
+    private static PropertyConfigHelper propertyConfigHelper;
 
-    private static PropertiesConfiguration configuration;
+    private PropertyConfigHelper(PropertiesConfiguration configuration){
+        this.configuration = configuration;
+    }
 
-    static {
-        try {
-            StringBuffer path = new StringBuffer("file:///");
-            path.append(PropertyConfigHelper.class.getResource("").getFile().toString().replaceAll("target/classes","src/main/java"));
-            path.append("schedulerDB.properties");
-            configuration = new PropertiesConfiguration(path.toString());
-            configuration.setEncoding("utf-8");
-            //设置是否自动提交，true自动提交，false 则需要configuration.save()保存提交。
-            configuration.setAutoSave(true);
-        } catch (ConfigurationException e) {
-            log.info("读取属性文件异常:{}",e.getMessage());
+    public final static PropertyConfigHelper newInstance(){
+        if (StringUtils.isEmpty(propertyConfigHelper)){
+            try {
+                StringBuffer path = new StringBuffer("file:///G:\\hq-spmvc-demo\\project\\war\\src\\main\\resources\\");
+                path.append("schedulerDB.properties");
+                log.info("任务存储文件位置:{}",path.toString());
+                PropertiesConfiguration configuration = new PropertiesConfiguration(path.toString());
+//            configuration = new PropertiesConfiguration("schedulerDB.properties");
+                configuration.setEncoding("utf-8");
+                //设置是否自动提交，true自动提交，false 则需要configuration.save()保存提交。
+                configuration.setAutoSave(true);
+                propertyConfigHelper = new PropertyConfigHelper(configuration);
+            } catch (ConfigurationException e) {
+                log.info("读取属性文件异常:{}",e.getMessage());
+            }
         }
+        return propertyConfigHelper;
     }
 
     /**
@@ -52,7 +61,7 @@ public class PropertyConfigHelper {
      * @param key
      * @return
      */
-    public final static String getValue(String key) {
+    public final String getValue(String key) {
         return configuration.getString(key);
     }
 
@@ -62,7 +71,7 @@ public class PropertyConfigHelper {
      * @return
      * @throws ClassNotFoundException
      */
-    public final static SchedulerInfo getSchedulerInfo(String schedulerId) throws ClassNotFoundException {
+    public final SchedulerInfo getSchedulerInfo(String schedulerId) throws ClassNotFoundException {
         SchedulerInfo si = new SchedulerInfo();
         si.setSchedulerId(schedulerId);
         si.setJobName(getValue(schedulerId+JOB_NAME_SUFFIX));
@@ -79,8 +88,9 @@ public class PropertyConfigHelper {
      * @param prefix 前缀
      * @return
      */
-    public final static List<String> getKeys(String prefix){
+    public final List<String> getKeys(String prefix){
         List<String> keys = new ArrayList<>();
+        System.out.println(configuration);
         Iterator iterator = configuration.getKeys(prefix);
         while (iterator.hasNext()){
             keys.add(String.valueOf(iterator.next()).replaceAll(KEY_PREFIX+".",""));
@@ -104,7 +114,7 @@ public class PropertyConfigHelper {
      * @param time             触发时间
      * @throws ConfigurationException
      */
-    public final static synchronized String addJobProp(String jobName,
+    public final synchronized String addJobProp(String jobName,
                                         String jobClass,
                                         String jobGroupName,
                                         String triggerGroupName,
@@ -125,7 +135,7 @@ public class PropertyConfigHelper {
      * @param key
      * @param value
      */
-    public final static synchronized void updateJobProp(String key,String value){
+    public final synchronized void updateJobProp(String key,String value) throws ConfigurationException {
         configuration.setProperty(key,value);
     }
 
@@ -133,7 +143,7 @@ public class PropertyConfigHelper {
      * 移除任务记录
      * @param schedulerId 任务ID UUID生成
      */
-    public final static synchronized void removeJobProp(String schedulerId){
+    public final synchronized void removeJobProp(String schedulerId){
         configuration.clearProperty(KEY_PREFIX+"."+schedulerId);
         configuration.clearProperty(schedulerId+JOB_NAME_SUFFIX);
         configuration.clearProperty(schedulerId+JOB_CLASS_SUFFIX);
@@ -143,19 +153,18 @@ public class PropertyConfigHelper {
     }
 
     public static void main(String[] args) throws ConfigurationException, ClassNotFoundException {
-        addJobProp("test",
-                   "hq.com.quartz.QuartzDemo",
-                   null,
-                   null,
-                   "0/1 * * * * ?");
-//        List<String> list = getKeys(KEY_PREFIX);
-//        updateJobProp("2a2ca7e81cc84a4aa9ab48f6b670d4f0.time","00000");
-//        configuration.clearProperty("a1be24095ce04bfea86f60b190c9a349.time");
-//        removeJobProp("a1be24095ce04bfea86f60b190c9a349");
-//        for (String object:
-//             list) {
-//            System.out.println(object);
-//        }
-//        System.out.println(getSchedulerInfo("56cfc37bf21b46f08cd6b9906945d8a8"));
+//        PropertyConfigHelper.newInstance().addJobProp("test",
+//                   "hq.com.quartz.QuartzDemo",
+//                   null,
+//                   null,
+//                   "0/1 * * * * ?");
+        List<String> list = PropertyConfigHelper.newInstance().getKeys(KEY_PREFIX);
+//        PropertyConfigHelper.newInstance().updateJobProp("2a2ca7e81cc84a4aa9ab48f6b670d4f0.time","00000");
+//        PropertyConfigHelper.newInstance().removeJobProp("a1be24095ce04bfea86f60b190c9a349");
+        for (String object:
+             list) {
+            System.out.println(object);
+        }
+//        System.out.println(PropertyConfigHelper.newInstance().getSchedulerInfo("56cfc37bf21b46f08cd6b9906945d8a8"));
     }
 }

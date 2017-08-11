@@ -53,6 +53,8 @@ public class QuartzTest {
         Thread.sleep(5*1000);
 
         quartzDao.switchJob(null, SwitchTypeEnum.STOPALL);
+
+
         Thread.sleep(60*1000);
     }
 

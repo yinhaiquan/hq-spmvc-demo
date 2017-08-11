@@ -36,7 +36,7 @@ public interface QuartzDao {
      * @param schedulerId  任务ID
      * @param newTime      新触发时间
      */
-    public void updateJobTime(String schedulerId,String newTime) throws ClassNotFoundException;
+    public void updateJobTime(String schedulerId,String newTime) throws ClassNotFoundException, ConfigurationException;
 
     /**
      * 删除任务
@@ -49,7 +49,7 @@ public interface QuartzDao {
      * @param schedulerId      任务ID
      * @param switchTypeEnum   开关类型
      */
-    public void switchJob(String schedulerId,SwitchTypeEnum switchTypeEnum) throws SchedulerException, ClassNotFoundException;
+    public void switchJob(String schedulerId,SwitchTypeEnum switchTypeEnum) throws SchedulerException, ClassNotFoundException, ConfigurationException;
 
     /**
      * 分页获取任务列表
