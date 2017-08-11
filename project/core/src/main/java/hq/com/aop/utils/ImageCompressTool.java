@@ -6,10 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
 import javax.imageio.ImageIO;
-
 import com.sun.image.codec.jpeg.ImageFormatException;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -17,7 +14,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 /**
  * 
  ***************************************************************  
- * <b>项目名称：</b>吉美营养线<br>
+ * <b>项目名称：</b>project<br>
  * <b>程序名称：</b>图片压缩处理工具类<br>
  * <b>日期：</b>2015年5月18日-上午10:01:36<br>
  * <b>作者：</b>yinHaiquan<br>
@@ -49,13 +46,23 @@ public class ImageCompressTool {
      /**
       * 构造方法
       * 
-      * @param file                源文件     
+      * @param sourceFile          源文件 支持string、File、FileInputStream三种类型数据
       * @param fileName            保存文件路径(包括文件名)
       * @param tag                 等比缩放标记     true-等比缩放  false-原比例缩放
       * @throws IOException
       */
-     public ImageCompressTool(InputStream file,String fileName,boolean tag) throws IOException{
-    	 this.image = ImageIO.read(file);
+     public ImageCompressTool(Object sourceFile,String fileName,boolean tag) throws IOException{
+         FileInputStream fileInputStream = null;
+         if (StringUtils.isNotEmpty(sourceFile)){
+             if (sourceFile instanceof String){
+                 fileInputStream = new FileInputStream(new File(String.valueOf(sourceFile)));
+             } else if (sourceFile instanceof File){
+                 fileInputStream = new FileInputStream((File) sourceFile);
+             } else if (sourceFile instanceof FileInputStream){
+                 fileInputStream = (FileInputStream)sourceFile;
+             }
+         }
+    	 this.image = ImageIO.read(fileInputStream);
     	 this.fileName = fileName;
     	 this.proportion = tag;
      }
@@ -69,17 +76,20 @@ public class ImageCompressTool {
       * @throws IOException
       */
      public void imageCompress(int w,int h) throws ImageFormatException, IOException{
-    	// 判断是否是等比缩放 
+         // 图片真实宽高度
+         double rwidth = image.getWidth(null);
+         double rheight = image.getHeight(null);
+    	 // 判断是否是等比缩放
          if (this.proportion) { 
                  // 为等比缩放计算输出的图片宽度及高度 
-                 double rate1 = ((double) image.getWidth(null)) / (double) w + 0.1; 
-                 double rate2 = ((double) image.getHeight(null)) / (double) h + 0.1; 
+                 double rate1 = rwidth/ (double) w + 0.1;
+                 double rate2 = rheight/ (double) h + 0.1;
                  // 根据缩放比率大的进行缩放控制 
                  double rate = rate1 > rate2 ? rate1 : rate2; 
-                 this.width = (int) (((double) image.getWidth(null)) / rate); 
-                 this.heigth = (int) (((double) image.getHeight(null)) / rate); 
+                 this.width = (int) (rwidth/ rate);
+                 this.heigth = (int) (rheight/ rate);
          } else { 
-        	     this.width = image.getWidth(null); // 输出的图片宽度 
+        	     this.width = image.getWidth(null); // 输出的图片宽度
         	     this.heigth = image.getHeight(null); // 输出的图片高度 
          }
          resize();
@@ -108,7 +118,7 @@ public class ImageCompressTool {
      public static void main(String[] arg) { 
     	    ImageCompressTool mypic;
 			try {
-				mypic = new ImageCompressTool(new FileInputStream(new File("e:\\123.png")),"e:/f2.jpg",true);
+				mypic = new ImageCompressTool("e:\\123.png","e:/f4.jpg",true);
 	            mypic.imageCompress(400,300);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
