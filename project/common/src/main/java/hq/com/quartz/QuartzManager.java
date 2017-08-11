@@ -177,17 +177,17 @@ public final class QuartzManager {
     public static void start(String schedulerId) throws SchedulerException {
         if (StringUtils.isNotEmpty(map)){
             Scheduler scheduler = map.get(schedulerId);
-            System.out.println("启动前状态：");
-            System.out.println("isStarted: "+scheduler.isStarted());
-            System.out.println("isShutdown: "+scheduler.isShutdown());
-            System.out.println("isInStandbyMode: "+scheduler.isInStandbyMode());
+            log.info("启动前状态：");
+            log.info("isStarted: {}",scheduler.isStarted());
+            log.info("isShutdown: {}",scheduler.isShutdown());
+            log.info("isInStandbyMode: {}",scheduler.isInStandbyMode());
             if (!scheduler.isStarted()&&!scheduler.isShutdown()&&scheduler.isInStandbyMode()){
                 scheduler.start();
             }
-            System.out.println("启动后状态：");
-            System.out.println("isStarted: "+scheduler.isStarted());
-            System.out.println("isShutdown: "+scheduler.isShutdown());
-            System.out.println("isInStandbyMode: "+scheduler.isInStandbyMode());
+            log.info("启动后状态：");
+            log.info("isStarted: {}",scheduler.isStarted());
+            log.info("isShutdown: {}",scheduler.isShutdown());
+            log.info("isInStandbyMode: {}",scheduler.isInStandbyMode());
         }
     }
 
