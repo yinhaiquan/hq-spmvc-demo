@@ -175,7 +175,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
          */
         dataTable : function(data,data_,obj,id){
             var str = '';
-            str +='<table class="table table-border table-bordered table-hover"><thead><tr>';
+            str +='<table class="table table-border table-bordered table-bg radius"><thead><tr>';
             if(data&&data.length>0){
                for(var i =0;i<data.length;i++){
                    var obj_ = data[i];
