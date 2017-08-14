@@ -15,7 +15,7 @@
     <bean id="redisManager" class="hq.com.base.RedisManager">
         <!--30分钟-->
         <constructor-arg name="expire" value="1800"/>
-        <constructor-arg name="jedisTemplate" ref="redisClusterTemplate"/>
+        <constructor-arg name="jedisTemplate" ref="jedisTemplate"/>
     </bean>
     <!-- 配置session管理器 -->
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">

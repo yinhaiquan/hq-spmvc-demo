@@ -40,11 +40,13 @@ public final class PropertyConfigHelper {
     public final static PropertyConfigHelper newInstance(){
         if (StringUtils.isEmpty(propertyConfigHelper)){
             try {
-                StringBuffer path = new StringBuffer("file:///G:\\hq-spmvc-demo\\project\\war\\src\\main\\resources\\");
-                path.append("schedulerDB.properties");
-                log.info("任务存储文件位置:{}",path.toString());
-                PropertiesConfiguration configuration = new PropertiesConfiguration(path.toString());
-//            configuration = new PropertiesConfiguration("schedulerDB.properties");
+                //开发环境本地测试使用，生产环境删除以下代码
+//                StringBuffer path = new StringBuffer("file:///G:\\hq-spmvc-demo\\project\\war\\src\\main\\resources\\");
+//                path.append("schedulerDB.properties");
+//                log.info("任务存储文件位置:{}",path.toString());
+//                PropertiesConfiguration configuration = new PropertiesConfiguration(path.toString());
+                //生产环境使用 默认在classpath路径查找schedulerDB.properties文件
+                PropertiesConfiguration configuration = new PropertiesConfiguration("schedulerDB.properties");
                 configuration.setEncoding("utf-8");
                 //设置是否自动提交，true自动提交，false 则需要configuration.save()保存提交。
                 configuration.setAutoSave(true);
