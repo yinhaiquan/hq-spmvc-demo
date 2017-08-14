@@ -61,6 +61,15 @@
 <!-- content -->
 <script type="text/javascript" language="JavaScript">
 	/**
+	 * 防xss攻击demo
+	 */
+	require(['webSecurity'],function(WebSecurity){
+	    //使用方式filterXSS(过滤内容);
+        console.log(WebSecurity.filterXSS('<a href="#" onclick="alert(/xss/)">click me</a>'));
+        console.log(WebSecurity.filterXSS('<script type="text/javascript" src="../../resource/js/config.js">'));
+        console.log(WebSecurity.filterSQL('selecT123 update123 call *'));
+	})
+	/**
 	 * 加载h-ui核心js库 jQuery jQueryi18n等初始js库
 	 */
     require([

@@ -45,6 +45,7 @@ requirejs.config({
         prettify:'resource/lib/prettify/prettify',
         wangeditor:'resource/lib/wangeditor/3.0.7/wangEditor',
         bootstrapswitch:'resource/lib/switch/bootstrapSwitch',
+        xss:'resource/js/xss',
 
         /*自定义插件扩展*/
         constant:'resource/js/base/constant',
@@ -56,6 +57,7 @@ requirejs.config({
         ztreeUtils:'resource/js/base/ztreeUtils',
         layPageUtils:'resource/js/base/layPageUtils',
         editorUtils:'resource/js/base/editorUtils',
+        webSecurity:'resource/js/base/webSecurity',
 
         /*html、tpl路径配置*/
         testfk:'html/fk.html',
