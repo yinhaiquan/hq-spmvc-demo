@@ -86,9 +86,9 @@ define('editorUtils',['jquery','wangeditor','stringUtils'],function($,Editor,Str
          */
         getHtml:function(editor,tag){
             if(tag){
-                editor.txt.html();
+               return editor.txt.html();
             }else{
-                editor.txt.text();
+               return editor.txt.text();
             }
         }
     }
