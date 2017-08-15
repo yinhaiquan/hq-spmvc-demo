@@ -1,4 +1,26 @@
 <div class="page-container">
+    <style type="text/css">
+        .tips{
+            display: inline-block;
+            width:10px;
+            height: 10px;
+            border:5px solid #e0dfdf;
+            background: #949393;
+            border-radius: 50%;
+        }
+        .success{
+            border-color:#bbf3bb;
+            background: #18ad18;
+        }
+        .error{
+            border-color:#f7dae4;
+            background: #ee5858;
+        }
+        .warn{
+            border-color:#f3e0c4;
+            background: #f9990d;
+        }
+    </style>
     <div class="panel panel-default">
         <div class="panel-header">面板标题</div>
         <div class="panel-body">
@@ -108,7 +130,14 @@
                         width:'10%',
                         iShow:true,
                         formartVal:function(row){
-                            return row.started+"|"+row.shutdown+"|"+row.inStandbyMode;
+                            if(row.statusEnum=='initialing'){
+                                return '<span class="tips"/>|<span class="tips"/>|<span class="tips"/>';
+                            }else{
+                                var tips = row.started==true?'<span class="tips success"/>|':'<span class="tips error"/>|';
+                                tips+=row.shutdown==true?'<span class="tips success"/>|':'<span class="tips error"/>|';
+                                tips+=row.inStandbyMode==true?'<span class="tips success"/>':'<span class="tips error"/>';
+                            }
+                            return tips;
                         }
                     },{
                         name:'操作',
