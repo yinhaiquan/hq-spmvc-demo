@@ -1,5 +1,7 @@
 package hq.com.aop.concurrency;
 
+import hq.com.aop.exception.IllegalArgumentsException;
+
 import java.util.EventListener;
 
 /**
@@ -11,5 +13,5 @@ import java.util.EventListener;
  */
 public interface AsyncHandlerListener extends EventListener {
     /*执行事件方法*/
-    public void eventHandler(AsyncEvent asyncEvent);
+    public void eventHandler(AsyncEvent asyncEvent) throws IllegalArgumentsException;
 }

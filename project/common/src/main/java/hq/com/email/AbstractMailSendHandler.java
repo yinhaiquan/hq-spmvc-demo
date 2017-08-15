@@ -1,5 +1,9 @@
 package hq.com.email;
 
+import hq.com.aop.exception.IllegalArgumentsException;
+import hq.com.aop.utils.StringUtils;
+import hq.com.email.vo.EmailParams;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -33,8 +37,24 @@ public abstract class AbstractMailSendHandler {
     /**
      * 发送自定义消息体邮件
      */
-    public void sendMimeMessage() {
-        sender.send(formatMimeMessage());
+    public void sendMimeMessage(EmailParams emailParams) throws IllegalArgumentsException {
+        try {
+            if (StringUtils.isNotEmpty(emailParams)){
+                MimeMessage mimeMessage = formatMimeMessage(emailParams);
+                if (StringUtils.isNotEmpty(mimeMessage)){
+                    sender.send(mimeMessage);
+                }else{
+                    throw new IllegalArgumentsException("邮件信息不全");
+                }
+            }else{
+                throw new IllegalArgumentsException("邮件信息不全");
+            }
+        } catch (MailException e) {
+            throw new IllegalArgumentsException("发件人地址异常，请联系管理员!");
+        } catch (IllegalArgumentsException e) {
+            throw new IllegalArgumentsException(e);
+        }
+
     }
 
     /**
@@ -42,16 +62,19 @@ public abstract class AbstractMailSendHandler {
      *
      * @return
      */
-    public abstract MimeMessage formatMimeMessage();
+    public abstract MimeMessage formatMimeMessage(EmailParams emailParams) throws IllegalArgumentsException;
 
     /**
-     * 设置多个邮箱地址
+     * 设置多个邮箱地址,逗号隔开
      *
      * @param address
      * @param pattern
      * @return
      */
     public String[] address(String address, String pattern) {
+        if (StringUtils.isEmpty(address)||StringUtils.isEmpty(pattern)){
+            return null;
+        }
         return address.split(pattern);
     }
 
