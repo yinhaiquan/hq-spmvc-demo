@@ -1,5 +1,6 @@
 package hq.com.quartz.service.impl;
 
+import hq.com.aop.utils.StringUtils;
 import hq.com.aop.vo.OutParam;
 import hq.com.aop.vo.Pager;
 import hq.com.enums.SystemCodeEnum;
@@ -8,10 +9,14 @@ import hq.com.quartz.base.SwitchTypeEnum;
 import hq.com.quartz.dao.QuartzDao;
 import hq.com.quartz.service.QuartzService;
 import hq.com.quartz.vo.QuartzInParam;
+import hq.com.quartz.vo.SchedulerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @title : quartz任务集成业务实现层
@@ -127,6 +132,62 @@ public class QuartzServiceImpl implements QuartzService{
             op.setContent(pager);
         } catch (Exception e) {
             log.info("分页获取任务列表【getSchedulerList】抛出异常:{}", e.getMessage());
+            throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);
+        }
+        return op;
+    }
+
+    /**
+     * 监控容器中任务量
+     *
+     * @return
+     * @throws IllegalOptionException
+     */
+    @Override
+    public OutParam monitorContainerScheduler() throws IllegalOptionException {
+        OutParam op = new OutParam();
+        Map<String,Object> map = new HashMap<>();
+        try{
+            int total = 0;
+            int initialings = 0;
+            int runnings = 0;
+            int pausings = 0;
+            int shutdownings = 0;
+            int failurings = 0;
+            List<SchedulerInfo> list = quartzDao.getAll();
+            if (StringUtils.isNotEmpty(list)){
+                total = list.size();
+                for (SchedulerInfo schedulerInfo : list) {
+                    switch (schedulerInfo.getStatusEnum()){
+                        case PAUSING:
+                            pausings++;
+                            break;
+                        case RUNNING:
+                            runnings++;
+                            break;
+                        case FAILURING:
+                            failurings++;
+                            break;
+                        case INITIALING:
+                            initialings++;
+                            break;
+                        case SHUTDOWNING:
+                            shutdownings++;
+                            break;
+                    }
+                }
+            }
+            map.put("total",total);
+            map.put("initialings",initialings);
+            map.put("runnings",runnings);
+            map.put("pausings",pausings);
+            map.put("shutdownings",shutdownings);
+            map.put("failurings",failurings);
+            op.setCode(SystemCodeEnum.SYSTEM_OK.getCode());
+            op.setDesc(SystemCodeEnum.SYSTEM_OK.getDesc());
+            op.setContent(null);
+        } catch (Exception e) {
+            log.info("监控容器中任务量【monitorContainerScheduler】抛出异常:{}", e.getMessage());
             throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);
         }
         return op;

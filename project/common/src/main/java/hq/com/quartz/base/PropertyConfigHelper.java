@@ -41,12 +41,12 @@ public final class PropertyConfigHelper {
         if (StringUtils.isEmpty(propertyConfigHelper)){
             try {
                 //开发环境本地测试使用，生产环境删除以下代码
-//                StringBuffer path = new StringBuffer("file:///G:\\hq-spmvc-demo\\project\\war\\src\\main\\resources\\");
-//                path.append("schedulerDB.properties");
-//                log.info("任务存储文件位置:{}",path.toString());
-//                PropertiesConfiguration configuration = new PropertiesConfiguration(path.toString());
+                StringBuffer path = new StringBuffer("file:///G:\\hq-spmvc-demo\\project\\war\\src\\main\\resources\\");
+                path.append("schedulerDB.properties");
+                log.info("任务存储文件位置:{}",path.toString());
+                PropertiesConfiguration configuration = new PropertiesConfiguration(path.toString());
                 //生产环境使用 默认在classpath路径查找schedulerDB.properties文件
-                PropertiesConfiguration configuration = new PropertiesConfiguration("schedulerDB.properties");
+//                PropertiesConfiguration configuration = new PropertiesConfiguration("schedulerDB.properties");
                 configuration.setEncoding("utf-8");
                 //设置是否自动提交，true自动提交，false 则需要configuration.save()保存提交。
                 configuration.setAutoSave(true);
@@ -160,6 +160,7 @@ public final class PropertyConfigHelper {
 //                   null,
 //                   null,
 //                   "0/1 * * * * ?");
+        PropertyConfigHelper.newInstance().updateJobProp("d43ff64a173d4c4f9c125a501c4f5b73.state","initialing");
         List<String> list = PropertyConfigHelper.newInstance().getKeys(KEY_PREFIX);
 //        PropertyConfigHelper.newInstance().updateJobProp("2a2ca7e81cc84a4aa9ab48f6b670d4f0.time","00000");
 //        PropertyConfigHelper.newInstance().removeJobProp("a1be24095ce04bfea86f60b190c9a349");

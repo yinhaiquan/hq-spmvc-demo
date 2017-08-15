@@ -38,6 +38,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 value:'name',
                 align:'text-c', //text-c 居中  text-r 居右  默认 居左
                 width:'20%',
+                order:false,
                 iShow:true,
                 formartVal:function(value){
                     return value;
@@ -47,6 +48,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 value:'sex',
                 align:'text-c',
                 width:'50%',
+                order:true,
                 iShow:true,
                 formartVal:function(value){
                     return value;
@@ -77,7 +79,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 data_ = pager.rows;
                 pages = pager.pages;
             }
-            layPageFunction.dataTable(setting.data,data_,null,setting.tableId);
+            layPageFunction.dataTable(setting,data_,null);
             console.info(StringUtils.isEmpty_(setting.first)?false:setting.first);
             console.info(StringUtils.isEmpty_(setting.last)?false:setting.last);
             console.info(StringUtils.isEmpty_(setting.prev)?false:setting.prev);
@@ -104,7 +106,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                             if(!StringUtils.isEmpty_(pager)){
                                 data_ = pager.rows;
                             }
-                            layPageFunction.dataTable(setting.data,data_,obj,setting.tableId);
+                            layPageFunction.dataTable(setting,data_,obj);
                         }
                     }
                 }
@@ -169,11 +171,15 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
         },
         /**
          * 表单遍历函数
-         * @param data  表单列表
+         * @param setting 配置信息
          * @param data_ 源数据
          * @param obj   laypager对象
          */
-        dataTable : function(data,data_,obj,id){
+        dataTable : function(setting,data_,obj){
+            /*表单列表*/
+            var data = setting.data;
+            /*table id*/
+            var id = setting.tableId;
             var str = '';
             str +='<table class="table table-border table-bordered table-bg radius"><thead><tr>';
             if(data&&data.length>0){
@@ -192,6 +198,9 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                            }else{
                                str += '<th>'+obj_.name+'</th>';
                            }
+                       }
+                       if(obj_.order){
+
                        }
                    }
                }

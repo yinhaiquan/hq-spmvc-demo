@@ -52,4 +52,11 @@ public interface QuartzService {
      */
     @Log(desc = "分页获取任务列表参数:{0}")
     public OutParam getSchedulerList(QuartzInParam quartzInParam) throws IllegalOptionException;
+
+    /**
+     * 监控容器中任务量
+     * @return
+     * @throws IllegalOptionException
+     */
+    public OutParam monitorContainerScheduler() throws IllegalOptionException;
 }

@@ -57,5 +57,11 @@ public interface QuartzDao {
      * @param pageSize 页面大小
      * @return
      */
-    public Pager getSchedulerList(int page, int pageSize) throws ClassNotFoundException;
+    public Pager getSchedulerList(int page, int pageSize);
+
+    /**
+     * 获取容器所有任务
+     * @return
+     */
+    public List<SchedulerInfo> getAll();
 }

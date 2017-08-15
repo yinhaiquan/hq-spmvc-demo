@@ -17,7 +17,8 @@ public enum StatusEnum {
     INITIALING("initialing","初始化中"),
     RUNNING("running","运行中"),
     PAUSING("pausing","暂停中"),
-    SHUTDOWNING("shutdowning","关闭中");
+    SHUTDOWNING("shutdowning","关闭中"),
+    FAILURING("failuring","故障中");
 
     private String code;
     private String desc;

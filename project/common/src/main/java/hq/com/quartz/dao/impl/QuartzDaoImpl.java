@@ -179,7 +179,7 @@ public class QuartzDaoImpl implements QuartzDao {
      * @return
      */
     @Override
-    public Pager getSchedulerList(int page, int pageSize) throws ClassNotFoundException {
+    public Pager getSchedulerList(int page, int pageSize){
         Pager pager = new Pager();
         List<SchedulerInfo> infoList = new ArrayList<>();
         List<String> list = PropertyConfigHelper.newInstance().getKeys(PropertyConfigHelper.KEY_PREFIX);
@@ -195,18 +195,22 @@ public class QuartzDaoImpl implements QuartzDao {
             int pageTotal = index+pageSize;
             if(index<list.size()){
                 for (int i = index; i <(pageTotal<list.size()?pageTotal:list.size()) ; i++) {
-                    SchedulerInfo schedulerInfo = PropertyConfigHelper.newInstance().getSchedulerInfo(list.get(i));
-                    Scheduler scheduler = QuartzManager.map.get(list.get(i));
-                    if (StringUtils.isNotEmpty(scheduler)){
-                        try {
-                            schedulerInfo.setStarted(scheduler.isStarted());
-                            schedulerInfo.setShutdown(scheduler.isShutdown());
-                            schedulerInfo.setInStandbyMode(scheduler.isInStandbyMode());
-                        } catch (SchedulerException e) {
-                            log.info("实时获取任务状态异常：{}",e.getMessage());
+                    try {
+                        SchedulerInfo schedulerInfo = PropertyConfigHelper.newInstance().getSchedulerInfo(list.get(i));
+                        Scheduler scheduler = QuartzManager.map.get(list.get(i));
+                        if (StringUtils.isNotEmpty(scheduler)){
+                            try {
+                                schedulerInfo.setStarted(scheduler.isStarted());
+                                schedulerInfo.setShutdown(scheduler.isShutdown());
+                                schedulerInfo.setInStandbyMode(scheduler.isInStandbyMode());
+                            } catch (SchedulerException e) {
+                                log.info("实时获取任务状态异常：{}",e.getMessage());
+                            }
                         }
+                        infoList.add(schedulerInfo);
+                    } catch (ClassNotFoundException e) {
+                        log.info("任务[{}]class类异常:{}",list.get(i),e.getMessage());
                     }
-                    infoList.add(schedulerInfo);
                 }
             }
         }
@@ -215,6 +219,28 @@ public class QuartzDaoImpl implements QuartzDao {
         pager.setTotal(list.size());
         pager.setPages(pages);
         return pager;
+    }
+
+    /**
+     * 获取容器所有任务
+     *
+     * @return
+     */
+    @Override
+    public List<SchedulerInfo> getAll(){
+        List<SchedulerInfo> infoList = new ArrayList<>();
+        List<String> list = PropertyConfigHelper.newInstance().getKeys(PropertyConfigHelper.KEY_PREFIX);
+        if (StringUtils.isNotEmpty(list)){
+            for (String key : list) {
+                try {
+                    SchedulerInfo schedulerInfo = PropertyConfigHelper.newInstance().getSchedulerInfo(key);
+                    infoList.add(schedulerInfo);
+                } catch (ClassNotFoundException e) {
+                    log.info("任务[{}]class类异常:{}",key,e.getMessage());
+                }
+            }
+        }
+        return infoList;
     }
 
     /**
@@ -239,6 +265,9 @@ public class QuartzDaoImpl implements QuartzDao {
                             schedulerInfo.getJobClass(),
                             schedulerInfo.getTime());
                 } catch (ClassNotFoundException e) {
+                    PropertyConfigHelper.newInstance().updateJobProp(
+                            key+PropertyConfigHelper.JOB_RUNNING_STATE_SUFFIX,
+                            StatusEnum.FAILURING.getCode());
                     log.info("任务容器加载[{}]任务失败,请检查schedulerDB.properties文件",key);
                 }
             }

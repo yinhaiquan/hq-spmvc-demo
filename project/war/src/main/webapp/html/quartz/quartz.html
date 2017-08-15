@@ -20,9 +20,32 @@
             border-color:#f3e0c4;
             background: #f9990d;
         }
+        .initialing{
+            color: #9dad51;
+        }
+        .running{
+            color:#18ad18;
+        }
+        .pausing{
+            color:#949393;
+        }
+        .shutdowning{
+            color:#ee5858;
+        }
+        .failuring{
+            color:#f9990d;
+        }
     </style>
+    <div class="Huialert Huialert-success"><i class="icon-remove"></i>
+        <span>容器总量(单位/个)</span>:<span>1</span>
+        <span class="running">运行中</span>：<span class="running">1</span>
+        <span class="pausing">暂停中</span>: <span class="pausing">0</span>
+        <span class="initialing">初始化中</span>: <span class="initialing">0</span>
+        <span class="shutdowning">关闭中</span>: <span class="shutdowning">0</span>
+        <span class="failuring">故障中</span>: <span class="failuring">0</span>
+    </div>
     <div class="panel panel-default">
-        <div class="panel-header">面板标题</div>
+        <div class="panel-header"><input class="btn btn-success radius" type="button" value="添加"></div>
         <div class="panel-body">
             <div class="bk-gray radius">
                 <div id="quartz_list"></div>
@@ -68,12 +91,14 @@
                         value:'schedulerId',
                         align:'text-c',
                         width:'10%',
+                        order:false,
                         iShow:true
                     },{
                         name:'任务名称',
                         value:'jobName',
                         align:'text-c',
                         width:'5%',
+                        order:true,
                         iShow:true,
                         formartVal:function(value,row){
                             return value;
@@ -115,7 +140,7 @@
                             return value;
                         }
                     },{
-                        name:'任务状态',
+                        name:'<span title="1. initialing:初始化中\n2. running:运行中 \n3. pausing:暂停中 \n4. shutdowning:关闭中">任务状态</span>',
                         value:'statusEnum',
                         align:'text-c',
                         width:'10%',
