@@ -71,7 +71,46 @@
                     "pageSize": "10"
                 }
             }
+            var data =[
+                {
+                    schedulerId :"123456",
+                    jobName:"中国银行",
+                    jobClass:"hq.com.Dao.TEST",
+                    jobGroupName:"中国",
+                    triggerGroupName:"呵呵",
+                    time:"* 0/1 * * * ?",
+                    statusEnum:"running",
+                    started:true,
+                    shutdown:false,
+                    inStandbyMode:false
+                },
+                {
+                    schedulerId :"123457",
+                    jobName:"中国银行2",
+                    jobClass:"hq.com.Dao.TEST2",
+                    jobGroupName:"中国",
+                    triggerGroupName:"呵呵",
+                    time:"* 0/1 * * * ?",
+                    statusEnum:"running",
+                    started:true,
+                    shutdown:true,
+                    inStandbyMode:true
+                },
+                {
+                    schedulerId :"123458",
+                    jobName:"中国银行3",
+                    jobClass:"hq.com.Dao.TEST3",
+                    jobGroupName:"中国",
+                    triggerGroupName:"呵呵",
+                    time:"* 0/1 * * * ?",
+                    statusEnum:"running",
+                    started:false,
+                    shutdown:true,
+                    inStandbyMode:true
+                }
+            ]
             LayPageUtils.dataGride({
+//                data_:data,
                 url : LayPageUtils.AjaxUtils.URLS.quartzURLS.getSchedulerList,
                 params :LayPageUtils.AjaxUtils.ajaxParam,
                 type:'json',

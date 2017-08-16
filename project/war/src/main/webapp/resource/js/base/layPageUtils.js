@@ -11,7 +11,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
      * @type {{data_: {}, url: string, method: string, tableId: string, cont: Element, pages: number, skip: boolean, groups: number, skin: string, first_: number, last_: string, prev_: string, next_: string, fn: fn, data: [*]}}
      */
     var default_setting = {
-        data_ : {},                                  //[可选]数据源  用户测试
+        data_ : [],                                  //[可选]数据源  用户测试
         url : '',                                    //[可选]请求地址
         params :{},                                  //[可选]请求参数
         type:'json',                                 //[可选]请求参数数据类型
@@ -64,6 +64,8 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             }
         ]                                            //[可选]数据源对应列名
     }
+    //全局表ID后缀
+    var tableIdSuffix = "_table_id";
     var layPageFunction = {
         AjaxUtils : AjaxUtils,
         dataGride : function(setting){
@@ -72,13 +74,17 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 return;
             }
             var data_ = setting.data_;
+            //table 首行加载
+            layPageFunction.titleTable(setting,null);
+            //请求数据
             var pager = layPageFunction.dataOption(setting,1);
-            var pages = 0;
+            var pages = 3;
             //首页加载
             if(!StringUtils.isEmpty_(pager)){
                 data_ = pager.rows;
                 pages = pager.pages;
             }
+            //数据加载
             layPageFunction.dataTable(setting,data_,null);
             console.info(StringUtils.isEmpty_(setting.first)?false:setting.first);
             console.info(StringUtils.isEmpty_(setting.last)?false:setting.last);
@@ -112,7 +118,11 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 }
             })
         },
-        dataOption:function(setting,curr){
+        dataOption : function(setting,curr){
+            /*table id*/
+            var id = setting.tableId;
+            //添加加载loading
+            $("#"+id+tableIdSuffix).find("tbody").html('loading...');
             var pager =null;
             if(setting.url){
                 /**
@@ -134,7 +144,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                  * @type {{}}
                  */
                 setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].page = curr || 1;
-                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = 3;
+                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = 1;
                 AjaxUtils.ajaxSimple(
                     setting.method,
                     setting.url,
@@ -170,6 +180,34 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             return pager;
         },
         /**
+         * table首行加载
+         * @param setting
+         * @param obj
+         */
+        titleTable : function(setting,obj){
+            console.info("table首行加载");
+            /*表单列表*/
+            var data = setting.data;
+            /*table id*/
+            var id = setting.tableId;
+            $(document.getElementById(id)).append('<table id="'+
+                id+tableIdSuffix+'" class="table table-border table-bordered table-bg radius">' +
+                '<thead><tr></tr></thead><tbody></tbody></table>');
+            if(data&&data.length>0){
+                var thead_tr = $("#"+id+tableIdSuffix).find("thead tr");
+                for(var i =0;i<data.length;i++){
+                    var obj_ = data[i];
+                    if(obj_.iShow){
+                        var align = obj_.align||'';
+                        var width = obj_.width||'';
+                        thead_tr.append('<th class="'+align+'" width="'+width+'">'+obj_.name+'</th>');
+                    }
+                }
+            }else{
+                return;
+            }
+        },
+        /**
          * 表单遍历函数
          * @param setting 配置信息
          * @param data_ 源数据
@@ -180,53 +218,21 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             var data = setting.data;
             /*table id*/
             var id = setting.tableId;
-            var str = '';
-            str +='<table class="table table-border table-bordered table-bg radius"><thead><tr>';
-            if(data&&data.length>0){
-               for(var i =0;i<data.length;i++){
-                   var obj_ = data[i];
-                   if(obj_.iShow){
-                       if(obj_.align){
-                           if(obj_.width){
-                               str += '<th class="'+obj_.align+'" width="'+obj_.width+'">'+obj_.name+'</th>';
-                           }else{
-                               str += '<th class="'+obj_.align+'">'+obj_.name+'</th>';
-                           }
-                       }else{
-                           if(obj_.width){
-                               str += '<th width="'+obj_.width+'">'+obj_.name+'</th>';
-                           }else{
-                               str += '<th>'+obj_.name+'</th>';
-                           }
-                       }
-                       if(obj_.order){
-
-                       }
-                   }
-               }
-            }else{
-                return;
-            }
-            str +='</tr></thead><tbody>';
+            $("#"+id+tableIdSuffix).find("tbody").html('');
             if(data_&&data_.length>0){
                 for(var i =0;i<data_.length;i++){
                    var val_obj = data_[i];
-                   str+='<tr class="active">';
+                   var str ='<tr class="active">';
                    for(var j =0;j<data.length;j++){
                         var obj_ = data[j];
                         if(obj_.iShow){
-                            if(obj_.align){
-                                str+='<td class="'+obj_.align+'">';
-                            }else{
-                                str+='<td>';
-                            }
+                            var align = obj_.align||'';
+                            str+='<td class="'+align+'">';
                             if(val_obj[obj_.value]!= undefined){
-                                if(obj_.formartVal){
-                                    str += obj_.formartVal(val_obj[obj_.value],val_obj);
-                                }else{
-                                    str += val_obj[obj_.value];
-                                }
+                                //已知参数自定义函数处理
+                                str += obj_.formartVal?obj_.formartVal(val_obj[obj_.value],val_obj):val_obj[obj_.value];
                             }else if(val_obj[obj_.value] === undefined){
+                                //未知参数自定义函数处理，例如：操作等行
                                 if(obj_.formartVal){
                                     str += obj_.formartVal(val_obj);
                                 }
@@ -235,10 +241,9 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                         }
                    }
                    str+='</tr>';
+                   $("#"+id+tableIdSuffix).find("tbody").append(str);
                 }
             }
-            str+='</tbody></table>';
-            document.getElementById(id).innerHTML = str;
         }
     }
     return layPageFunction;
