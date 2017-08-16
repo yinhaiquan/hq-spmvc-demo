@@ -19,3 +19,19 @@
 /* 一般用于信息流加载 */
 .laypageskin_flow{text-align:center}
 .laypageskin_flow .page_nomore{color:#999}
+
+/*排序箭头*/
+.sorting {
+    background-image: url(../../../../../resource/images/sort_both.png);
+}
+.sorting_asc{
+    background-image: url(../../../../../resource/images/sort_asc.png);
+}
+.sorting_desc{
+    background-image: url(../../../../../resource/images/sort_desc.png);
+}
+.sorting_asc, .sorting_desc, .sorting {
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: right center;
+}

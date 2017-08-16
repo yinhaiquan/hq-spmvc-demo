@@ -37,11 +37,11 @@
         }
     </style>
     <div class="Huialert Huialert-success"><i class="icon-remove"></i>
-        <span>容器总量(单位/个)</span>:<span>1</span>
-        <span class="running">运行中</span>：<span class="running">1</span>
-        <span class="pausing">暂停中</span>: <span class="pausing">0</span>
-        <span class="initialing">初始化中</span>: <span class="initialing">0</span>
-        <span class="shutdowning">关闭中</span>: <span class="shutdowning">0</span>
+        <span>容器总量(单位/个)</span>:<span>1</span> &#124;
+        <span class="running">运行中</span>：<span class="running">1</span> &#124;
+        <span class="pausing">暂停中</span>: <span class="pausing">0</span> &#124;
+        <span class="initialing">初始化中</span>: <span class="initialing">0</span> &#124;
+        <span class="shutdowning">关闭中</span>: <span class="shutdowning">0</span> &#124;
         <span class="failuring">故障中</span>: <span class="failuring">0</span>
     </div>
     <div class="panel panel-default">
@@ -110,7 +110,7 @@
                 }
             ]
             LayPageUtils.dataGride({
-//                data_:data,
+                data_:data,
                 url : LayPageUtils.AjaxUtils.URLS.quartzURLS.getSchedulerList,
                 params :LayPageUtils.AjaxUtils.ajaxParam,
                 type:'json',
@@ -130,13 +130,13 @@
                         value:'schedulerId',
                         align:'text-c',
                         width:'10%',
-                        order:false,
+                        order:true,
                         iShow:true
                     },{
                         name:'任务名称',
                         value:'jobName',
                         align:'text-c',
-                        width:'5%',
+                        width:'10%',
                         order:true,
                         iShow:true,
                         formartVal:function(value,row){
@@ -173,7 +173,7 @@
                         name:'触发时间',
                         value:'time',
                         align:'text-c',
-                        width:'5%',
+                        width:'10%',
                         iShow:true,
                         formartVal:function(value,row){
                             return value;
@@ -191,14 +191,14 @@
                         name:'started|shutdown|inStandbyMode',
                         value:'status',
                         align:'text-c',
-                        width:'10%',
+                        width:'20%',
                         iShow:true,
                         formartVal:function(row){
                             if(row.statusEnum=='initialing'){
-                                return '<span class="tips"/>|<span class="tips"/>|<span class="tips"/>';
+                                return '<span class="tips"/>&#124;<span class="tips"/>&#124;<span class="tips"/>';
                             }else{
-                                var tips = row.started==true?'<span class="tips success"/>|':'<span class="tips error"/>|';
-                                tips+=row.shutdown==true?'<span class="tips success"/>|':'<span class="tips error"/>|';
+                                var tips = row.started==true?'<span class="tips success"/>&#124;':'<span class="tips error"/>&#124;';
+                                tips+=row.shutdown==true?'<span class="tips success"/>&#124;':'<span class="tips error"/>&#124;';
                                 tips+=row.inStandbyMode==true?'<span class="tips success"/>':'<span class="tips error"/>';
                             }
                             return tips;

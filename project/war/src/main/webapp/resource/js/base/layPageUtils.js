@@ -78,7 +78,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             layPageFunction.titleTable(setting,null);
             //请求数据
             var pager = layPageFunction.dataOption(setting,1);
-            var pages = 3;
+            var pages = 0;
             //首页加载
             if(!StringUtils.isEmpty_(pager)){
                 data_ = pager.rows;
@@ -86,9 +86,6 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             }
             //数据加载
             layPageFunction.dataTable(setting,data_,null);
-            console.info(StringUtils.isEmpty_(setting.first)?false:setting.first);
-            console.info(StringUtils.isEmpty_(setting.last)?false:setting.last);
-            console.info(StringUtils.isEmpty_(setting.prev)?false:setting.prev);
             /**
              * 分页信息展示
              */
@@ -111,6 +108,8 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                             var pager = layPageFunction.dataOption(setting,obj.curr);
                             if(!StringUtils.isEmpty_(pager)){
                                 data_ = pager.rows;
+                            }else{
+                                data_ = null;
                             }
                             layPageFunction.dataTable(setting,data_,obj);
                         }
@@ -135,6 +134,8 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                              *          xxxx:{
                              *             page:1,      //页码
                              *             pageSize:10, //页面大小
+                             *             order:'',    //排序字段
+                             *             orderType:'asc' //排序类型
                              *             .
                              *             .
                              *             .
@@ -144,7 +145,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                  * @type {{}}
                  */
                 setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].page = curr || 1;
-                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = 1;
+                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = 10;
                 AjaxUtils.ajaxSimple(
                     setting.method,
                     setting.url,
@@ -191,7 +192,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             /*table id*/
             var id = setting.tableId;
             $(document.getElementById(id)).append('<table id="'+
-                id+tableIdSuffix+'" class="table table-border table-bordered table-bg radius">' +
+                id+tableIdSuffix+'" class="table table-border table-bordered table-hover table-bg radius">' +
                 '<thead><tr></tr></thead><tbody></tbody></table>');
             if(data&&data.length>0){
                 var thead_tr = $("#"+id+tableIdSuffix).find("thead tr");
@@ -200,12 +201,48 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                     if(obj_.iShow){
                         var align = obj_.align||'';
                         var width = obj_.width||'';
-                        thead_tr.append('<th class="'+align+'" width="'+width+'">'+obj_.name+'</th>');
+                        var order = obj_.order?align+' sorting':'';
+                        thead_tr.append('<th class="'+order+'" width="'+width+'" id="'+obj_.value+'">'+obj_.name+'</th>');
                     }
                 }
             }else{
                 return;
             }
+            $(document.getElementById(id)).find('th').bind('click',function(){
+                var current_ = this;
+                var currentcls = $(current_).attr('class');
+                if(currentcls.indexOf('sorting')<0){
+                    return;
+                }
+                $(this).toggleClass(function(){
+                    var cls = $(this).attr('class');
+                    $(this).removeClass('sorting_asc sorting sorting_desc');
+                    return cls.indexOf('sorting_desc')>=0?'sorting_asc':'sorting_desc';
+                })
+                $(document.getElementById(id)).find('th').each(function(){
+                    if(this!=current_){
+                        var childcls = $(this).attr('class');
+                        if (childcls.indexOf('sorting_asc')>=0||childcls.indexOf('sorting_desc')>=0){
+                            $(this).removeClass('sorting_asc sorting sorting_desc');
+                            $(this).addClass('sorting');
+                        }
+                    }
+                })
+                var clickcls = $(this).attr('class');
+                var order_name = $(this).attr('id');
+                var order_type = clickcls.indexOf('sorting_asc')>=0?'asc':'desc';
+                //请求数据
+                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].order = order_name;
+                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].orderType = order_type || 'desc';
+                var pager = layPageFunction.dataOption(setting,1);
+                var data_;
+                //首页加载
+                if(!StringUtils.isEmpty_(pager)){
+                    data_ = pager.rows;
+                }
+                //数据加载
+                layPageFunction.dataTable(setting,data_,null);
+            })
         },
         /**
          * 表单遍历函数
@@ -222,7 +259,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             if(data_&&data_.length>0){
                 for(var i =0;i<data_.length;i++){
                    var val_obj = data_[i];
-                   var str ='<tr class="active">';
+                   var str ='<tr class="">';
                    for(var j =0;j<data.length;j++){
                         var obj_ = data[j];
                         if(obj_.iShow){

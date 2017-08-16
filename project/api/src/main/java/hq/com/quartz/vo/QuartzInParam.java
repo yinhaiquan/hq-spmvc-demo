@@ -37,6 +37,10 @@ public class QuartzInParam extends InParam implements Serializable {
     private int page;
     @Parameter(value = "pageSize", type = ParamType.INT, desc = "页面大小")
     private int pageSize;
+    @Parameter(value = "order", type = ParamType.STRING, desc = "排序字段")
+    private String order;
+    @Parameter(value = "orderType", type = ParamType.STRING, desc = "排序类型")
+    private String orderType;
 
     public QuartzInParam() {
     }
@@ -113,6 +117,22 @@ public class QuartzInParam extends InParam implements Serializable {
         this.pageSize = pageSize;
     }
 
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
+
     @Override
     public String toString() {
         return "QuartzInParam{" +
@@ -125,6 +145,8 @@ public class QuartzInParam extends InParam implements Serializable {
                 ", switchType=" + switchType +
                 ", page=" + page +
                 ", pageSize=" + pageSize +
+                ", order='" + order + '\'' +
+                ", orderType='" + orderType + '\'' +
                 '}';
     }
 }
