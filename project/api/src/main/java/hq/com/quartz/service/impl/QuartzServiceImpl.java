@@ -185,7 +185,7 @@ public class QuartzServiceImpl implements QuartzService{
             map.put("failurings",failurings);
             op.setCode(SystemCodeEnum.SYSTEM_OK.getCode());
             op.setDesc(SystemCodeEnum.SYSTEM_OK.getDesc());
-            op.setContent(null);
+            op.setContent(map);
         } catch (Exception e) {
             log.info("监控容器中任务量【monitorContainerScheduler】抛出异常:{}", e.getMessage());
             throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);

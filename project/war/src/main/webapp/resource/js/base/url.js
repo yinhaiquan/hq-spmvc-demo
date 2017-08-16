@@ -15,6 +15,7 @@ define({
         switchJob:'/handler/quartzSvc/switchJob.do',
         deleteJob:'/handler/quartzSvc/deleteJob.do',
         updateJobTime:'/handler/quartzSvc/updateJobTime.do',
-        addJob:'/handler/quartzSvc/addJob.do'
+        addJob:'/handler/quartzSvc/addJob.do',
+        monitorContainerScheduler:'/handler/quartzSvc/monitorContainerScheduler.do'
     }
 })

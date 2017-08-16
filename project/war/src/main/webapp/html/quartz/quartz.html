@@ -57,6 +57,41 @@
         </div>
     </div>
     <script>
+        require(['ajax'],function(AjaxUtils){
+            AjaxUtils.ajaxSimple(
+                'post',
+                AjaxUtils.URLS.quartzURLS.monitorContainerScheduler,
+                'json',
+                AjaxUtils.ajaxParam,
+                AjaxUtils.Constant.Ajax.TIME_OUT,
+                function(data){
+                    /**
+                     * 分页返回结果格式，其中content内为分页对象Pager
+                     * {
+                                     *   code : 0,
+                                     *   desc : 'response ok',
+                                     *   content : {
+                                     *       pages : 5,       --总页数
+                                     *       rows : [{},{}],  --数据列表
+                                     *       total : 100,     --总数
+                                     *       pageSize : 10    --页面大小
+                                     *   }
+                                     * }
+                     */
+                    if(data&&data.code==0){
+                        if(!AjaxUtils.StringUtils.isEmpty_(data.content)){
+                            console.info(data.content.total);
+                            console.info(data.content.initialings);
+                            console.info(data.content.runnings);
+                            console.info(data.content.pausings);
+                            console.info(data.content.shutdownings);
+                            console.info(data.content.failurings);
+                        }
+                    }
+                }
+            )
+        })
+
         require(['layPageUtils'],function(LayPageUtils){
             LayPageUtils.AjaxUtils.ajaxParam.root.msg = {
                 quartzInfo: {
