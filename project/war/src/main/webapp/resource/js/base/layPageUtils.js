@@ -121,7 +121,11 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             /*table id*/
             var id = setting.tableId;
             //添加加载loading
-            $("#"+id+tableIdSuffix).find("tbody").html('loading...');
+            // $("#"+id+tableIdSuffix).find("tbody").html('loading...');
+            var index = layer.msg('加载中', {
+                icon: 16
+                ,shade: 0.01
+            });
             var pager =null;
             if(setting.url){
                 /**
@@ -153,6 +157,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                     setting.params,
                     AjaxUtils.Constant.Ajax.TIME_OUT,
                     function(data){
+                        layer.close(index);
                         /**
                          * 分页返回结果格式，其中content内为分页对象Pager
                          * {

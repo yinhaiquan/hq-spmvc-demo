@@ -19,8 +19,8 @@ requirejs.config({
 
 */
 requirejs.config({
-    // baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
-    baseUrl: 'http://localhost:8080/',
+    baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
+    // baseUrl: 'http://localhost:8080/',
     paths: {
         /*js配置路径*/
         tmpl:'resource/lib/requirejs/jquery.tmpl.min',
@@ -72,7 +72,8 @@ requirejs.config({
         webuploaderstyle:'resource/lib/webuploader/0.1.5/webuploader',
         lightbox2style:'resource/lib/lightbox2/2.8.1/css/lightbox',
         prettifystyle:'resource/lib/prettify/prettify',
-        bootstrapswitchstyle:'resource/lib/switch/bootstrapSwitch'
+        bootstrapswitchstyle:'resource/lib/switch/bootstrapSwitch',
+        layerstyle:'resource/lib/layer/2.4/skin/layer'
     },
     shim:{
         'tmpl':{
@@ -96,7 +97,7 @@ requirejs.config({
             exports:'hui_admin_page'
         },
         'layer':{
-            deps:['jquery'],
+            deps:['jquery','css!layerstyle'],
             exports:'layer'
         },
         'ajax':{

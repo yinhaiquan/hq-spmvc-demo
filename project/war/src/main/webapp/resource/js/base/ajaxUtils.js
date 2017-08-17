@@ -99,12 +99,14 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
                     error:function (XMLHttpRequest, textStatus, errorThrown) {
                        console.info("ajax 异常日志：");
                        if(textStatus == 'timeout'){
-                           $.Huimodalalert('网络请求超时！',2000);
+                           layer.alert("网络请求超时！",{icon: 1});
+                           // $.Huimodalalert('网络请求超时！',2000);
                            console.info('网络请求超时!');
                            return;
                        }
                        if (textStatus == 'error' && XMLHttpRequest.status == 404){
-                           $.Huimodalalert('请求地址不存在,或者服务未启动!',2000);
+                           layer.alert('请求地址不存在,或者服务未启动!',{icon: 1});
+                           // $.Huimodalalert('请求地址不存在,或者服务未启动!',2000);
                            console.info('请求地址不存在,或者服务未启动!');
                            return;
                        }
