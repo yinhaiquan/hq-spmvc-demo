@@ -214,7 +214,7 @@
                             return value;
                         }
                     },{
-                        name:'<span title="1. initialing:初始化中\n2. running:运行中 \n3. pausing:暂停中 \n4. shutdowning:关闭中">任务状态</span>',
+                        name:'<span onclick="tips(this)">任务状态</span>',
                         value:'statusEnum',
                         align:'text-c',
                         width:'10%',
@@ -250,5 +250,12 @@
                 ]
             });
         })
+
+    function tips(obj){
+        layer.tips('1. initialing:初始化中\n2. running:运行中 \n3. pausing:暂停中 \n4. shutdowning:关闭中', obj, {
+            tips: [1, '#3595CC'],
+            time: 4000
+        });
+    }
     </script>
 </div>
