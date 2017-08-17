@@ -154,20 +154,28 @@ public final class PropertyConfigHelper {
         configuration.clearProperty(schedulerId+CRON_EXPRESSION_TIME_SUFFIX);
     }
 
+    public PropertiesConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(PropertiesConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     public static void main(String[] args) throws ConfigurationException, ClassNotFoundException {
 //        PropertyConfigHelper.newInstance().addJobProp("test",
 //                   "hq.com.quartz.QuartzDemo",
 //                   null,
 //                   null,
 //                   "0/1 * * * * ?");
-        PropertyConfigHelper.newInstance().updateJobProp("d43ff64a173d4c4f9c125a501c4f5b73.state","initialing");
-        List<String> list = PropertyConfigHelper.newInstance().getKeys(KEY_PREFIX);
+//        PropertyConfigHelper.newInstance().updateJobProp("d43ff64a173d4c4f9c125a501c4f5b73.state","initialing");
+//        List<String> list = PropertyConfigHelper.newInstance().getKeys(KEY_PREFIX);
 //        PropertyConfigHelper.newInstance().updateJobProp("2a2ca7e81cc84a4aa9ab48f6b670d4f0.time","00000");
 //        PropertyConfigHelper.newInstance().removeJobProp("a1be24095ce04bfea86f60b190c9a349");
-        for (String object:
-             list) {
-            System.out.println(object);
-        }
+//        for (String object:
+//             list) {
+//            System.out.println(object);
+//        }
 //        System.out.println(PropertyConfigHelper.newInstance().getSchedulerInfo("56cfc37bf21b46f08cd6b9906945d8a8"));
     }
 }
