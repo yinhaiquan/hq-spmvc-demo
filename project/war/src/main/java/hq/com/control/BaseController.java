@@ -1,6 +1,8 @@
 package hq.com.control;
 
+import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.utils.StringUtils;
+import hq.com.exception.IllegalOptionException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -20,9 +22,9 @@ public abstract class BaseController {
     public final static String MSG = "msg";
     public final static String ROUTE = "route";
 
-    public abstract Object decodeRequest(HttpServletRequest request);
+    public abstract Object decodeRequest(HttpServletRequest request) throws IllegalArgumentsException;
 
-    public abstract Object decodeRequest(Map<String, Map<String, Object>> map);
+    public abstract Object decodeRequest(Map<String, Map<String, Object>> map) throws IllegalOptionException, IllegalArgumentsException;
 
     public abstract String encodeResponse(Object obj);
 

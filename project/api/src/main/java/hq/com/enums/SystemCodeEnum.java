@@ -15,7 +15,8 @@ public enum SystemCodeEnum {
     SYSTEM_USER_NMAE_PASSWORD_ERROR(1,"用户名/密码错误"),
     SYSTEM_USER_UNKNOWN_ACCOUNT(2,"账号不存在"),
     SYSTEM_USER_DISABLED_ACCOUNT(3,"账号被禁用"),
-    SYSTEM_USER_EXCESSIVE_ATTEMPTS(4,"超过登录失败次数限制");
+    SYSTEM_USER_EXCESSIVE_ATTEMPTS(4,"超过登录失败次数限制"),
+    SYSTEM_PARAMS_NOT_EXIST(5,"缺失参数");
 
     private int code;
     private String desc;

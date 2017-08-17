@@ -5,6 +5,7 @@ import hq.com.aop.ctx.SpringApplicationContext;
 import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.handler.ProxyHandler;
 import hq.com.aop.utils.StringUtils;
+import hq.com.enums.SystemCodeEnum;
 import hq.com.exception.IllegalOptionException;
 import hq.com.vo.RequestRoot;
 import org.slf4j.Logger;
@@ -116,8 +117,14 @@ public class FocusController extends BaseController {
     }
 
     private Object doFuck(String className, String methodName, RequestRoot rr) throws IllegalArgumentsException, IllegalOptionException {
-        Map<String, String[]> params = rr.getMsg();
-        Map<String, String[]> route = rr.getRoute();
+        Map<String, String[]> params = null;
+        Map<String, String[]> route = null;
+        if (StringUtils.isNotEmpty(rr)
+                &&StringUtils.isNotEmpty(rr.getMsg())
+                &&StringUtils.isNotEmpty(rr.getRoute())){
+            params = rr.getMsg();
+            route = rr.getRoute();
+        }
         //针对route路由信息处理,国际化信息也在此处理
         SpringApplicationContext.setLOCALE("zh_CN");
         //
@@ -126,64 +133,76 @@ public class FocusController extends BaseController {
         return proxyHandler.handler(className, methodName, params);
     }
 
-    public Object decodeRequest(HttpServletRequest request) {
-        RequestRoot rr = new RequestRoot();
-        Map<String, String[]> params = request.getParameterMap();
-        Map<String, String[]> msg = new LinkedHashMap<String, String[]>();
-        Map<String, String[]> route = new LinkedHashMap<String, String[]>();
-        if (StringUtils.isNotEmpty(params)) {
-            for (String key : params.keySet()) {
-                if (isMsgOrRoute(key, REGMSG)) {
-                    msg.put(getRegKey(key, MSG), params.get(key));
-                    continue;
-                }
-                if (isMsgOrRoute(key, REGROUTE)) {
-                    route.put(getRegKey(key, ROUTE), params.get(key));
-                    continue;
-                }
-            }
-        }
-        rr.setMsg(msg);
-        rr.setRoute(route);
-        return rr;
-    }
-
-    @Override
-    public Object decodeRequest(Map<String, Map<String, Object>> map) {
-        RequestRoot rr = new RequestRoot();
-        Map<String, String[]> msg = new LinkedHashMap<String, String[]>();
-        Map<String, String[]> route = new LinkedHashMap<String, String[]>();
-        Map<String, Object> msg_2 = (Map<String, Object>) map.get("root").get("msg");
-        Map<String, Object> route_2 = (Map<String, Object>) map.get("root").get("route");
-        if (StringUtils.isNotEmpty(msg_2)) {
-            Set<String> set = msg_2.keySet();
-            if (StringUtils.isNotEmpty(set)) {
-                String key = set.iterator().next();
-                Map<String, Object> kv = (Map<String, Object>) msg_2.get(key);
-                if (StringUtils.isNotEmpty(kv)) {
-                    Set<Map.Entry<String, Object>> entrySet = kv.entrySet();
-                    for (Map.Entry<String, Object> entry : entrySet) {
-                        StringBuffer sb = new StringBuffer(key);
-                        sb.append(StringUtils.PREFIX);
-                        String entry_key = sb.append(entry.getKey()).append(StringUtils.SUFFIX).toString();
-                        Object entry_value = StringUtils.isNotEmpty(entry.getValue()) ? entry.getValue() : "";
-                        msg.put(entry_key, new String[]{String.valueOf(entry_value)});
+    public Object decodeRequest(HttpServletRequest request) throws IllegalArgumentsException {
+        try {
+            RequestRoot rr = new RequestRoot();
+            Map<String, String[]> params = request.getParameterMap();
+            Map<String, String[]> msg = new LinkedHashMap<String, String[]>();
+            Map<String, String[]> route = new LinkedHashMap<String, String[]>();
+            if (StringUtils.isNotEmpty(params)) {
+                for (String key : params.keySet()) {
+                    if (isMsgOrRoute(key, REGMSG)) {
+                        msg.put(getRegKey(key, MSG), params.get(key));
+                        continue;
+                    }
+                    if (isMsgOrRoute(key, REGROUTE)) {
+                        route.put(getRegKey(key, ROUTE), params.get(key));
+                        continue;
                     }
                 }
             }
+            rr.setMsg(msg);
+            rr.setRoute(route);
+            return rr;
+        } catch (Exception e) {
+            log.info("application/x-www-form-urlencoded请求方式抛出异常:{}",e.getMessage());
+            throw new IllegalArgumentsException(e);
         }
+    }
 
-        if (StringUtils.isNotEmpty(route_2)) {
-            Set<Map.Entry<String, Object>> entrySet = route_2.entrySet();
-            for (Map.Entry<String, Object> entry : entrySet) {
-                String entry_key = entry.getKey();
-                Object entry_value = StringUtils.isNotEmpty(entry.getValue()) ? entry.getValue() : "";
-                route.put(entry_key, new String[]{String.valueOf(entry_value)});
+    @Override
+    public Object decodeRequest(Map<String, Map<String, Object>> map) throws IllegalOptionException, IllegalArgumentsException {
+        try {
+            RequestRoot rr = new RequestRoot();
+            Map<String, String[]> msg = new LinkedHashMap<String, String[]>();
+            Map<String, String[]> route = new LinkedHashMap<String, String[]>();
+            Map<String, Object> msg_2 = (Map<String, Object>) map.get("root").get("msg");
+            Map<String, Object> route_2 = (Map<String, Object>) map.get("root").get("route");
+            if (StringUtils.isNotEmpty(msg_2)) {
+                Set<String> set = msg_2.keySet();
+                if (StringUtils.isNotEmpty(set)) {
+                    String key = set.iterator().next();
+                    Map<String, Object> kv = (Map<String, Object>) msg_2.get(key);
+                    if (StringUtils.isNotEmpty(kv)) {
+                        Set<Map.Entry<String, Object>> entrySet = kv.entrySet();
+                        for (Map.Entry<String, Object> entry : entrySet) {
+                            StringBuffer sb = new StringBuffer(key);
+                            sb.append(StringUtils.PREFIX);
+                            String entry_key = sb.append(entry.getKey()).append(StringUtils.SUFFIX).toString();
+                            Object entry_value = StringUtils.isNotEmpty(entry.getValue()) ? entry.getValue() : "";
+                            msg.put(entry_key, new String[]{String.valueOf(entry_value)});
+                        }
+                    }
+                }
             }
+            if (StringUtils.isNotEmpty(route_2)) {
+                Set<Map.Entry<String, Object>> entrySet = route_2.entrySet();
+                for (Map.Entry<String, Object> entry : entrySet) {
+                    String entry_key = entry.getKey();
+                    Object entry_value = StringUtils.isNotEmpty(entry.getValue()) ? entry.getValue() : "";
+                    route.put(entry_key, new String[]{String.valueOf(entry_value)});
+                }
+            }
+            rr.setMsg(msg);
+            rr.setRoute(route);
+            return rr;
+        } catch (NullPointerException e) {
+            log.info("application/json请求方式抛出异常:{}",e.getMessage());
+            throw new IllegalOptionException(SystemCodeEnum.SYSTEM_PARAMS_NOT_EXIST);
+        } catch (Exception e){
+            log.info("application/json请求方式抛出异常:{}",e.getMessage());
+            throw new IllegalArgumentsException(e);
         }
-        rr.setMsg(msg);
-        rr.setRoute(route);
-        return rr;
     }
 
     public String encodeResponse(Object obj) {
