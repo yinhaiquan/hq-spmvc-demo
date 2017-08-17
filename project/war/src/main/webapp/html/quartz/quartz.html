@@ -37,12 +37,12 @@
         }
     </style>
     <div class="Huialert Huialert-success"><i class="icon-remove"></i>
-        <span>容器总量(单位/个)</span>:<span>1</span> &#124;
-        <span class="running">运行中</span>：<span class="running">1</span> &#124;
-        <span class="pausing">暂停中</span>: <span class="pausing">0</span> &#124;
-        <span class="initialing">初始化中</span>: <span class="initialing">0</span> &#124;
-        <span class="shutdowning">关闭中</span>: <span class="shutdowning">0</span> &#124;
-        <span class="failuring">故障中</span>: <span class="failuring">0</span>
+        <span>容器总量(单位/个)</span>:<span id="task_total">0</span> &#124;
+        <span class="running">运行中</span>：<span class="running" id="task_running_total">0</span> &#124;
+        <span class="pausing">暂停中</span>: <span class="pausing" id="task_pausing_total">0</span> &#124;
+        <span class="initialing">初始化中</span>: <span class="initialing" id="task_initialing_total">0</span> &#124;
+        <span class="shutdowning">关闭中</span>: <span class="shutdowning" id="task_shutdowning_total">0</span> &#124;
+        <span class="failuring">故障中</span>: <span class="failuring" id="task_failuring_total">0</span>
     </div>
     <div class="panel panel-default">
         <div class="panel-header"><input class="btn btn-success radius" type="button" value="添加"></div>
@@ -80,12 +80,12 @@
                      */
                     if(data&&data.code==0){
                         if(!AjaxUtils.StringUtils.isEmpty_(data.content)){
-                            console.info(data.content.total);
-                            console.info(data.content.initialings);
-                            console.info(data.content.runnings);
-                            console.info(data.content.pausings);
-                            console.info(data.content.shutdownings);
-                            console.info(data.content.failurings);
+                            $("#task_total").innerText(data.content.total||0);
+                            $("#task_running_total").innerText(data.content.runnings||0);
+                            $("#task_pausing_total").innerText(data.content.pausings||0);
+                            $("#task_initialing_total").innerText(data.content.initialings||0);
+                            $("#task_shutdowning_total").innerText(data.content.shutdownings||0);
+                            $("#task_failuring_total").innerText(data.content.failurings||0);
                         }
                     }
                 }
