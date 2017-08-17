@@ -43,9 +43,10 @@
         <span class="initialing">初始化中</span>: <span class="initialing" id="task_initialing_total">0</span> &#124;
         <span class="shutdowning">关闭中</span>: <span class="shutdowning" id="task_shutdowning_total">0</span> &#124;
         <span class="failuring">故障中</span>: <span class="failuring" id="task_failuring_total">0</span>
+        <i class="Hui-iconfont" style="float: right;font-size: 1.5pc;color: #429842;" onclick="task_monitor()">&#xe68f;</i>
     </div>
     <div class="panel panel-default">
-        <div class="panel-header"><input class="btn btn-success radius" type="button" value="添加"></div>
+        <div class="panel-header"><input class="btn btn-success radius" type="button" onclick="test_click()" value="点击"></div>
         <div class="panel-body">
             <div class="bk-gray radius">
                 <div id="quartz_list"></div>
@@ -57,17 +58,19 @@
         </div>
     </div>
     <script>
-        require(['ajax'],function(AjaxUtils){
-            AjaxUtils.ajaxSimple(
-                'post',
-                AjaxUtils.URLS.quartzURLS.monitorContainerScheduler,
-                'json',
-                AjaxUtils.ajaxParam,
-                AjaxUtils.Constant.Ajax.TIME_OUT,
-                function(data){
-                    /**
-                     * 分页返回结果格式，其中content内为分页对象Pager
-                     * {
+        task_monitor();
+        function task_monitor(){
+            require(['ajax'],function(AjaxUtils){
+                AjaxUtils.ajaxSimple(
+                    'post',
+                    AjaxUtils.URLS.quartzURLS.monitorContainerScheduler,
+                    'json',
+                    AjaxUtils.ajaxParam,
+                    AjaxUtils.Constant.Ajax.TIME_OUT,
+                    function(data){
+                        /**
+                         * 分页返回结果格式，其中content内为分页对象Pager
+                         * {
                                      *   code : 0,
                                      *   desc : 'response ok',
                                      *   content : {
@@ -77,20 +80,22 @@
                                      *       pageSize : 10    --页面大小
                                      *   }
                                      * }
-                     */
-                    if(data&&data.code==0){
-                        if(!AjaxUtils.StringUtils.isEmpty_(data.content)){
-                            $("#task_total").innerText(data.content.total||0);
-                            $("#task_running_total").innerText(data.content.runnings||0);
-                            $("#task_pausing_total").innerText(data.content.pausings||0);
-                            $("#task_initialing_total").innerText(data.content.initialings||0);
-                            $("#task_shutdowning_total").innerText(data.content.shutdownings||0);
-                            $("#task_failuring_total").innerText(data.content.failurings||0);
+                         */
+                        if(data&&data.code==0){
+                            if(!AjaxUtils.StringUtils.isEmpty_(data.content)){
+                                $("#task_total").html(data.content.total||0);
+                                $("#task_running_total").html(data.content.runnings||0);
+                                $("#task_pausing_total").html(data.content.pausings||0);
+                                $("#task_initialing_total").html(data.content.initialings||0);
+                                $("#task_shutdowning_total").html(data.content.shutdownings||0);
+                                $("#task_failuring_total").html(data.content.failurings||0);
+                            }
                         }
                     }
-                }
-            )
-        })
+                )
+            })
+        }
+        var options ;
 
         require(['layPageUtils'],function(LayPageUtils){
             LayPageUtils.AjaxUtils.ajaxParam.root.msg = {
@@ -144,7 +149,7 @@
                     inStandbyMode:true
                 }
             ]
-            LayPageUtils.dataGride({
+            options = LayPageUtils.dataGride({
 //                data_:data,
                 url : LayPageUtils.AjaxUtils.URLS.quartzURLS.getSchedulerList,
                 params :LayPageUtils.AjaxUtils.ajaxParam,
@@ -159,6 +164,8 @@
                 last:"尾页",
                 prev:"<",
                 next:">",
+                pageSize:[10,20,30,40,50],
+                currentSize:30,
                 data:[
                     {
                         name:'任务ID',
@@ -250,6 +257,26 @@
                 ]
             });
         })
+
+    function test_click(){
+        require(['layPageUtils'],function(LayPageUtils){
+            console.info("*********************");
+            console.info(options);
+            LayPageUtils.dataLoading(options.setting,options.curr,{
+                quartzInfo: {
+                    "schedulerId": "d43ff64a173d4c4f9c125a501c4f5b73",
+                    "jobName": "test1",
+                    "jobClass": "hq.com.quartz.QuartzDemo",
+                    "jobGroupName": "",
+                    "triggerGroupName": "",
+                    "time": "0/1 * * * * ?",
+                    "switchType": "33",
+                    "page": "5",
+                    "pageSize": "10"
+                }
+            });
+        })
+    }
 
     function tips(obj){
         layer.tips('1. initialing:初始化中\n2. running:运行中 \n3. pausing:暂停中 \n4. shutdowning:关闭中', obj, {

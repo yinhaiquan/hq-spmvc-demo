@@ -19,8 +19,8 @@ requirejs.config({
 
 */
 requirejs.config({
-    baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
-    // baseUrl: 'http://localhost:8080/',
+    // baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
+    baseUrl: 'http://localhost:8080/',
     paths: {
         /*js配置路径*/
         tmpl:'resource/lib/requirejs/jquery.tmpl.min',
@@ -58,6 +58,7 @@ requirejs.config({
         layPageUtils:'resource/js/base/layPageUtils',
         editorUtils:'resource/js/base/editorUtils',
         webSecurity:'resource/js/base/webSecurity',
+        selectGroup:'resource/js/base/selectGroup',
 
         /*html、tpl路径配置*/
         testfk:'html/fk.html',
@@ -164,6 +165,9 @@ requirejs.config({
         },
         'bootstrapswitch':{
             deps:['jquery','css!bootstrapswitchstyle']
+        },
+        'selectGroup':{
+            deps:['jquery','ajax']
         }
     }
 });

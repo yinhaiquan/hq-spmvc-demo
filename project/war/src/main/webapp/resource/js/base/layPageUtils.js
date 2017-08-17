@@ -5,7 +5,7 @@
  *         方式一：传参data_数据源，可以根据fn函数自定义数据展示，亦可定义data数据列表按照内置函数展示【注意：使用内置函数时不可定义fn】;
  *         方式二: 传参url服务端请求地址，可以根据fn函数自定义数据展示，亦可定义data数据列表按照内置函数展示【注意：使用内置函数时不可定义fn】;
  */
-define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','ajax'],function($,laypager,laypagestyle,StringUtils,AjaxUtils){
+define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','ajax','selectGroup'],function($,laypager,laypagestyle,StringUtils,AjaxUtils,SelectGroup){
     /**
      * 控件参数配置讲解例子
      * @type {{data_: {}, url: string, method: string, tableId: string, cont: Element, pages: number, skip: boolean, groups: number, skin: string, first_: number, last_: string, prev_: string, next_: string, fn: fn, data: [*]}}
@@ -62,17 +62,22 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                     return value;
                 }
             }
-        ]                                            //[可选]数据源对应列名
+        ],                                           //[可选]数据源对应列名
+        pageSize:[10,20,30,40,50],                   //[可选]页面大小列表
+        currentSize:10                               //[可选]默认当前页面大小
     }
     //全局表ID后缀
     var tableIdSuffix = "_table_id";
     var layPageFunction = {
         AjaxUtils : AjaxUtils,
         dataGride : function(setting){
+            var options = {};
             if(StringUtils.isEmpty_(setting)){
                 console.info("空配置信息");
                 return;
             }
+            var current_page = 1;
+            options.setting = setting;
             var data_ = setting.data_;
             //table 首行加载
             layPageFunction.titleTable(setting,null);
@@ -105,27 +110,55 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                             setting.fn(data_);
                         }else{
                             //分页点击加载
-                            var pager = layPageFunction.dataOption(setting,obj.curr);
-                            if(!StringUtils.isEmpty_(pager)){
-                                data_ = pager.rows;
-                            }else{
-                                data_ = null;
-                            }
-                            layPageFunction.dataTable(setting,data_,obj);
+                            layPageFunction.dataLoading(setting,obj,null);
+                            current_page = obj.curr;
                         }
                     }
                 }
             })
+            options.curr = current_page;
+            layPageFunction.pageListShow(setting);
+            return options;
         },
+        dataLoading : function(setting,curr,msg){
+            var data_;
+            AjaxUtils.ajaxParam.root.msg = msg;
+            setting.params=AjaxUtils.ajaxParam;
+            var pager = layPageFunction.dataOption(setting,curr);
+            if(!StringUtils.isEmpty_(pager)){
+                data_ = pager.rows;
+            }else{
+                data_ = null;
+            }
+            layPageFunction.dataTable(setting,data_,null);
+        },
+        /**
+         * 页数下拉表展示
+         * @param setting
+         */
+        pageListShow : function(setting){
+            if(!setting.pageSize){
+                return;
+            }
+            var page_list = setting.pageSize;
+            var current_pageSize = setting.currentSize;
+            SelectGroup.selectGroup({
+                data:SelectGroup.formartSelectList(page_list,current_pageSize),
+                selector:$(setting.cont).find('div')
+            });
+            $(setting.cont).find('div select').css({'width':'40px','height':'28px'});
+        },
+        /**
+         * 请求数据
+         * @param setting
+         * @param curr
+         * @returns {*}
+         */
         dataOption : function(setting,curr){
             /*table id*/
             var id = setting.tableId;
             //添加加载loading
-            // $("#"+id+tableIdSuffix).find("tbody").html('loading...');
-            var index = layer.msg('加载中', {
-                icon: 16
-                ,shade: 0.01
-            });
+            $("#"+id+tableIdSuffix).find("tbody").html('loading...');
             var pager =null;
             if(setting.url){
                 /**
@@ -149,7 +182,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                  * @type {{}}
                  */
                 setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].page = curr || 1;
-                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = 10;
+                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = $(setting.cont).find('div select').val()||10;
                 AjaxUtils.ajaxSimple(
                     setting.method,
                     setting.url,
@@ -157,7 +190,6 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                     setting.params,
                     AjaxUtils.Constant.Ajax.TIME_OUT,
                     function(data){
-                        layer.close(index);
                         /**
                          * 分页返回结果格式，其中content内为分页对象Pager
                          * {
