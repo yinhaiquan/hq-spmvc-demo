@@ -168,7 +168,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 data:SelectGroup.formartSelectList(page_list,current_pageSize),
                 selector:$(setting.cont).find('div')
             });
-            $(setting.cont).find('div select').css({'width':'40px','height':'28px'});
+            $(setting.cont).find('div span:last').css({'width':'50px','height':'28px','padding':'1px'});
         },
         /**
          * 请求数据

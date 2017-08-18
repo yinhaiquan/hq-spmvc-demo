@@ -30,13 +30,13 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
                     }
                 );
             }
-            var str = '<select class="select" size="1">';
+            var str = '<span class="select-box mt-10"><select class="select" size="1">';
             for(var field in data){
                 var obj = data[field];
                 var selected = obj[tagField]?'selected':'';
                 str+="<option value='"+obj[valueField]+"' "+selected+">"+obj[textField]+"</option>";
             }
-            str+='</select>';
+            str+='</select></span>';
             $(options.selector).append(str);
         },
         formartSelectList : function(values,tag_val){
