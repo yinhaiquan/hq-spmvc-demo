@@ -55,6 +55,9 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
         },
         getValue : function(selector){
            return $(selector).val();
+        },
+        setSelected : function(selector,value){
+            $(selector).find("option[value='"+value+"']").attr("selected",true);
         }
     }
     return selectGroupFunction;

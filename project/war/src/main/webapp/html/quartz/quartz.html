@@ -97,7 +97,14 @@
         }
         var options ;
 
-        require(['layPageUtils'],function(LayPageUtils){
+        function getselectval () {
+            require(['selectGroup'],function(SelectGroup){
+                SelectGroup.setSelected($(document.getElementById('pager_index')).find('div select'),2);
+//                alert(SelectGroup.getValue($(document.getElementById('pager_index')).find('div select')));
+            })
+        }
+
+        require(['layPageUtils','selectGroup'],function(LayPageUtils,SelectGroup){
             LayPageUtils.AjaxUtils.ajaxParam.root.msg = {
                 quartzInfo: {
                     "schedulerId": "d43ff64a173d4c4f9c125a501c4f5b73",
@@ -106,9 +113,7 @@
                     "jobGroupName": "",
                     "triggerGroupName": "",
                     "time": "0/1 * * * * ?",
-                    "switchType": "33",
-                    "page": "1",
-                    "pageSize": "10"
+                    "switchType": "33"
                 }
             }
             var data =[
@@ -164,8 +169,8 @@
                 last:"尾页",
                 prev:"<",
                 next:">",
-                pageSize:[10,20,30,40,50],
-                currentSize:30,
+                pageSize:[1,2,3,4,5],
+                currentSize:1,
                 data:[
                     {
                         name:'任务ID',
@@ -256,23 +261,23 @@
                     }
                 ]
             });
+//            var val = SelectGroup.getValue($(options.cont).find('div select'));
+//            alert(val);
         })
 
     function test_click(){
         require(['layPageUtils'],function(LayPageUtils){
             console.info("*********************");
             console.info(options);
-            LayPageUtils.dataLoading(options.setting,options.curr,{
+            LayPageUtils.dataLoading(options,{
                 quartzInfo: {
-                    "schedulerId": "d43ff64a173d4c4f9c125a501c4f5b73",
-                    "jobName": "test1",
-                    "jobClass": "hq.com.quartz.QuartzDemo",
+                    "schedulerId": "",
+                    "jobName": "",
+                    "jobClass": "",
                     "jobGroupName": "",
                     "triggerGroupName": "",
-                    "time": "0/1 * * * * ?",
-                    "switchType": "33",
-                    "page": "5",
-                    "pageSize": "10"
+                    "time": "",
+                    "switchType": ""
                 }
             });
         })

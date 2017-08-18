@@ -71,19 +71,59 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
     var layPageFunction = {
         AjaxUtils : AjaxUtils,
         dataGride : function(setting){
-            var options = {};
             if(StringUtils.isEmpty_(setting)){
                 console.info("空配置信息");
                 return;
             }
-            var current_page = 1;
-            options.setting = setting;
-            var data_ = setting.data_;
             //table 首行加载
             layPageFunction.titleTable(setting,null);
+            layPageFunction.dataLoading(setting,null,false);
+            return setting;
+        },
+        /**
+         * 页面大小选中触发数据刷新
+         * @param setting
+         */
+        pageSizeSelectChange : function(setting){
+            $(setting.cont).find('div select').bind('change',function(){
+                layPageFunction.dataLoading(setting,null,SelectGroup.getValue(this));
+            })
+        },
+        /**
+         * 分页请求
+         * @param setting
+         * @param obj
+         */
+        dataPage : function(setting,obj,currentPageSize){
+            var data_;
+            var pager = layPageFunction.dataOption(setting,obj.curr);
+            if(!StringUtils.isEmpty_(pager)){
+                data_ = pager.rows;
+            }else{
+                data_ = null;
+            }
+            layPageFunction.dataTable(setting,data_,obj);
+            layPageFunction.selectGroupShow(setting,currentPageSize);
+        },
+        selectGroupShow:function(setting,currenPageSize){
+            layPageFunction.pageListShow(setting);
+            SelectGroup.setSelected($(setting.cont).find('div select'),currenPageSize);
+            layPageFunction.pageSizeSelectChange(setting);
+        },
+        /**
+         * 重新加载
+         * @param setting
+         * @param msg
+         */
+        dataLoading : function(setting,msg,currenPageSize){
+            currenPageSize = currenPageSize?SelectGroup.getValue($(setting.cont).find('div select')):undefined;
+            var data_;
+            setting.params.root.msg = msg || setting.params.root.msg;
+            setting.params=setting.params;
             //请求数据
             var pager = layPageFunction.dataOption(setting,1);
             var pages = 0;
+            data_ = setting.data_;
             //首页加载
             if(!StringUtils.isEmpty_(pager)){
                 data_ = pager.rows;
@@ -91,9 +131,6 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             }
             //数据加载
             layPageFunction.dataTable(setting,data_,null);
-            /**
-             * 分页信息展示
-             */
             laypager({
                 cont: setting.cont,
                 pages: pages || 0,
@@ -110,27 +147,12 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                             setting.fn(data_);
                         }else{
                             //分页点击加载
-                            layPageFunction.dataLoading(setting,obj,null);
-                            current_page = obj.curr;
+                            layPageFunction.dataPage(setting,obj,currenPageSize);
                         }
                     }
                 }
             })
-            options.curr = current_page;
-            layPageFunction.pageListShow(setting);
-            return options;
-        },
-        dataLoading : function(setting,curr,msg){
-            var data_;
-            AjaxUtils.ajaxParam.root.msg = msg;
-            setting.params=AjaxUtils.ajaxParam;
-            var pager = layPageFunction.dataOption(setting,curr);
-            if(!StringUtils.isEmpty_(pager)){
-                data_ = pager.rows;
-            }else{
-                data_ = null;
-            }
-            layPageFunction.dataTable(setting,data_,null);
+            layPageFunction.selectGroupShow(setting,currenPageSize);
         },
         /**
          * 页数下拉表展示
@@ -182,7 +204,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                  * @type {{}}
                  */
                 setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].page = curr || 1;
-                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = $(setting.cont).find('div select').val()||10;
+                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = $(setting.cont).find('div select').val()||1;
                 AjaxUtils.ajaxSimple(
                     setting.method,
                     setting.url,
