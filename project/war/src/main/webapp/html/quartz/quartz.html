@@ -155,12 +155,13 @@
                 }
             ]
             options = LayPageUtils.dataGride({
-//                data_:data,
+                data_:data,
                 url : LayPageUtils.AjaxUtils.URLS.quartzURLS.getSchedulerList,
                 params :LayPageUtils.AjaxUtils.ajaxParam,
                 type:'json',
                 method : 'post',
                 tableId:'quartz_list',
+//                table_class:'table table-border table-bordered table-hover table-bg radius',
                 cont: document.getElementById('pager_index'),
                 skip: true,
                 skin: '#00AA91',

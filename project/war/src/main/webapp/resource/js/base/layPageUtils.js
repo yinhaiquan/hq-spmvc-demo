@@ -17,6 +17,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
         type:'json',                                 //[可选]请求参数数据类型
         method : '',                                 //[可选]请求类型 post get
         tableId : 'biuuu_city_list',                 //[可选]数据容器 Id，若使用默认table，则须传入table的div ID
+        table_class:'table table-border table-bordered table-hover table-bg radius',//[可选]数据容器table class 默认table table-border table-bordered table-hover table-bg radius
         cont : document.getElementById('biuuu_city'),//[必选]分页标签容器。值支持id名、原生dom对象，jquery对象
         skip : true,                                 //[可选]是否显示跳转
         groups :7,                                   //[可选]连续分页数
@@ -249,9 +250,9 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             /*表单列表*/
             var data = setting.data;
             /*table id*/
-            var id = setting.tableId;
+            var id = setting.tableId,table_class=setting.table_class||'table table-border table-bordered table-hover table-bg radius';
             $(document.getElementById(id)).append('<table id="'+
-                id+tableIdSuffix+'" class="table table-border table-bordered table-hover table-bg radius">' +
+                id+tableIdSuffix+'" class="'+table_class+'">' +
                 '<thead><tr></tr></thead><tbody></tbody></table>');
             if(data&&data.length>0){
                 var thead_tr = $("#"+id+tableIdSuffix).find("thead tr");
