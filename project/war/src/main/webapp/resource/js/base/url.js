@@ -3,8 +3,8 @@
  * Created by yinhaiquan on 2017/7/21.
  */
 define({
-    baseUrl:'http://localhost:8080/',
-    // baseUrl:'http://localhost:63342/project/war/src/main/webapp/',
+    // baseUrl:'http://localhost:8080/',
+    baseUrl:'http://localhost:63342/project/war/src/main/webapp/',
 
     findUserInfo:'/handler/shiroUserSvc/findUserInfo.do',
     fileUpload:'/file/upload.do',

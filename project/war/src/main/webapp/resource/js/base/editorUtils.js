@@ -42,7 +42,7 @@ define('editorUtils',['jquery','wangeditor','stringUtils'],function($,Editor,Str
             } else {
                 editor = new Editor(item1,item2);
             }
-            if(StringUtils.isEmpty_(config)){
+            if(!StringUtils.isEmpty_(config)){
                 // 自定义菜单配置
                 editor.customConfig.menus = config;
             }

@@ -10,7 +10,8 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
         selector:'',          //[必选]下拉标签
         valueField:'value',   //[可选]值
         textField:'name',     //[可选]text
-        tagField:'tag'        //[可选]是否selected
+        tagField:'tag',       //[可选]是否selected
+        selector_class:'select-box mt-10'   //[可选]select 样式 默认select-box mt-10
     }
     var selectGroupFunction = {
         selectGroup : function(options){
@@ -18,6 +19,7 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
             var valueField = options.valueField || 'value';
             var tagField = options.tagField || 'tag';
             var textField = options.textField || 'name';
+            var select_class = options.selector_class||'select-box mt-10';
             if(options.url){
                 AjaxUtils.ajaxSimple(
                     'post',
@@ -30,7 +32,7 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
                     }
                 );
             }
-            var str = '<span class="select-box mt-10"><select class="select" size="1">';
+            var str = '<span class="'+select_class+'"><select class="select" size="1">';
             for(var field in data){
                 var obj = data[field];
                 var selected = obj[tagField]?'selected':'';
