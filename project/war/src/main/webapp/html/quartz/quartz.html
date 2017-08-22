@@ -174,6 +174,16 @@
                 currentSize:1,
                 data:[
                     {
+                        name:'<div class="skin-minimal"><div class="check-box"><input type="checkbox"></div></div>',
+                        value:'checkbox',
+                        align:'text-c',
+                        width:'8%',
+                        iShow:true,
+                        formartVal:function(value,row){
+                            return '<div class="skin-minimal"><div class="check-box"><input type="checkbox" name="checkbox"></div></div>';
+                        }
+                    },
+                    {
                         name:'任务ID',
                         value:'schedulerId',
                         align:'text-c',
