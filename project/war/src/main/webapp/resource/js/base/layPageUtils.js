@@ -106,13 +106,23 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             layPageFunction.dataTable(setting,data_,obj);
             layPageFunction.selectGroupShow(setting,currentPageSize);
         },
+        /**
+         * 页数大小下拉列表加载
+         * 注意：若pageSize不传则默认不显示页面大小列表展示
+         * @param setting
+         * @param currenPageSize
+         */
         selectGroupShow:function(setting,currenPageSize){
+            if(!setting.pageSize){
+                return;
+            }
             layPageFunction.pageListShow(setting);
             SelectGroup.setSelected($(setting.cont).find('div select'),currenPageSize);
             layPageFunction.pageSizeSelectChange(setting);
         },
         /**
          * 重新加载
+         * 注意：currenPageSize当前页再页面调用时可不传
          * @param setting
          * @param msg
          */
