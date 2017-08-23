@@ -32,6 +32,7 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
                     }
                 );
             }
+            selectGroupFunction.clear(options.selector);
             var str = '<span class="'+select_class+'"><select class="select" size="1">';
             for(var field in data){
                 var obj = data[field];
@@ -60,6 +61,9 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
         },
         setSelected : function(selector,value){
             $(selector).find("option[value='"+value+"']").attr("selected",true);
+        },
+        clear:function(selector){
+            $(selector).remove('option');
         }
     }
     return selectGroupFunction;
