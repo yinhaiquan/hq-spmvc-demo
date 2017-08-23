@@ -718,6 +718,9 @@
         $('.maskWraper').Huihover();
     })
 
+    /**
+     * 使用icheck时需要添加以下代码
+     */
     $('.skin-minimal input').iCheck({
         checkboxClass: 'icheckbox-blue',
         radioClass: 'iradio-blue',
@@ -761,7 +764,9 @@
         focusCleanup:true,
         success:"valid",
         submitHandler:function(form){
+            /*提交表单通过ajax 不用$(form).ajaxSubmit()*/
             $(form).ajaxSubmit();
+
             var index = parent.layer.getFrameIndex(window.name);
             parent.$('.btn-refresh').click();
             parent.layer.close(index);
