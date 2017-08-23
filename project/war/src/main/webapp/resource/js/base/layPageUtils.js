@@ -80,6 +80,11 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             //table 首行加载
             layPageFunction.titleTable(setting,null);
             layPageFunction.dataLoading(setting,null,false);
+            $("table").find('.check-box input').iCheck({
+                checkboxClass: 'icheckbox-grey',
+                radioClass: 'iradio-blue',
+                increaseArea: '20%'
+            });
             return setting;
         },
         /**
@@ -145,7 +150,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             layPageFunction.dataTable(setting,data_,null);
             laypager({
                 cont: setting.cont,
-                pages: pages || 0,
+                pages: pages || 1,
                 skip: StringUtils.isEmpty_(setting.skip)?false:setting.skip,
                 skin: StringUtils.isEmpty_(setting.skin)?'#00AA91':setting.skin,
                 groups: StringUtils.isEmpty_(setting.groups)?5:setting.groups,
@@ -276,6 +281,9 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                         thead_tr.append('<th class="'+order+'" width="'+width+'" id="'+obj_.value+'">'+obj_.name+'</th>');
                     }
                 }
+                $("table thead th").find("input:checkbox").on("ifToggled",function() {
+                    $("table td").find("input:checkbox").iCheck('toggle');
+                });
             }else{
                 return;
             }
