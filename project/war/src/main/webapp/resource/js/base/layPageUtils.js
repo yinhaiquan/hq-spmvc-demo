@@ -1,5 +1,6 @@
 /**
  * 分页控件，基于laypage.js插件扩展
+ * 参考：http://www.layui.com/laypage/?page=5
  * Created by yinhaiquan on 2017/8/1.
  * 本插件使用方法：
  *         方式一：传参data_数据源，可以根据fn函数自定义数据展示，亦可定义data数据列表按照内置函数展示【注意：使用内置函数时不可定义fn】;
