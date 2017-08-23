@@ -3,20 +3,20 @@
     <b>搜索</b>
     <div class="searchBar">
         <form class="form-search" method="post" action="">
-            <input id="searchKeyword" name="searchKeyword" value="请输入搜索关键词" class="input-text searchTxt">
+            <input id="searchKeyword" name="searchKeyword" placeholder="请输入搜索关键词" class="input-text searchTxt">
             <input id="searchBtn" name="searchBtn" type="submit" value="搜索" class="btn btn-default searchBtn" onclick="b_onclick()">
         </form>
     </div>
     <b>checkBox</b>
     <script>
           /* 参考： https://github.com/fronteed/iCheck*/
-        $('.skin-minimal input').iCheck('check');
+        /*$('.skin-minimal input').iCheck('check');
 
 
         $('input').on('ifChecked', function(event){
             console.info(event);
             alert(event.type + ' callback');
-        });
+        });*/
         require(['icheckUtils'],function(IcheckUtils){
             IcheckUtils.setICheck($("#radio-1"),'check');
         })
@@ -77,7 +77,7 @@
             maxmin: true
         });
         //全屏设置
-        layer.full(index);
+//        layer.full(index);
         function test2(){
             layer.confirm('您是如何看待前端开发？', {
                 btn: ['重要','奇葩'] //按钮
@@ -379,7 +379,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3">备注：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="beizhu2" cols="" rows="" class="textarea" placeholder="说点什么...最少输入10个字符" datatype="*10-500" nullmsg="备注不能为空！" onkeyup="$(this).Huitextarealength(this)"></textarea>
+                <textarea name="beizhu2" id="beizhu2" cols="" rows="" class="textarea" placeholder="说点什么...最少输入10个字符" datatype="*10-500" nullmsg="备注不能为空！" onkeyup="$(this).Huitextarealength(this)"></textarea>
                 <p class="textarea-numberbar"><em class="textarea-length">10</em>/500</p>
             </div>
         </div>
@@ -724,6 +724,9 @@
         increaseArea: '20%'
     });
 
+    /**
+     * 表单验证对应错误信息显示在jquery.validate.js中的showLabel方法中
+     */
     $("#form-member-add").validate({
         rules:{
             username:{
@@ -751,7 +754,10 @@
             }
 
         },
-        onkeyup:false,
+        onfocusin: function(element) { $(element).valid(); },
+        onfocusout: function(element) { $(element).valid(); },
+        onclick: function(element) { $(element).valid(); },
+        onkeyup: function(element) { $(element).valid(); },
         focusCleanup:true,
         success:"valid",
         submitHandler:function(form){

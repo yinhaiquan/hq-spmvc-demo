@@ -773,6 +773,15 @@ $.extend( $.validator, {
 		},
 
 		showLabel: function( element, message ) {
+			/*update by yinhaiquan at 2017-08-23 修改验证错误信息显示*/
+			var id = $(element).attr("id");
+			if(id&&message){
+                layer.tips(message,'#'+id, {
+                    tips: [3, '#d8414e'],
+                    tipsMore: true
+                });
+			}
+            return;
 			var place, group, errorID,
 				error = this.errorsFor( element ),
 				elementID = this.idOrName( element ),
@@ -784,7 +793,7 @@ $.extend( $.validator, {
 				error.html( message );
 			} else {
 				// create error element
-				error = $( "<" + this.settings.errorElement + ">" )
+				error = $( "<" + this.settings.errorElement + " class='c-red'>" )
 					.attr( "id", elementID + "-error" )
 					.addClass( this.settings.errorClass )
 					.html( message || "" );
