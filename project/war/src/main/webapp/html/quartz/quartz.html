@@ -36,6 +36,7 @@
             color:#f9990d;
         }
     </style>
+
     <div class="Huialert Huialert-success"><i class="icon-remove"></i>
         <span>容器总量(单位/个)</span>:<span id="task_total">0</span> &#124;
         <span class="running">运行中</span>：<span class="running" id="task_running_total">0</span> &#124;
@@ -46,7 +47,10 @@
         <i class="Hui-iconfont" style="float: right;font-size: 1.5pc;color: #429842;" onclick="task_monitor()">&#xe68f;</i>
     </div>
     <div class="panel panel-default">
-        <div class="panel-header"><input class="btn btn-success radius" type="button" onclick="test_click()" value="点击"></div>
+        <div class="panel-header">
+            <input class="btn btn-success radius" type="button" onclick="test_icheck()" value="点击">
+            <input class="btn btn-success radius" type="button" onclick="test_icheck2()" value="反选">
+        </div>
         <div class="panel-body">
             <div class="bk-gray radius">
                 <div id="quartz_list"></div>
@@ -58,6 +62,7 @@
         </div>
     </div>
     <script>
+
         task_monitor();
         function task_monitor(){
             require(['ajax'],function(AjaxUtils){
@@ -168,19 +173,19 @@
                 groups: 5 ,
                 first:"首页",
                 last:"尾页",
-                prev:"<em>←</em>",
-                next:"<em>→</em>",
+                prev:"<em><</em>",
+                next:"<em>>/em>",
                 pageSize:[10,20,30,40,50],
                 currentSize:10,
                 data:[
                     {
-                        name:'<div class="skin-minimal"><div class="check-box"><input type="checkbox"></div></div>',
+                        name:'<div class="check-box"><input id="fuck" type="checkbox"></div>',
                         value:'checkbox',
                         align:'text-c',
                         width:'8%',
                         iShow:true,
-                        formartVal:function(value,row){
-                            return '<div class="skin-minimal"><div class="check-box"><input type="checkbox" name="checkbox"></div></div>';
+                        formartVal:function(row){
+                            return '<div class="check-box"><input type="checkbox" name="quartz" value="'+row.schedulerId+'"></div>';
                         }
                     },
                     {
@@ -272,10 +277,25 @@
                     }
                 ]
             });
+
+
 //            var val = SelectGroup.getValue($(options.cont).find('div select'));
 //            alert(val);
         })
 
+        function test_icheck(){
+            require(['icheckUtils'],function(IcheckUtils){
+                alert(IcheckUtils.CheckBox.getCheckBoxChecked("quartz"));
+            })
+        }
+
+        function test_icheck2(){
+            require(['icheckUtils'],function(IcheckUtils){
+                IcheckUtils.CheckBox.allSelected("quartz");
+            })
+        }
+
+        /* 测试外部点击事件重新加载分页信息 */
     function test_click(){
         require(['layPageUtils'],function(LayPageUtils){
             console.info("*********************");
@@ -300,5 +320,12 @@
             time: 4000
         });
     }
+
+        /*使用icheck需要添加以下代码,分页控件内部函数已添加，外部不需要再添加*/
+       /* $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-red',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });*/
     </script>
 </div>

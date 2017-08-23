@@ -59,6 +59,7 @@ requirejs.config({
         editorUtils:'resource/js/base/editorUtils',
         webSecurity:'resource/js/base/webSecurity',
         selectGroup:'resource/js/base/selectGroup',
+        icheckUtils:'resource/js/base/icheckUtils',
 
         /*html、tpl路径配置*/
         testfk:'html/fk.html',
@@ -169,8 +170,8 @@ requirejs.config({
         'selectGroup':{
             deps:['jquery','ajax']
         },
-        'icheck':{
-            deps:['jquery','css!icheckstyle']
+        'icheckUtils':{
+            deps:['jquery','hui']
         }
     }
 });

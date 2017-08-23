@@ -8,7 +8,7 @@
         </form>
     </div>
     <b>checkBox</b>
-    <!--<script>
+    <script>
           /* 参考： https://github.com/fronteed/iCheck*/
         $('.skin-minimal input').iCheck('check');
 
@@ -17,7 +17,10 @@
             console.info(event);
             alert(event.type + ' callback');
         });
-    </script>-->
+        require(['icheckUtils'],function(IcheckUtils){
+            IcheckUtils.setICheck($("#radio-1"),'check');
+        })
+    </script>
 
     <div class="codeView docs-example">
         <div class="skin-minimal">
