@@ -50,6 +50,7 @@
         <div class="panel-header">
             <input class="btn btn-success radius" type="button" onclick="test_icheck()" value="点击">
             <input class="btn btn-success radius" type="button" onclick="test_icheck2()" value="反选">
+            <input class="btn radius btn-secondary" type="button" onclick="create_task()" value="创建任务">
         </div>
         <div class="panel-body">
             <div class="bk-gray radius">
@@ -100,6 +101,26 @@
                 )
             })
         }
+        function create_task(){
+            require(['text!add_quartz','tmpl','jquery','css!layerstyle'],function(add_quartz,tmpl){
+                /**
+                 * type 1 html内容 2 url请求地址
+                 * 注意：在使用layer.open加载内容为模板页面时，模板中的div第一层只能为一个div，
+                 * $($(add_quartz).tmpl()).html()方式获取页面内容是<div class="page-container">
+                 * 下面的第一个div，且js css均要写在div内，否则不生效
+                 */
+                var index = layer.open({
+                    title: '创建任务',
+                    type: 1,
+                    content: $($(add_quartz).tmpl()).html(),
+                    area: ['480px', '560px'],
+                    maxmin: true
+                });
+                //弹出即全屏 全屏设置
+//        layer.full(index);
+            })
+        }
+
         var options ;
 
         function getselectval () {

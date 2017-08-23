@@ -67,6 +67,7 @@ requirejs.config({
         menu:'html/base/menu.tpl',
         uploader:'html/uploader.html',
         quartz:"html/quartz/quartz.html",
+        add_quartz:"html/quartz/add_quartz.html",
 
         /*css路径配置*/
         jqueryztreestyle:'resource/lib/zTree/v3/css/metroStyle/metroStyle',
@@ -86,7 +87,8 @@ requirejs.config({
                 'ajax',
                 'text!testfk',
                 'text!uploader',
-                'text!quartz'
+                'text!quartz',
+                'text!add_quartz'
             ],
             exports:'tmpl'
         },
