@@ -1,6 +1,8 @@
 package hq.com.email.vo;
 
 import hq.com.aop.vo.FileParam;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -11,7 +13,8 @@ import java.util.Map;
  * Create By yinhaiquan
  * @date 2017/8/15 11:38 星期二
  */
-public class EmailParams {
+public class EmailParams implements Serializable{
+    private static final long serialVersionUID = -4123966721335358256L;
     /*接收者列表 [必填]*/
     private String [] receiver;
     /*发送者 [必填]*/

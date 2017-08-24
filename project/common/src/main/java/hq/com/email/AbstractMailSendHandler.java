@@ -3,11 +3,11 @@ package hq.com.email;
 import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.utils.StringUtils;
 import hq.com.email.vo.EmailParams;
+import hq.com.email.vo.EmailServerConfigurationParams;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -16,6 +16,10 @@ import javax.mail.internet.MimeMessage;
  * @title : 邮件发送处理抽象处理器
  * @describle :
  * <p>
+ *     <b>note:</b>
+ *     smtp协议用于发送邮件
+ *     pop3协议用户接收邮件
+ * </p>
  * Create By yinhaiquan
  * @date 2017/6/12 17:50 星期一
  */
@@ -28,6 +32,22 @@ public abstract class AbstractMailSendHandler {
      */
     private JavaMailSenderImpl sender;
     private FreeMarkerConfigurer freeMarkerConfigurer;
+
+    /**
+     * 手动实例化JavaMailSenderImpl
+     * @param escp 邮箱服务配置信息
+     * @return
+     */
+    public JavaMailSenderImpl configuration(final EmailServerConfigurationParams escp){
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        if (StringUtils.isNotEmpty(escp)){
+            sender.setHost(escp.getHost());
+            sender.setPassword(escp.getPassword());
+            sender.setUsername(escp.getUserName());
+            sender.setJavaMailProperties(escp.getJavaMailProperties());
+        }
+        return sender;
+    }
 
     /**
      * 发送普通邮件
