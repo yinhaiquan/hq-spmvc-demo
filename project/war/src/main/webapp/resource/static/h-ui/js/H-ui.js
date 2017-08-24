@@ -4697,9 +4697,9 @@ function displaynavbar(obj){
 			var that = $(this);
 			var v = that.val();
 			var l = v.length;
+            that.parent().find('p').remove();
 			var str = '<p class="textarea-numberbar"><em class="textarea-length">'+l+'</em>/'+options.maxlength+'</p>';
 			that.parent().append(str);
-			
 			that.on("keyup",function(){
 				v = that.val();
 				l = v.length;
