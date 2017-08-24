@@ -35,3 +35,12 @@
     background-repeat: no-repeat;
     background-position: right center;
 }
+
+/*复选框样式*/
+table .check-box,table .radio-box{
+    display: block;
+    width:20px;
+    height: 20px;
+    margin:0 auto;
+    padding:0px;
+}
