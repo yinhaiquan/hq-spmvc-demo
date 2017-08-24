@@ -13,7 +13,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
- * @title : 邮件发送处理
+ * @title : 邮件发送处理抽象处理器
  * @describle :
  * <p>
  * Create By yinhaiquan
@@ -21,8 +21,12 @@ import javax.mail.internet.MimeMessage;
  */
 public abstract class AbstractMailSendHandler {
 
+    /**
+     * 系统管理员统一邮件发送配置
+     * 注意:
+     *     若需要根据系统登录用户配置邮件发送地址，可通过查询登录用户邮件配置信息实例化JavaMailSenderImpl即可
+     */
     private JavaMailSenderImpl sender;
-    private SimpleMailMessage mailMessage;
     private FreeMarkerConfigurer freeMarkerConfigurer;
 
     /**
@@ -100,14 +104,6 @@ public abstract class AbstractMailSendHandler {
 
     public void setSender(JavaMailSenderImpl sender) {
         this.sender = sender;
-    }
-
-    public SimpleMailMessage getMailMessage() {
-        return mailMessage;
-    }
-
-    public void setMailMessage(SimpleMailMessage mailMessage) {
-        this.mailMessage = mailMessage;
     }
 
     public FreeMarkerConfigurer getFreeMarkerConfigurer() {
