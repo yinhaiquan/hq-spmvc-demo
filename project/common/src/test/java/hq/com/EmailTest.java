@@ -7,22 +7,19 @@ import hq.com.aop.concurrency.impl.AsyncEventSourceImpl;
 import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.utils.DateUtils;
 import hq.com.aop.vo.FileParam;
-import hq.com.email.AbstractMailSendHandler;
-import hq.com.email.TemplateMailHandler;
+import hq.com.email.server.send.AbstractMailSendHandler;
+import hq.com.email.server.send.TemplateMailHandler;
 import hq.com.email.vo.EmailParams;
+import hq.com.email.vo.EmailServerConfigurationParams;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @title :
@@ -46,15 +43,25 @@ public class EmailTest {
 
     @Test
     public void testSendEmail() {
+        EmailServerConfigurationParams escp = new EmailServerConfigurationParams();
+        escp.setHost("smtp.exmail.qq.com");
+        escp.setUserName("yinhaiquan@juzix.io");
+        escp.setPassword("yhq123456");
+        Properties javaMailProperties = new Properties();
+        javaMailProperties.put("mail.smtp.auth",true);
+        javaMailProperties.put("mail.debug",true);
+        escp.setJavaMailProperties(javaMailProperties);
+        mailHandler.setSender(mailHandler.configuration(escp));
+        System.out.println(mailHandler.getSender().getHost());
         Random random = new Random();
         String check = String.valueOf(random.nextInt(899999) + 100000);//随机生成6位验证码
         String message = "您的邮箱验证码是：" + check + "。有效期60秒，请及时验证！"; //邮件内容
         SimpleMailMessage smm = new SimpleMailMessage();
-        smm.setFrom("yinhaiquan@juzix.io");
+        smm.setFrom(mailHandler.getSender().getUsername());
         smm.setTo("1083775683@qq.com");
         smm.setSubject("test");
         smm.setText(message);
-        javaMail.sendSimpleEmail(smm);
+        mailHandler.sendSimpleEmail(smm);
     }
 
     @Test
@@ -82,7 +89,7 @@ public class EmailTest {
         Map<String, Object> param_1 = new HashMap<>();
         EmailParams emailParams = new EmailParams();
         emailParams.setText("thanks");
-        emailParams.setFrom("yinhaiquan@juzix.io");
+        emailParams.setFrom(mailHandler.getSender().getUsername());
         emailParams.setReceiver(new String[]{"1083775683@qq.com"});
         emailParams.setSubject("test");
         emailParams.setSentDate(DateUtils.stringToDate("2018-8-8 00:00:00",DateUtils.YYYY_MM_DD_HH_MM_SS));

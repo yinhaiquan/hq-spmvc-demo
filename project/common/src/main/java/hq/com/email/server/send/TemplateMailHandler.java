@@ -1,4 +1,4 @@
-package hq.com.email;
+package hq.com.email.server.send;
 
 import freemarker.core.ParseException;
 import freemarker.template.MalformedTemplateNameException;
@@ -14,11 +14,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * @title : 邮件发送处理器
@@ -55,9 +53,9 @@ public class TemplateMailHandler extends AbstractMailSendHandler {
                 /*装载模板*/
                 Template tpl = getFreeMarkerConfigurer().getConfiguration().getTemplate(emailParams.getTplName());
                 /*加入map到模板中 输出对应变量*/
-                System.out.println(emailParams.getData());
+//                System.out.println(emailParams.getData());
                 emailParams.setText(FreeMarkerTemplateUtils.processTemplateIntoString(tpl,emailParams.getData()));
-                System.out.println(emailParams.getText());
+//                System.out.println(emailParams.getText());
             }
             if (StringUtils.isNotEmpty(emailParams.getFiles())){
                 for (FileParam file : emailParams.getFiles()) {

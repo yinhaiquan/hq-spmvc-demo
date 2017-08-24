@@ -1,4 +1,4 @@
-package hq.com.email;
+package hq.com.email.server.send;
 
 import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.utils.StringUtils;
