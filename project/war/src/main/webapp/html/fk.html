@@ -758,14 +758,22 @@
             }
 
         },
-        onfocusin: function(element) { $(element).valid(); },
+//        errorClass:"", //自定义错误样式
+        errorElement:"em", //自定义错误标签
+//        errorPlacement: function(error, element){//错误信息显示位置
+//            error.appendTo(element.parent().find(".tipinfo"));
+//        },
+    onfocusin: false,
         onfocusout: function(element) { $(element).valid(); },
         onclick: function(element) { $(element).valid(); },
         onkeyup: function(element) { $(element).valid(); },
         focusCleanup:true,
-        success:"valid",
+        success:function(item){//每个表单验证成功后执行
+
+        },
         submitHandler:function(form){
             /*提交表单通过ajax 不用$(form).ajaxSubmit()*/
+            console.info(form);
             $(form).ajaxSubmit();
 
             var index = parent.layer.getFrameIndex(window.name);

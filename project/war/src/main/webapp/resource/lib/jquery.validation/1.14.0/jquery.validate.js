@@ -773,15 +773,6 @@ $.extend( $.validator, {
 		},
 
 		showLabel: function( element, message ) {
-			/*update by yinhaiquan at 2017-08-23 修改验证错误信息显示*/
-			var id = $(element).attr("id");
-			if(id&&message){
-                layer.tips(message,'#'+id, {
-                    tips: [3, '#d8414e'],
-                    tipsMore: true
-                });
-			}
-            return;
 			var place, group, errorID,
 				error = this.errorsFor( element ),
 				elementID = this.idOrName( element ),
