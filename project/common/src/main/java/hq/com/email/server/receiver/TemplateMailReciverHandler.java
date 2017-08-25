@@ -5,10 +5,7 @@ import hq.com.aop.vo.FileParam;
 import hq.com.email.vo.EmailParams;
 import hq.com.email.vo.EmailServerConfigurationParams;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
+import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import java.io.*;
 import java.util.Properties;
@@ -76,49 +73,46 @@ public class TemplateMailReciverHandler extends AbstractMailReciverHandler{
      * 解析message
      */
     @Override
-    public void parseMessage(Message message) throws IOException, MessagingException {
-        Object content = message.getContent();
-        if (content instanceof Multipart){
-            handlerMultipart((Multipart) content);
-        }else{
-            parsePart(message);
+    public String parseMessage(Part message) throws IOException, MessagingException {
+        String disposition = message.getDisposition();
+        String contentType = message.getContentType();
+        int nameindex = contentType.indexOf("name");
+        boolean conname = false;
+        if (nameindex!=-1){
+            conname = true;
         }
+        StringBuilder bodytext = new StringBuilder();
+        // 没有附件的情况 保存邮件内容
+        if (StringUtils.isEmpty(disposition)){
+            if (message.isMimeType(MIMETYPE_TEXT_PLAIN)&&!conname){
+                bodytext.append((String) message.getContent());
+            }else if (message.isMimeType(MIMETYPE_TEXT_HTML)&&!conname){
+                bodytext.append((String) message.getContent());
+            }else if (message.isMimeType(MIMETYPE_MULTIPART)){
+                Multipart multipart = (Multipart) message.getContent();
+                for (int i =0;i<multipart.getCount();i++){
+                    bodytext.append(parseMessage( multipart.getBodyPart(i)));
+                }
+            }else if (message.isMimeType(MIMETYPE_MESSAGE)){
+                bodytext.append(parseMessage(message));
+            }else{
+                log.info("未知文件类型");
+            }
+        }
+        return bodytext.toString();
     }
 
     /**
-     * 解析指定part,从中提取文件
+     * 解析指定part,从中提取附件
      * @param part
      */
     @Override
     public FileParam parsePart(Part part) throws IOException, MessagingException {
         String disposition = part.getDisposition();
-        String contentType = part.getContentType();
         FileParam fp = new FileParam();
-        String fileNameWidthExtension = "";
+        String fileNameWidthExtension = null;
         // 获得邮件的内容输入流
         InputStreamReader sbis = new InputStreamReader(part.getInputStream());
-        // 没有附件的情况 保存邮件内容
-        if (StringUtils.isEmpty(disposition)){
-            if (contentType.length()>=10&& (contentType.toLowerCase().substring(0, 10)
-                    .equals(MIMETYPE_TEXT_PLAIN))){
-                fileNameWidthExtension = escp.getAttachmentDir()+currentEmailFileName+TXT_SUFFIX;
-            }else if (contentType.length()>=9&& (contentType.toLowerCase().substring(0, 9)
-                    .equals(MIMETYPE_TEXT_HTML))){
-                // Check if html
-                fileNameWidthExtension = escp.getAttachmentDir()+this.currentEmailFileName+HTML_SUFFIX;
-            }else if (contentType.length()>=9&& (contentType.toLowerCase().substring(0, 9)
-                    .equals(MIMETYPE_IMAGE_GIF))){
-                fileNameWidthExtension = escp.getAttachmentDir()+currentEmailFileName+GIF_SUFFIX;
-            }else if (contentType.length()>=11&& contentType.toLowerCase().substring(0, 11).equals(
-                    MIMETYPE_MULTIPART)){
-                handlerMultipart((Multipart) part.getContent());
-            }else{
-                // Unknown type
-                fileNameWidthExtension = escp.getAttachmentDir()+currentEmailFileName+TXT_SUFFIX;
-            }
-            fp = saveFile(fileNameWidthExtension,sbis);
-            return fp;
-        }
         // 各种有附件的情况
         String name = getFileName(part);
         if (disposition.equalsIgnoreCase(Part.ATTACHMENT)||disposition.equalsIgnoreCase(Part.INLINE)){
@@ -154,23 +148,16 @@ public class TemplateMailReciverHandler extends AbstractMailReciverHandler{
                         System.out.println("正在获取第" + index + "封邮件");
 //                        if(!isNew()){
                             //下载eml文件
-//                            saveMLFile(currentMessage);
+                            saveMLFile(currentMessage);
                             EmailParams ep = formartEamilInfo();
                             //下载邮件文件附件等
-                            parseMessage(currentMessage);
-                            File html = new File(escp.getAttachmentDir()+this.currentEmailFileName+HTML_SUFFIX);
-                            File text = new File(escp.getAttachmentDir()+this.currentEmailFileName+TXT_SUFFIX);
-                            if (html.exists()){
-                                InputStream is = new FileInputStream(html);
-                                ep.setHtml(true);
-                                ep.setText(inputStreamToHtml(is));
+                            //判断是否包含附件
+                            if (isContainAttach(currentMessage)){
+                                parsePart(currentMessage);
                             }
-                        if (text.exists()){
-                            InputStream is = new FileInputStream(text);
-                            ep.setHtml(false);
-                            ep.setText(inputStreamToHtml(is));
-                        }
-
+                            //获取邮件内容
+                            String sb = parseMessage(currentMessage);
+                            ep.setText(sb);
                             System.out.println("邮件内容:");
                             System.out.println(ep.getText());
                             System.out.println(ep);
@@ -191,26 +178,6 @@ public class TemplateMailReciverHandler extends AbstractMailReciverHandler{
             }
         }
         return null;
-    }
-
-    private String inputStreamToHtml(InputStream is){
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
     }
 
     public static void main(String[] args) throws IOException, MessagingException {

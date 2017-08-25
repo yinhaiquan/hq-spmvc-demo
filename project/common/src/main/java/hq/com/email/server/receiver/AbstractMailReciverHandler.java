@@ -11,7 +11,6 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
 import java.io.*;
-import java.util.List;
 
 /**
  * @title : 邮件接收服务处理器
@@ -190,7 +189,7 @@ public abstract class AbstractMailReciverHandler {
 
 
     /**
-     * 判断是否包含附件
+     * 判断是否包含附件 true 包含附件 false 不包含附件
      * @return
      * @throws IOException
      * @throws MessagingException
@@ -343,16 +342,6 @@ public abstract class AbstractMailReciverHandler {
     }
 
     /**
-     * 解析multipart
-     * @param multipart
-     */
-    public final void handlerMultipart(Multipart multipart) throws MessagingException, IOException {
-        for (int i=0;i<multipart.getCount();i++){
-            parsePart(multipart.getBodyPart(i));
-        }
-    }
-
-    /**
      * 获取邮件详情
      * @return
      */
@@ -366,7 +355,7 @@ public abstract class AbstractMailReciverHandler {
     /**
      * 解析message
      */
-    public abstract void parseMessage(Message message) throws IOException, MessagingException;
+    public abstract String parseMessage(Part message) throws IOException, MessagingException;
 
     /**
      * 解析指定part,从中提取文件
