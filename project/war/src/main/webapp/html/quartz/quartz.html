@@ -47,6 +47,21 @@
         <span class="failuring">故障中</span>: <span class="failuring" id="task_failuring_total">0</span>
         <i class="Hui-iconfont" style="float: right;font-size: 1.5pc;color: #429842;" onclick="task_monitor()">&#xe68f;</i>
     </div>
+    <div class="text-c">
+				<span class="select-box inline">
+				<select name="" class="select">
+					<option value="0">全部分类</option>
+					<option value="1">分类一</option>
+					<option value="2">分类二</option>
+				</select>
+				</span>
+        日期范围：
+        <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin" class="input-text Wdate" style="width:120px;">
+        -
+        <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax" class="input-text Wdate" style="width:120px;">
+        <input type="text" placeholder=" 资讯名称" style="width:250px" class="input-text">
+        <button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜资讯</button>
+    </div>
     <div class="panel panel-default">
         <div class="panel-header">
             <input class="btn btn-success radius" type="button" onclick="test_icheck()" value="点击">

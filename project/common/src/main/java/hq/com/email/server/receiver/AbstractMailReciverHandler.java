@@ -159,9 +159,9 @@ public abstract class AbstractMailReciverHandler {
      */
     public final String getFileName(Part part) throws MessagingException, UnsupportedEncodingException {
         String fileName = part.getFileName();
-        fileName = MimeUtility.decodeText(fileName);
         String name = fileName;
         if (StringUtils.isNotEmpty(fileName)) {
+            fileName = MimeUtility.decodeText(fileName);
             int index = fileName.lastIndexOf(SLASH);
             if (index != -1) {
                 name = fileName.substring(index + 1);
