@@ -26,7 +26,7 @@ import javax.mail.internet.MimeMessage;
 public abstract class AbstractMailSendHandler {
 
     /**
-     * 系统管理员统一邮件发送配置
+     * 系统管理员统一邮件发送配置，spring自动注入
      * 注意:
      *     若需要根据系统登录用户配置邮件发送地址，可通过查询登录用户邮件配置信息实例化JavaMailSenderImpl即可
      */
@@ -38,7 +38,7 @@ public abstract class AbstractMailSendHandler {
      * @param escp 邮箱服务配置信息
      * @return
      */
-    public JavaMailSenderImpl configuration(final EmailServerConfigurationParams escp){
+    public JavaMailSenderImpl configuration(EmailServerConfigurationParams escp){
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
         if (StringUtils.isNotEmpty(escp)){
             sender.setHost(escp.getHost());

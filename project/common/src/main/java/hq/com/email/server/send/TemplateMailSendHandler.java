@@ -25,7 +25,7 @@ import java.io.IOException;
  * Create By yinhaiquan
  * @date 2017/6/12 18:05 星期一
  */
-public class TemplateMailHandler extends AbstractMailSendHandler {
+public class TemplateMailSendHandler extends AbstractMailSendHandler {
     private final static String ENCODING = "UTF-8";
 
     @Override
