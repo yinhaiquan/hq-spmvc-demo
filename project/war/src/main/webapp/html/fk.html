@@ -321,6 +321,39 @@
     <i18n key="name">呵呵</i18n><i18n key="name">呵呵</i18n><i18n key="name">呵呵</i18n>
 
     <b>表单</b>
+    <style>
+        .input-text,.textarea{
+            margin-bottom:5px;
+        }
+        .error:not(.valid):not(.input-text):not(.textarea){
+            background: #ee5f5b;
+            color:white;
+            position:relative;
+            z-index: 3;
+            margin-top:2px;
+            padding:1px 6px;
+            border-radius: 2px;
+        }
+
+        .error:not(.valid):not(.input-text):not(.textarea):after{
+            content: "";
+            display:inline-block;
+            font-size: 0;
+            line-height: 0;
+            border-width: 10px;
+            border-color: #ee5f5b;
+            border-top-width: 0;
+            border-style: dashed;
+            border-bottom-style: solid;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            position: absolute;
+            left:2px;
+            top:-5px;
+            z-index:-1;
+        }
+
+    </style>
     <form action="" method="post" class="form form-horizontal" id="form-member-add">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span><i18n key="name">呵呵</i18n>用户名：</label>
@@ -380,7 +413,7 @@
             <label class="form-label col-xs-4 col-sm-3">备注：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <textarea name="beizhu2" id="beizhu2" cols="" rows="" class="textarea" placeholder="说点什么...最少输入10个字符" datatype="*10-500" nullmsg="备注不能为空！" onkeyup="$(this).Huitextarealength(this)"></textarea>
-                <p class="textarea-numberbar"><em class="textarea-length">10</em>/500</p>
+                <p class="textarea-numberbar"><em class="textarea-length">0</em>/500</p>
             </div>
         </div>
         <div class="row cl">
@@ -758,8 +791,8 @@
             }
 
         },
-//        errorClass:"", //自定义错误样式
-        errorElement:"em", //自定义错误标签
+//        errorClass:"error", //自定义错误样式
+//        errorElement:"em", //自定义错误标签
 //        errorPlacement: function(error, element){//错误信息显示位置
 //            error.appendTo(element.parent().find(".tipinfo"));
 //        },
@@ -768,9 +801,7 @@
         onclick: function(element) { $(element).valid(); },
         onkeyup: function(element) { $(element).valid(); },
         focusCleanup:true,
-        success:function(item){//每个表单验证成功后执行
-
-        },
+        success:"valid",
         submitHandler:function(form){
             /*提交表单通过ajax 不用$(form).ajaxSubmit()*/
             console.info(form);
