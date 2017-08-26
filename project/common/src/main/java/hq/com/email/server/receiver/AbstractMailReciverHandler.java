@@ -35,11 +35,9 @@ public abstract class AbstractMailReciverHandler {
     protected static final String HEADER = "Disposition-Notification-To";
     protected static final String MIMETYPE_TEXT_PLAIN = "text/plain";
     protected static final String MIMETYPE_TEXT_HTML = "text/html";
-    protected static final String MIMETYPE_IMAGE_GIF = "image/gif";
-    protected static final String TXT_SUFFIX = ".txt";//纯文本内容
-    protected static final String HTML_SUFFIX = ".html";//html内容
-    protected static final String GIF_SUFFIX = ".gif";
+    protected static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
     private static final boolean isDebug = false;
+    private static final int FOLDER_TYPE = Folder.READ_ONLY;
 
     /*邮件服务器配置信息*/
     protected EmailServerConfigurationParams escp;
@@ -83,7 +81,7 @@ public abstract class AbstractMailReciverHandler {
     public final boolean openInBoxFolder(){
         try {
             folder = store.getFolder(FOLDER);
-            folder.open(Folder.READ_ONLY);
+            folder.open(FOLDER_TYPE);
             return true;
         } catch (MessagingException e) {
             return false;
@@ -98,6 +96,7 @@ public abstract class AbstractMailReciverHandler {
         try {
             if (StringUtils.isNotEmpty(folder)&&folder.isOpen()){
                 folder.close(true);
+                store.close();
             }
             return true;
         } catch (MessagingException e) {
@@ -151,7 +150,7 @@ public abstract class AbstractMailReciverHandler {
     }
 
     /**
-     * 获取邮件文件名
+     * 获取文件名
      * @param part
      * @return
      * @throws MessagingException
@@ -242,6 +241,7 @@ public abstract class AbstractMailReciverHandler {
 
     /**
      * 判断邮件是否已读 true已读 false未读
+     * pop3没有判断邮件是否为已读的功能，要使用Imap才可以
      * @return
      * @throws MessagingException
      */
@@ -351,17 +351,6 @@ public abstract class AbstractMailReciverHandler {
      * 保存邮件源文件eml
      */
     public abstract void saveMLFile(Message message) throws MessagingException, IOException;
-
-    /**
-     * 解析message
-     */
-    public abstract String parseMessage(Part message) throws IOException, MessagingException;
-
-    /**
-     * 解析指定part,从中提取文件
-     * @param part
-     */
-    public abstract FileParam parsePart(Part part) throws IOException, MessagingException;
 
     /**
      * 接收邮件

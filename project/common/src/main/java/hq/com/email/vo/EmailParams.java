@@ -16,8 +16,7 @@ import java.util.Map;
  */
 public class EmailParams implements Serializable{
     private static final long serialVersionUID = -4123966721335358256L;
-    /*邮箱服务器邮件ID*/
-    private String emailServerId;
+
     /*接收者列表 [必填]*/
     private String [] receiver;
     /*发送者 [必填]*/
@@ -46,13 +45,7 @@ public class EmailParams implements Serializable{
     public EmailParams() {
     }
 
-    public String getEmailServerId() {
-        return emailServerId;
-    }
 
-    public void setEmailServerId(String emailServerId) {
-        this.emailServerId = emailServerId;
-    }
 
     public String[] getReceiver() {
         return receiver;
@@ -153,7 +146,6 @@ public class EmailParams implements Serializable{
     @Override
     public String toString() {
         return "EmailParams{" +
-                "emailServerId='" + emailServerId + '\'' +
                 ", receiver=" + Arrays.toString(receiver) +
                 ", from='" + from + '\'' +
                 ", cc=" + Arrays.toString(cc) +

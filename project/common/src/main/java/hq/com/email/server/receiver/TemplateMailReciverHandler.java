@@ -2,12 +2,16 @@ package hq.com.email.server.receiver;
 
 import hq.com.aop.utils.StringUtils;
 import hq.com.aop.vo.FileParam;
+import hq.com.email.vo.EmailAttachMentParams;
 import hq.com.email.vo.EmailParams;
 import hq.com.email.vo.EmailServerConfigurationParams;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -28,8 +32,8 @@ public class TemplateMailReciverHandler extends AbstractMailReciverHandler{
      * @return
      */
     @Override
-    public EmailParams formartEamilInfo() throws MessagingException, UnsupportedEncodingException {
-        EmailParams ep = new EmailParams();
+    public EmailAttachMentParams formartEamilInfo() throws MessagingException, UnsupportedEncodingException {
+        EmailAttachMentParams ep = new EmailAttachMentParams();
         ep.setHtml(true);
         ep.setEmailServerId(((MimeMessage)currentMessage).getMessageID());
         ep.setSentDate(currentMessage.getSentDate());
@@ -43,7 +47,7 @@ public class TemplateMailReciverHandler extends AbstractMailReciverHandler{
     }
 
     /**
-     * 保存邮件源文件eml
+     * 保存邮件源文件eml路径
      */
     @Override
     public void saveMLFile(Message message) throws MessagingException, IOException {
@@ -60,69 +64,68 @@ public class TemplateMailReciverHandler extends AbstractMailReciverHandler{
         }
         currentEmailFileName = emlName;
         System.out.println("邮件消息的存储路径: " + fileNameWidthExtension);
-        // 将邮件消息的内容写入ByteArrayOutputStream流中
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        message.writeTo(baos);
-        // 读取邮件消息流中的数据
-        StringReader in = new StringReader(baos.toString());
-        // 存储到文件
-        saveFile(fileNameWidthExtension, in);
+        return;
+        //不用存储eml文件，可登陆自己邮件下载eml文件，此处第三方下载速度很慢，不建议在第三方下载eml
+//        // 将邮件消息的内容写入ByteArrayOutputStream流中
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        message.writeTo(baos);
+//        // 读取邮件消息流中的数据
+//        StringReader in = new StringReader(baos.toString());
+//        // 存储到文件
+//        saveFile(fileNameWidthExtension, in);
     }
 
     /**
-     * 解析message
+     * 解析复杂邮件内容
+     * @return
+     * @throws IOException
+     * @throws MessagingException
      */
-    @Override
-    public String parseMessage(Part message) throws IOException, MessagingException {
-        String disposition = message.getDisposition();
-        String contentType = message.getContentType();
-        int nameindex = contentType.indexOf("name");
-        boolean conname = false;
-        if (nameindex!=-1){
-            conname = true;
+    public EmailAttachMentParams parseMesage() throws IOException, MessagingException {
+        Object content = currentMessage.getContent();
+        EmailAttachMentParams eamp = new EmailAttachMentParams();
+        if (content instanceof MimeMultipart) {
+            MimeMultipart multipart = (MimeMultipart) content;
+            eamp = parseMultipart(multipart);
         }
+        return eamp;
+    }
+
+    /**
+     * 解析邮件内容
+     * @param multipart
+     * @return
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public EmailAttachMentParams parseMultipart(Multipart multipart) throws MessagingException, IOException {
+        EmailAttachMentParams eamp = new EmailAttachMentParams();
+        int count = multipart.getCount();
+        List<FileParam> list = new ArrayList<>();
+
         StringBuilder bodytext = new StringBuilder();
-        // 没有附件的情况 保存邮件内容
-        if (StringUtils.isEmpty(disposition)){
-            if (message.isMimeType(MIMETYPE_TEXT_PLAIN)&&!conname){
-                bodytext.append((String) message.getContent());
-            }else if (message.isMimeType(MIMETYPE_TEXT_HTML)&&!conname){
-                bodytext.append((String) message.getContent());
-            }else if (message.isMimeType(MIMETYPE_MULTIPART)){
-                Multipart multipart = (Multipart) message.getContent();
-                for (int i =0;i<multipart.getCount();i++){
-                    bodytext.append(parseMessage( multipart.getBodyPart(i)));
+        for (int idx=0;idx<count;idx++) {
+            BodyPart bodyPart = multipart.getBodyPart(idx);
+            if (bodyPart.isMimeType(MIMETYPE_TEXT_PLAIN)) {
+                bodytext.append((String) bodyPart.getContent());
+            } else if(bodyPart.isMimeType(MIMETYPE_TEXT_HTML)) {
+                bodytext.append((String) bodyPart.getContent());
+            } else if(bodyPart.isMimeType(MIMETYPE_MULTIPART)) {
+                Multipart mpart = (Multipart)bodyPart.getContent();
+                parseMultipart(mpart);
+            } else if (bodyPart.isMimeType(APPLICATION_OCTET_STREAM)) {
+                String disposition = bodyPart.getDisposition();
+                if (StringUtils.isNotEmpty(disposition)&&disposition.equalsIgnoreCase(BodyPart.ATTACHMENT)) {
+                    String fileName = bodyPart.getFileName();
+                    InputStreamReader sbis = new InputStreamReader(bodyPart.getInputStream());
+                    list.add(saveFile(escp.getAttachmentDir()+fileName, sbis));
+
                 }
-            }else if (message.isMimeType(MIMETYPE_MESSAGE)){
-                bodytext.append(parseMessage(message));
-            }else{
-                log.info("未知文件类型");
             }
         }
-        return bodytext.toString();
-    }
-
-    /**
-     * 解析指定part,从中提取附件
-     * @param part
-     */
-    @Override
-    public FileParam parsePart(Part part) throws IOException, MessagingException {
-        String disposition = part.getDisposition();
-        FileParam fp = new FileParam();
-        String fileNameWidthExtension = null;
-        // 获得邮件的内容输入流
-        InputStreamReader sbis = new InputStreamReader(part.getInputStream());
-        // 各种有附件的情况
-        String name = getFileName(part);
-        if (disposition.equalsIgnoreCase(Part.ATTACHMENT)||disposition.equalsIgnoreCase(Part.INLINE)){
-            fileNameWidthExtension = escp.getAttachmentDir()+name;
-        }
-        // 存储各类附件
-        if (StringUtils.isNotEmpty(fileNameWidthExtension)){
-            fp = saveFile(fileNameWidthExtension,sbis);
-        }
-        return fp;
+        eamp.setText(bodytext.toString());
+        eamp.setFiles(list.toArray(new FileParam [list.size()]));
+        return eamp;
     }
 
     /**
@@ -145,23 +148,23 @@ public class TemplateMailReciverHandler extends AbstractMailReciverHandler{
                 for (int index = 0;index<getMessageCount();index++){
                     try {
                         currentMessage = messages[index];//设置当前邮件
+                        // 删除邮件
+                        // currentMessage.setFlag(Flags.Flag.DELETED, true);
+                        // 标记为已读
+                        // currentMessage.setFlag(Flags.Flag.SEEN, true);
                         System.out.println("正在获取第" + index + "封邮件");
-//                        if(!isNew()){
+                        if(!isNew()){
                             //下载eml文件
                             saveMLFile(currentMessage);
-                            EmailParams ep = formartEamilInfo();
-                            //下载邮件文件附件等
-                            //判断是否包含附件
-                            if (isContainAttach(currentMessage)){
-                                parsePart(currentMessage);
-                            }
+                            EmailAttachMentParams ep = formartEamilInfo();
                             //获取邮件内容
-                            String sb = parseMessage(currentMessage);
-                            ep.setText(sb);
+                            EmailAttachMentParams ep2 = parseMesage();
+                            ep.setText(ep2.getText());
+                            ep.setFiles(ep2.getFiles());
                             System.out.println("邮件内容:");
                             System.out.println(ep.getText());
                             System.out.println(ep);
-//                        }
+                        }
                         System.out.println("成功获取第" + index + "封邮件");
                         successCounter++;
                     } catch (Throwable e) {
