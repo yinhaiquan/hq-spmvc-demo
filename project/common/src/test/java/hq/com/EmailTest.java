@@ -8,7 +8,7 @@ import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.utils.DateUtils;
 import hq.com.aop.vo.FileParam;
 import hq.com.email.server.send.AbstractMailSendHandler;
-import hq.com.email.server.send.TemplateMailHandler;
+import hq.com.email.server.send.TemplateMailSendHandler;
 import hq.com.email.vo.EmailParams;
 import hq.com.email.vo.EmailServerConfigurationParams;
 import org.junit.Test;
@@ -33,7 +33,7 @@ import java.util.*;
 public class EmailTest {
 
     @Resource(name = "mailHandler")
-    private TemplateMailHandler javaMail;
+    private TemplateMailSendHandler javaMail;
 
     @Resource(name = "asyncEventSource")
     private AsyncEventSourceImpl asyncEventSource;

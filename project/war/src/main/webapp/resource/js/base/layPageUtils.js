@@ -79,6 +79,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             }
             //table 首行加载
             layPageFunction.titleTable(setting,null);
+
             layPageFunction.dataLoading(setting,null,false);
             $("table").find('.check-box input').iCheck({
                 checkboxClass: 'icheckbox-grey',
@@ -197,7 +198,8 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             /*table id*/
             var id = setting.tableId;
             //添加加载loading
-            $("#"+id+tableIdSuffix).find("tbody").html('loading...');
+            var list = $("#"+id+tableIdSuffix).find("thead tr th");
+            $("#"+id+tableIdSuffix).find("tbody").append("<tr><td colspan='"+list.length+"'><div class='load'></div></td></tr>");
             var pager =null;
             if(setting.url){
                 /**
@@ -229,6 +231,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                     setting.params,
                     AjaxUtils.Constant.Ajax.TIME_OUT,
                     function(data){
+                        $("#"+id+tableIdSuffix).find("tbody").remove('div');
                         /**
                          * 分页返回结果格式，其中content内为分页对象Pager
                          * {
@@ -284,8 +287,6 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 $("table thead th").find("input:checkbox").on("ifToggled",function() {
                     $("table td").find("input:checkbox").iCheck('toggle');
                 });
-            }else{
-                return;
             }
             $(document.getElementById(id)).find('th').bind('click',function(){
                 var current_ = this;
