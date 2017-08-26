@@ -147,6 +147,9 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 data_ = pager.rows;
                 pages = pager.pages;
             }
+            if(layPageFunction.noDateShow(setting.tableId,data_)){
+                return;
+            }
             //数据加载
             layPageFunction.dataTable(setting,data_,null);
             laypager({
@@ -254,7 +257,8 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                                 pager.pageSize = data.content.pageSize;
                             }
                         }
-                    }
+                    },
+                    id+tableIdSuffix
                 )
             }
             return pager;
@@ -320,6 +324,9 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 if(!StringUtils.isEmpty_(pager)){
                     data_ = pager.rows;
                 }
+                if(layPageFunction.noDateShow(setting.tableId,data_)){
+                    return;
+                }
                 //数据加载
                 layPageFunction.dataTable(setting,data_,null);
             })
@@ -361,6 +368,14 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                    $("#"+id+tableIdSuffix).find("tbody").append(str);
                 }
             }
+        },
+        noDateShow : function(id,data_){
+            if(StringUtils.isEmpty_(data_)){
+                var list = $("#"+id+tableIdSuffix).find("thead tr th");
+                $("#"+id+tableIdSuffix).find("tbody").append("<tr><td colspan='"+list.length+"'><div align='center'>暂无数据</div></td></tr>");
+                return true;
+            }
+            return false;
         }
     }
     return layPageFunction;

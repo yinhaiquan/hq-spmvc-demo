@@ -81,8 +81,9 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
              * @param data      参数
              * @param timeout   ajax请求超时时间(单位ms)
              * @param sucessfn  请求成功处理函数
+             * @param id        扩展字段 暂时用于取消加载效果
              */
-            ajaxSimple : function(type,url,dataType,data,timeout,sucessfn){
+            ajaxSimple : function(type,url,dataType,data,timeout,sucessfn,id){
                 $.ajax({
                     async:false,
                     type: type,
@@ -98,6 +99,10 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
                     },
                     error:function (XMLHttpRequest, textStatus, errorThrown) {
                        console.info("ajax 异常日志：");
+                        //取消加载效果
+                        if(id){
+                            $("#"+id).find("tbody").html('');
+                        }
                        if(textStatus == 'timeout'){
                            layer.alert("网络请求超时！",{icon: 5});
                            console.info('网络请求超时!');
@@ -108,7 +113,7 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
                            console.info('请求地址不存在,或者服务未启动!');
                            return;
                        }
-                       $.Huimodalalert(XMLHttpRequest.responseText);
+                       layer.alert(XMLHttpRequest.responseText,{icon: 5});
                     }
                 })
             },

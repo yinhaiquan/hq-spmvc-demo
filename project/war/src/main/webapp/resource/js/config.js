@@ -19,7 +19,7 @@ requirejs.config({
 
 */
 requirejs.config({
-    baseUrl: 'http://localhost:63342/project/war/src/main/webapp/',
+    baseUrl: 'http://localhost:63342/hq-spmvc-demo/project/war/src/main/webapp/',
     // baseUrl: 'http://localhost:8080/',
     paths: {
         /*js配置路径*/
@@ -46,6 +46,7 @@ requirejs.config({
         wangeditor:'resource/lib/wangeditor/3.0.7/wangEditor',
         bootstrapswitch:'resource/lib/switch/bootstrapSwitch',
         xss:'resource/js/xss',
+        wdatepicker:'resource/lib/My97DatePicker/4.8/WdatePicker',
 
         /*自定义插件扩展*/
         constant:'resource/js/base/constant',

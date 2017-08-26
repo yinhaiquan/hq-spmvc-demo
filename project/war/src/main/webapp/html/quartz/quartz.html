@@ -79,6 +79,9 @@
         </div>
     </div>
     <script>
+        require(['wdatepicker'],function(){
+
+        })
 
         task_monitor();
         function task_monitor(){
@@ -219,7 +222,7 @@
                         name:'<div class="check-box"><input id="fuck" type="checkbox"></div>',
                         value:'checkbox',
                         align:'text-c',
-                        width:'8%',
+                        width:'3%',
                         iShow:true,
                         formartVal:function(row){
                             return '<div class="check-box"><input type="checkbox" name="quartz" value="'+row.schedulerId+'"></div>';
@@ -246,7 +249,7 @@
                         name:'任务包名+类名',
                         value:'jobClass',
                         align:'text-c',
-                        width:'15%',
+                        width:'10%',
                         iShow:true,
                         formartVal:function(value,row){
                             return value;

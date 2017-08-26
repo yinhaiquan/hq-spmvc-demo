@@ -52,6 +52,7 @@ public class QuartzDaoImpl implements QuartzDao {
     @Override
     public void updateJobTime(String schedulerId, String newTime) throws ClassNotFoundException, ConfigurationException {
         PropertyConfigHelper.newInstance().updateJobProp(schedulerId+PropertyConfigHelper.CRON_EXPRESSION_TIME_SUFFIX,newTime);
+        PropertyConfigHelper.newInstance().updateJobProp(schedulerId+PropertyConfigHelper.JOB_RUNNING_STATE_SUFFIX,"running");
         SchedulerInfo schedulerInfo = PropertyConfigHelper.newInstance().getSchedulerInfo(schedulerId);
         if (StringUtils.isNotEmpty(schedulerInfo)){
             QuartzManager.updateJobTime(schedulerId,
@@ -71,8 +72,8 @@ public class QuartzDaoImpl implements QuartzDao {
      */
     @Override
     public void deleteJob(String schedulerId) throws ClassNotFoundException {
-        PropertyConfigHelper.newInstance().removeJobProp(schedulerId);
         SchedulerInfo schedulerInfo = PropertyConfigHelper.newInstance().getSchedulerInfo(schedulerId);
+        PropertyConfigHelper.newInstance().removeJobProp(schedulerId);
         if (StringUtils.isNotEmpty(schedulerInfo)){
             QuartzManager.removeJob(schedulerId,
                     schedulerInfo.getJobName(),
