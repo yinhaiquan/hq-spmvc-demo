@@ -47,25 +47,10 @@
         <span class="failuring">故障中</span>: <span class="failuring" id="task_failuring_total">0</span>
         <i class="Hui-iconfont" style="float: right;font-size: 1.5pc;color: #429842;" onclick="task_monitor()">&#xe68f;</i>
     </div>
-    <div class="text-c">
-				<span class="select-box inline">
-				<select name="" class="select">
-					<option value="0">全部分类</option>
-					<option value="1">分类一</option>
-					<option value="2">分类二</option>
-				</select>
-				</span>
-        日期范围：
-        <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin" class="input-text Wdate" style="width:120px;">
-        -
-        <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax" class="input-text Wdate" style="width:120px;">
-        <input type="text" placeholder=" 资讯名称" style="width:250px" class="input-text">
-        <button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜资讯</button>
-    </div>
     <div class="panel panel-default">
         <div class="panel-header">
-            <input class="btn btn-success radius" type="button" onclick="test_icheck()" value="点击">
-            <input class="btn btn-success radius" type="button" onclick="test_icheck2()" value="反选">
+          <!--  <input class="btn btn-success radius" type="button" onclick="test_icheck()" value="点击">
+            <input class="btn btn-success radius" type="button" onclick="test_icheck2()" value="反选">-->
             <input class="btn radius btn-secondary" type="button" onclick="create_task()" value="创建任务">
         </div>
         <div class="panel-body">
@@ -181,7 +166,7 @@
                     jobGroupName:"中国",
                     triggerGroupName:"呵呵",
                     time:"* 0/1 * * * ?",
-                    statusEnum:"running",
+                    statusEnum:"shutdowning",
                     started:true,
                     shutdown:true,
                     inStandbyMode:true
@@ -193,14 +178,14 @@
                     jobGroupName:"中国",
                     triggerGroupName:"呵呵",
                     time:"* 0/1 * * * ?",
-                    statusEnum:"running",
+                    statusEnum:"failuring",
                     started:false,
                     shutdown:true,
                     inStandbyMode:true
                 }
             ]
             options = LayPageUtils.dataGride({
-//                data_:data,
+                data_:data,
                 url : LayPageUtils.AjaxUtils.URLS.quartzURLS.getSchedulerList,
                 params :LayPageUtils.AjaxUtils.ajaxParam,
                 type:'json',
@@ -223,7 +208,7 @@
                         value:'checkbox',
                         align:'text-c',
                         width:'3%',
-                        iShow:true,
+                        iShow:false,
                         formartVal:function(row){
                             return '<div class="check-box"><input type="checkbox" name="quartz" value="'+row.schedulerId+'"></div>';
                         }
@@ -288,7 +273,18 @@
                         width:'10%',
                         iShow:true,
                         formartVal:function(value,row){
-                            return value;
+                            switch(value){
+                                case 'initialing':
+                                    return '<span class="label label-default  radius">初始化中</span>';
+                                case 'running':
+                                    return '<span class="label label-success radius">运行中</span>';
+                                case 'pausing':
+                                    return '<span class="label label-secondary radius">暂停中</span>';
+                                case 'shutdowning':
+                                    return '<span class="label label-warning radius">关闭中</span>';
+                                default :
+                                    return '<span class="label label-danger radius">故障中</span>';
+                            }
                         }
                     },{
                         name:'started|shutdown|inStandbyMode',
@@ -309,10 +305,10 @@
                     },{
                         name:'操作',
                         value:'option',
-                        align:'text-l',
+                        align:'text-c',
                         iShow:true,
                         formartVal:function(data){
-                            return '<input class="btn btn-success radius" type="button" onclick="alert('+data.jobName+')" value="成功">';
+                            return '<input class="btn btn-success radius" type="button" onclick="alert(\''+data.statusEnum+'\')" value="成功">';
                         }
                     }
                 ]

@@ -284,7 +284,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                     if(obj_.iShow){
                         var align = obj_.align||'';
                         var width = obj_.width||'';
-                        var order = obj_.order?align+' sorting':'';
+                        var order = align+(obj_.order?' sorting':'');
                         thead_tr.append('<th class="'+order+'" width="'+width+'" id="'+obj_.value+'">'+obj_.name+'</th>');
                     }
                 }
