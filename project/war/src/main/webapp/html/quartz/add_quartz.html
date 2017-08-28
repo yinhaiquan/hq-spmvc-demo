@@ -1,47 +1,48 @@
 <div class="page-container">
-    <div class="codeView docs-example">
-        <div class="skin-minimal">
-            <div class="check-box">
-                <input type="checkbox" id="checkbox-1">
-                <label for="checkbox-1">复选框</label>
-            </div>
-            <div class="check-box">
-                <input type="checkbox" id="checkbox-2" checked>
-                <label for="checkbox-2">复选框 checked状态</label>
-            </div>
-            <div class="check-box">
-                <input type="checkbox" id="checkbox-disabled" disabled>
-                <label for="checkbox-disabled">Disabled</label>
-            </div>
-            <div class="check-box">
-                <input type="checkbox" id="checkbox-disabled-checked" checked disabled>
-                <label for="checkbox-disabled-checked">Disabled &amp; checked</label>
+    <div>
+    <article class="cl pd-20 mr-20">
+    <form action="" method="post" class="form form-horizontal" id="form-admin-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>管理员：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="adminName" name="adminName">
             </div>
         </div>
-        <div class="mt-20 skin-minimal">
-            <div class="radio-box">
-                <input type="radio" id="radio-1" name="demo-radio1">
-                <label for="radio-1">单选按钮</label>
-            </div>
-            <div class="radio-box">
-                <input type="radio" id="radio-2" name="demo-radio1" checked>
-                <label for="radio-2">单选按钮 checked状态</label>
-            </div>
-            <div class="radio-box">
-                <input type="radio" id="radio-disabled" disabled>
-                <label for="radio-disabled">Disabled</label>
-            </div>
-            <div class="radio-box">
-                <input type="radio" id="radio-disabled-checked" checked disabled>
-                <label for="radio-disabled-checked">Disabled &amp; checked</label>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="phone" name="phone">
             </div>
         </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" placeholder="@" name="email" id="email">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">立即启动：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div id="mySwitch" class="switch">
+                    <input type="checkbox" checked />
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
         <script>
-            $('.skin-minimal input').iCheck({
-                checkboxClass: 'icheckbox-blue',
-                radioClass: 'iradio-blue',
-                increaseArea: '20%'
-            });
+            require(['bootstrapswitch','css!bootstrapswitchstyle'],function(){
+                $('#mySwitch').on('switch-change', function (e, data) {
+                    var $el = $(data.el)
+                        , value = data.value;
+                    alert(value);
+                });
+            })
         </script>
+    </article>
     </div>
 </div>
