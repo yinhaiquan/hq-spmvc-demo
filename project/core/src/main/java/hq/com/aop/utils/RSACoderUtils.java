@@ -229,26 +229,52 @@ public final class RSACoderUtils extends CoderUtils {
     }
 
     public static void main(String[] args) throws Exception {
+//        test();
         Map<String, Object> map = initKey();
         String privateKey = getPrivateKey(map);
         String publicKey = getPublicKey(map);
+        System.out.println("私钥:");
         System.out.println(privateKey);
+        System.out.println("公钥:");
         System.out.println(publicKey);
-        System.out.println("用户私钥加密*************");
-        String msg = "123sadfsadf";
-        System.out.println("==>" + msg);
-        byte[] p_k_r = encryptByPrivateKey(msg.getBytes(), privateKey);
-        System.out.println("用公钥解密***************");
-        String msg_ = new String(decryptByPublicKey(p_k_r, publicKey));
-        System.out.println("==>" + msg_);
-        System.out.println("用私钥对信息生成数字签名****");
-        String pa = sign(msg.getBytes(), privateKey);
-        System.out.println(pa);
-        System.out.println("校验数字签名*****");
-        System.out.println(verify(msg.getBytes(), publicKey, pa));
+//        System.out.println("用户私钥加密*************");
+//        String msg = "123sadfsadf";
+//        System.out.println("==>" + msg);
+//        byte[] p_k_r = encryptByPrivateKey(msg.getBytes(), privateKey);
+//        System.out.println(encryptBase64(p_k_r));
+//        System.out.println("用公钥解密***************");
+//        String msg_ = new String(decryptByPublicKey(p_k_r, publicKey));
+//        System.out.println("==>" + msg_);
+//        System.out.println("用户公钥加密*************");
+//        byte[] p_k_r2 = encryptByPublicKey(msg.getBytes(),publicKey);
+//        System.out.println(encryptBase64(p_k_r2));
+//        System.out.println("用私钥解密***************");
+//        String msg_2 = new String(decryptByPrivateKey(p_k_r2,privateKey));
+//        System.out.println("====>"+msg_2);
+//
+//        System.out.println("用私钥对信息生成数字签名****");
+//        String pa = sign(msg.getBytes(), privateKey);
+//        System.out.println(pa);
+//        System.out.println("校验数字签名*****");
+//        System.out.println(verify(msg.getBytes(), publicKey, pa));
 //        Map<String, Object> map2 = initKey();
 //        System.out.println(getPrivateKey(map2));
 //        System.out.println(getPublicKey(map2));
     }
 
+    /**
+     * 测试前端jsencrypt.js插件对数据加密解密操作
+     * @throws Exception
+     */
+    public static void test() throws Exception {
+        String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQClVNJfuTWsDavS2byXsmPEBwFsFtjhA2QTI/RF1lN+4PxAdRq9V10P8SgdsLOerFlj7p/sWE4SvspDOLlEIf9PioIiWqDnZ/u3fI7+RJFhPXuPkO/Fv+bk95zT5bfoaPhNomZlFcH7ojjXEuufAclrcoiiwH/ecUmisYTQskoJBwIDAQAB";
+        String privateKey = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAKVU0l+5NawNq9LZvJeyY8QHAWwW2OEDZBMj9EXWU37g/EB1Gr1XXQ/xKB2ws56sWWPun+xYThK+ykM4uUQh/0+KgiJaoOdn+7d8jv5EkWE9e4+Q78W/5uT3nNPlt+ho+E2iZmUVwfuiONcS658ByWtyiKLAf95xSaKxhNCySgkHAgMBAAECgYArpJx0EFwOsv0sh7W1Ba44TPEfK1jM7Sw5sUAGP3GDCLkN+tu4J5u1XZ+NVtvTgwOF0bP9m8HgSOTzocGmLqNKWqekE13JWeMc5n8GmPPw98vgPHHYTKLVToJxMD6Ngq9pHpudyv+eNVzrD9/oCeBDgIIfxBdB9olDW10aOTxYgQJBAOX0NQqsDK3zYsd61KdwAWdPyRfP6hu3jDiEYJDgvar1CNeVKmTLnv64VzHWNKKgDmRPBFHv8RZwAektt9rStPcCQQC4Ds3WaQkEyJmzL407bZVoemFPuCUPc5CaSFcd6lGcu+M3TZVGCwBnrEtdhJO4PTsv4WusMblrBUhmyX1A9xhxAkEA4osdOl9XuoPeG/IZ0L8a0uIalfgChr3kScW4sOKIWQVAacsN0fF8uSt406NZhaGzrATgl6yQUm+UolmlGNKe7wJBALUT+3Yhx/mo0W30LmJ1ITS0keA4Ll3ROEZRPUP1L22fe58A+Qb7894LJ+pNcHcl5oDoqWGzWdPsUpqtSEkN0EECQQDNJXmeiqa1n2hQzWTAv6Vjd9DDc6cvMKDl56/8iA42zsbwhEWBEb/RVh7zcLcDKumYa1WtfT3wGW1t7F0GFzno";
+
+        //前端生成encrypted加密数据
+        String msg_ = "VeP0JC59ShiA+flNcxugNPJ5S91DGhdvrZpq/xcYWlmVJwi3nHypzycu3So2riHioZgNf68WJL/8cK9C5apV5g/73EPQ656ejLyeS1FQ5XVf72SxfVHJ6WZ5+7POAoxAqPzen2osq7eSJbKgHs+kpDfQOs3WFxj1JGMFk5gfNs0=";
+        System.out.println(msg_.length());
+        byte[] decodedData = decryptByPrivateKey(decryptBase64(msg_),privateKey);
+        String str = new String(decodedData);
+        System.out.println(str);
+    }
 }
