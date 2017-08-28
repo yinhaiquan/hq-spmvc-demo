@@ -2,6 +2,7 @@ package hq.com.email.server.receiver;
 
 import hq.com.aop.utils.StringUtils;
 import hq.com.aop.vo.FileParam;
+import hq.com.email.vo.EmailAttachMentParams;
 import hq.com.email.vo.EmailParams;
 import hq.com.email.vo.EmailServerConfigurationParams;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
 import java.io.*;
+import java.util.List;
 
 /**
  * @title : 邮件接收服务处理器
@@ -70,6 +72,7 @@ public abstract class AbstractMailReciverHandler {
             }
             return true;
         } catch (MessagingException e) {
+            log.info("邮件接收服务端登录失败!失败原因:{}",e.getMessage());
             return false;
         }
     }
@@ -84,6 +87,7 @@ public abstract class AbstractMailReciverHandler {
             folder.open(FOLDER_TYPE);
             return true;
         } catch (MessagingException e) {
+            log.info("打开收件箱异常:{}",e.getMessage());
             return false;
         }
     }
@@ -100,6 +104,7 @@ public abstract class AbstractMailReciverHandler {
             }
             return true;
         } catch (MessagingException e) {
+            log.info("关闭邮箱异常:{}",e.getMessage());
             return false;
         }
     }
@@ -345,7 +350,7 @@ public abstract class AbstractMailReciverHandler {
      * 获取邮件详情
      * @return
      */
-    public abstract EmailParams formartEamilInfo() throws MessagingException, UnsupportedEncodingException;
+    public abstract EmailAttachMentParams formartEamilInfo() throws MessagingException, UnsupportedEncodingException;
 
     /**
      * 保存邮件源文件eml
@@ -356,5 +361,5 @@ public abstract class AbstractMailReciverHandler {
      * 接收邮件
      * @return
      */
-    public abstract EmailParams receiverEmail() throws MessagingException;
+    public abstract List<EmailAttachMentParams> receiverEmail() throws MessagingException;
 }
