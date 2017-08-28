@@ -223,7 +223,13 @@
     <script>
         function bigbutton(){
             require(['ztreeUtils'],function(ztreeUtils){
-                console.info(ztreeUtils.getAllNodes('treeDemo2'));
+                /*测试两个属性结构直接添加删除数据*/
+                var array = ztreeUtils.getAllNodes('treeDemo2');
+                array.push({ id:0,name:"zTree 默认样式",pId:-1,chkDisabled:true});
+                array.push({ id:1, pId:0, name:"展开、折叠 自定义图标不同",checked:true, open:true, iconOpen:"http://www.treejs.cn/v3/img/menuIcon.png", iconClose:"http://www.treejs.cn/v3/img/menuIcon.png"});
+                $("#treeDemo2").find("li").remove();
+                ztreeUtils.createTreeAMD($("#treeDemo2"),array);
+                console.info(array);
             })
         }
         var zNodes =[
