@@ -1,10 +1,8 @@
 package hq.com.email.server.receiver;
 
-import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.utils.StringUtils;
 import hq.com.aop.vo.FileParam;
 import hq.com.email.vo.EmailAttachMentParams;
-import hq.com.email.vo.EmailParams;
 import hq.com.email.vo.EmailServerConfigurationParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
