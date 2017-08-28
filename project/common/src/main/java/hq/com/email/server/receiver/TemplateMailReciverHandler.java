@@ -196,6 +196,12 @@ public class TemplateMailReciverHandler extends AbstractMailReciverHandler{
         return eps;
     }
 
+    /**
+     * 测试
+     * @param args
+     * @throws IOException
+     * @throws MessagingException
+     */
     public static void main(String[] args) throws IOException, MessagingException {
         EmailServerConfigurationParams escp = new EmailServerConfigurationParams();
 //        escp.setHost("pop.exmail.qq.com");

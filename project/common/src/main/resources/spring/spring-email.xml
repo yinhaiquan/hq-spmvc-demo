@@ -30,7 +30,7 @@
         </property>
     </bean>
 
-    <!--邮件组件对外接口-->
+    <!--发送邮件组件对外接口-->
     <bean id="mailHandler" class="hq.com.email.server.send.TemplateMailSendHandler">
         <property name="sender" ref="mailSender"/>
         <property name="freeMarkerConfigurer" ref="freeMarkerConfiguer"/>

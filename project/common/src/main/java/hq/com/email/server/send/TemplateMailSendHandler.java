@@ -33,11 +33,9 @@ public class TemplateMailSendHandler extends AbstractMailSendHandler {
         MimeMessage mailM = getSender().createMimeMessage();
         MimeMessageHelper messageHelper = null;
         try {
+            //是否需要回执
+//            mailM.addHeader(HEADER,emailParams.getFrom());
             messageHelper = new MimeMessageHelper(mailM,true,ENCODING);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        try {
             messageHelper.setTo(emailParams.getReceiver());
             messageHelper.setSentDate(emailParams.getSentDate());
             messageHelper.setSubject(emailParams.getSubject());
@@ -53,9 +51,7 @@ public class TemplateMailSendHandler extends AbstractMailSendHandler {
                 /*装载模板*/
                 Template tpl = getFreeMarkerConfigurer().getConfiguration().getTemplate(emailParams.getTplName());
                 /*加入map到模板中 输出对应变量*/
-//                System.out.println(emailParams.getData());
                 emailParams.setText(FreeMarkerTemplateUtils.processTemplateIntoString(tpl,emailParams.getData()));
-//                System.out.println(emailParams.getText());
             }
             if (StringUtils.isNotEmpty(emailParams.getFiles())){
                 for (FileParam file : emailParams.getFiles()) {

@@ -2,6 +2,7 @@ package hq.com.email.server.send;
 
 import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.utils.StringUtils;
+import hq.com.email.server.CommenMailHandler;
 import hq.com.email.vo.EmailParams;
 import hq.com.email.vo.EmailServerConfigurationParams;
 import org.springframework.mail.MailException;
@@ -23,7 +24,7 @@ import javax.mail.internet.MimeMessage;
  * Create By yinhaiquan
  * @date 2017/6/12 17:50 星期一
  */
-public abstract class AbstractMailSendHandler {
+public abstract class AbstractMailSendHandler extends CommenMailHandler{
 
     /**
      * 系统管理员统一邮件发送配置，spring自动注入

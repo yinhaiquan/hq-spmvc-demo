@@ -2,6 +2,7 @@ package hq.com.email.server.receiver;
 
 import hq.com.aop.utils.StringUtils;
 import hq.com.aop.vo.FileParam;
+import hq.com.email.server.CommenMailHandler;
 import hq.com.email.vo.EmailAttachMentParams;
 import hq.com.email.vo.EmailParams;
 import hq.com.email.vo.EmailServerConfigurationParams;
@@ -25,19 +26,9 @@ import java.util.List;
  * Create By yinhaiquan
  * @date 2017/8/25 11:42 星期五
  */
-public abstract class AbstractMailReciverHandler {
+public abstract class AbstractMailReciverHandler extends CommenMailHandler {
     protected static Logger log = LoggerFactory.getLogger(AbstractMailReciverHandler.class);
-    protected static final String FOLDER = "INBOX";
-    protected static final String POINT = ".";
-    protected static final String SLASH = "/";
-    protected static final String LEFT = "<";
-    protected static final String RIGHT = ">";
-    protected static final String MIMETYPE_MULTIPART = "multipart/*";
-    protected static final String MIMETYPE_MESSAGE = "message/rfc822";
-    protected static final String HEADER = "Disposition-Notification-To";
-    protected static final String MIMETYPE_TEXT_PLAIN = "text/plain";
-    protected static final String MIMETYPE_TEXT_HTML = "text/html";
-    protected static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+
     private static final boolean isDebug = false;
     private static final int FOLDER_TYPE = Folder.READ_ONLY;
 
