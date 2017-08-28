@@ -11,6 +11,7 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
         valueField:'value',   //[可选]值
         textField:'name',     //[可选]text
         tagField:'tag',       //[可选]是否selected
+        isAll:false,          //[可选]是否支持选择所有选项，默认false 值为-1
         selector_class:'select-box mt-10'   //[可选]select 样式 默认select-box mt-10
     }
     var selectGroupFunction = {
@@ -34,6 +35,9 @@ define('selectGroup',['jquery','ajax'],function($,AjaxUtils){
             }
             selectGroupFunction.clear(options.selector);
             var str = '<span class="'+select_class+'"><select class="select" size="1">';
+            if (options.isAll){
+                str+="<option value='-1'>--请选择--</option>";
+            }
             for(var field in data){
                 var obj = data[field];
                 var selected = obj[tagField]?'selected':'';
