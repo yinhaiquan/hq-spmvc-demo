@@ -3,7 +3,8 @@ package hq.com.email.vo;
 import java.io.Serializable;
 
 /**
- * @Describle: 邮件内容实体类
+ * @title : 邮件内容实体类
+ * @Describle: 邮件详情，包括内容附件等信息
  * @Author: yinhaiquan
  * @Date: Created By 下午 12:59 2017/8/26 0026
  * @Modified By

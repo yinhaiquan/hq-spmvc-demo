@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * @title : 邮件对象封装
- * @describle :
+ * @describle : 邮件发送参数封装
  * <p>
  * Create By yinhaiquan
  * @date 2017/8/15 11:38 星期二
