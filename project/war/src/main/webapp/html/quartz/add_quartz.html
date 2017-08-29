@@ -3,25 +3,37 @@
     <article class="cl pd-20 mr-20">
     <form action="" method="post" class="form form-horizontal" id="form-admin-add">
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>管理员：</label>
+            <label class="form-label col-xs-4 col-sm-4"><span class="c-red">*</span>jobName：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="adminName" name="adminName">
+                <input type="text" class="input-text" value="" placeholder="" id="jobName" name="jobName">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
+            <label class="form-label col-xs-4 col-sm-4"><span class="c-red">*</span>jobClass：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="phone" name="phone">
+                <input type="text" class="input-text" value="" placeholder="" id="jobClass" name="jobClass">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+            <label class="form-label col-xs-4 col-sm-4"></span>jobGroupName：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="@" name="email" id="email">
+                <input type="text" class="input-text" placeholder="@" name="jobGroupName" id="jobGroupName">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">立即启动：</label>
+            <label class="form-label col-xs-4 col-sm-4"></span>jobGroupName：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" placeholder="@" name="triggerGroupName" id="triggerGroupName">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-4"><span class="c-red">*</span>cronExpression：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" placeholder="@" name="time" id="time">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-4">立即启动：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div id="mySwitch" class="switch">
                     <input type="checkbox" checked />
@@ -30,7 +42,7 @@
         </div>
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;创建&nbsp;&nbsp;">
             </div>
         </div>
     </form>
