@@ -3,7 +3,8 @@ package hq.com.aop.utils;
 import java.io.*;
 
 /**
- * @Describle: 序列号和反序列化
+ * @title: 序列化和反序列化
+ * @Describle: 序列对象必须是Serializable序列化后的对象
  * @Author: yinhaiquan
  * @Date: Created By 下午 11:12 2017/6/3 0003
  * @Modified By
