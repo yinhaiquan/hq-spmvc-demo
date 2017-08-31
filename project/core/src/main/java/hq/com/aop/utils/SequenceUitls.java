@@ -9,7 +9,7 @@ import java.util.UUID;
  * Create By yinhaiquan
  * @date 2017/8/31 14:37 星期四
  */
-public class SequenceUitls {
+public final class SequenceUitls {
     /**字符集*/
     private final static String CHARACTERS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890";
     /**随机字符串默认长度*/
@@ -20,7 +20,7 @@ public class SequenceUitls {
      *
      * @return
      */
-    public static String getUUID(){
+    public final static String getUUID(){
         return UUID.randomUUID().toString().replaceAll(StringUtils.RAIL,StringUtils.NULL);
     }
 
@@ -30,7 +30,7 @@ public class SequenceUitls {
      * @description: 默认长度4位
      * @return
      */
-    public static String getRandomString(){
+    public final static String getRandomString(){
         return getRandomString(0);
     }
 
@@ -41,7 +41,7 @@ public class SequenceUitls {
      * @param length 指定生成随机字符串长度
      * @return
      */
-    public static String getRandomString(int length){
+    public final static String getRandomString(int length){
         char [] chars = CHARACTERS.toCharArray();
         if (length<=0){
             length = DEFAULT_LENGTH;
