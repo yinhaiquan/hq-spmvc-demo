@@ -27,6 +27,7 @@ import java.util.Map;
  * Create By yinhaiquan
  * @date 2017/5/25 17:44 星期四
  */
+@Deprecated
 public final class RSACoderUtils extends CoderUtils {
     //加密算法
     public static final String KEY_ALGORITHM = "RSA";
@@ -229,14 +230,14 @@ public final class RSACoderUtils extends CoderUtils {
     }
 
     public static void main(String[] args) throws Exception {
-//        test();
-        Map<String, Object> map = initKey();
-        String privateKey = getPrivateKey(map);
-        String publicKey = getPublicKey(map);
-        System.out.println("私钥:");
-        System.out.println(privateKey);
-        System.out.println("公钥:");
-        System.out.println(publicKey);
+        test();
+//        Map<String, Object> map = initKey();
+//        String privateKey = getPrivateKey(map);
+//        String publicKey = getPublicKey(map);
+//        System.out.println("私钥:");
+//        System.out.println(privateKey);
+//        System.out.println("公钥:");
+//        System.out.println(publicKey);
 //        System.out.println("用户私钥加密*************");
 //        String msg = "123sadfsadf";
 //        System.out.println("==>" + msg);
@@ -267,14 +268,28 @@ public final class RSACoderUtils extends CoderUtils {
      * @throws Exception
      */
     public static void test() throws Exception {
-        String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQClVNJfuTWsDavS2byXsmPEBwFsFtjhA2QTI/RF1lN+4PxAdRq9V10P8SgdsLOerFlj7p/sWE4SvspDOLlEIf9PioIiWqDnZ/u3fI7+RJFhPXuPkO/Fv+bk95zT5bfoaPhNomZlFcH7ojjXEuufAclrcoiiwH/ecUmisYTQskoJBwIDAQAB";
-        String privateKey = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAKVU0l+5NawNq9LZvJeyY8QHAWwW2OEDZBMj9EXWU37g/EB1Gr1XXQ/xKB2ws56sWWPun+xYThK+ykM4uUQh/0+KgiJaoOdn+7d8jv5EkWE9e4+Q78W/5uT3nNPlt+ho+E2iZmUVwfuiONcS658ByWtyiKLAf95xSaKxhNCySgkHAgMBAAECgYArpJx0EFwOsv0sh7W1Ba44TPEfK1jM7Sw5sUAGP3GDCLkN+tu4J5u1XZ+NVtvTgwOF0bP9m8HgSOTzocGmLqNKWqekE13JWeMc5n8GmPPw98vgPHHYTKLVToJxMD6Ngq9pHpudyv+eNVzrD9/oCeBDgIIfxBdB9olDW10aOTxYgQJBAOX0NQqsDK3zYsd61KdwAWdPyRfP6hu3jDiEYJDgvar1CNeVKmTLnv64VzHWNKKgDmRPBFHv8RZwAektt9rStPcCQQC4Ds3WaQkEyJmzL407bZVoemFPuCUPc5CaSFcd6lGcu+M3TZVGCwBnrEtdhJO4PTsv4WusMblrBUhmyX1A9xhxAkEA4osdOl9XuoPeG/IZ0L8a0uIalfgChr3kScW4sOKIWQVAacsN0fF8uSt406NZhaGzrATgl6yQUm+UolmlGNKe7wJBALUT+3Yhx/mo0W30LmJ1ITS0keA4Ll3ROEZRPUP1L22fe58A+Qb7894LJ+pNcHcl5oDoqWGzWdPsUpqtSEkN0EECQQDNJXmeiqa1n2hQzWTAv6Vjd9DDc6cvMKDl56/8iA42zsbwhEWBEb/RVh7zcLcDKumYa1WtfT3wGW1t7F0GFzno";
-
+        String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCSGUaCnoh+KyNEADIoB10CyNVatcqmgXcobcUV\n" +
+                "CoyfL+9Yj1QwVnJPLJYubSVQyL8DXXvN5yZXXUNYpEoeiABhBozud4jAlEbZd5/p9yuKsCeq4kmj\n" +
+                "w7IFirBLlsszxsTirdFd+Bjj1vRsoPe7DmWAIQAavThjGAjMGYCvxlov1QIDAQAB";
+        String privateKey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJIZRoKeiH4rI0QAMigHXQLI1Vq1\n" +
+                "yqaBdyhtxRUKjJ8v71iPVDBWck8sli5tJVDIvwNde83nJlddQ1ikSh6IAGEGjO53iMCURtl3n+n3\n" +
+                "K4qwJ6riSaPDsgWKsEuWyzPGxOKt0V34GOPW9Gyg97sOZYAhABq9OGMYCMwZgK/GWi/VAgMBAAEC\n" +
+                "gYAklifONh1AW1Uthk8JLy7fr6OeX8AsCmfou/SK3GVyx/JMXzhaEov1v9isL7EUlfEfyp1iZux3\n" +
+                "HGftHtdg5fYR89pX3pFvz6RphYNniOntqIjyJvkgJUyoMZkHj0YyhHQ8ash2WmR1U5Tra4XoxgXd\n" +
+                "mVG3T77dOeBchLUqrLFj0QJBAOYTEMg1jAbsg4qj06zyCrGuppSDMIKGyb88/gRio3avUK/dZHHD\n" +
+                "Q9hrwo8gjHDdqgLvG7B7tlvetEHM1eQY8bsCQQCij8U2YuQsM/IQ+KObIEDASc41w9frbYjQvBkY\n" +
+                "JwXSEbA0qIX9dkLXIOtzdydw8Mm2wO+Nq5BVoJpqTPldC0OvAkBMwmWh9kN+d+A3HAteMu6gcz1+\n" +
+                "ZPqFQcUDeazh96rDyR/pXLrLPbNf/CvQJrLUYQ/8pJufWNbxda68GUPvMudLAkADf/rr/9cPyJKG\n" +
+                "oQPMvDYIrc4dxDiq3fHbJKGZroVmj3DuwU4ZNemcfh3zn3Ye7WA6ag7+StpRraKFdWDNCwgLAkEA\n" +
+                "2qDsRnoqRfm0F0isGJ4/7C/9t4CGrls8D+TMt+4tz1szoaCcCh1N9/ss1OuhlTJgTP4W8tm3YMQY\n" +
+                "NxMqiiQHGA==";
+        String pa = sign("123".getBytes(), privateKey);
+        System.out.println(pa);
         //前端生成encrypted加密数据
-        String msg_ = "VeP0JC59ShiA+flNcxugNPJ5S91DGhdvrZpq/xcYWlmVJwi3nHypzycu3So2riHioZgNf68WJL/8cK9C5apV5g/73EPQ656ejLyeS1FQ5XVf72SxfVHJ6WZ5+7POAoxAqPzen2osq7eSJbKgHs+kpDfQOs3WFxj1JGMFk5gfNs0=";
-        System.out.println(msg_.length());
-        byte[] decodedData = decryptByPrivateKey(decryptBase64(msg_),privateKey);
-        String str = new String(decodedData);
-        System.out.println(str);
+//        String msg_ = "VeP0JC59ShiA+flNcxugNPJ5S91DGhdvrZpq/xcYWlmVJwi3nHypzycu3So2riHioZgNf68WJL/8cK9C5apV5g/73EPQ656ejLyeS1FQ5XVf72SxfVHJ6WZ5+7POAoxAqPzen2osq7eSJbKgHs+kpDfQOs3WFxj1JGMFk5gfNs0=";
+//        System.out.println(msg_.length());
+//        byte[] decodedData = decryptByPrivateKey(decryptBase64(msg_),privateKey);
+//        String str = new String(decodedData);
+//        System.out.println(str);
     }
 }
