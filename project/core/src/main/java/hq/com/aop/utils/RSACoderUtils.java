@@ -419,11 +419,11 @@ public final class RSACoderUtils extends CoderUtils {
 //        Map<String,String> map = getPemkey();
 //        System.out.println(map);
         /*解析私钥*/
-        System.out.println(loadKeyPEMFile(true,"g:/rsa_private_key.pem"));
+//        System.out.println(loadKeyPEMFile(true,"g:/rsa_private_key.pem"));
 
         /*解析公钥*/
-        System.out.println(loadKeyPEMFile(false,"g:/rsa_public_key.pem"));
-//        test();
+//        System.out.println(loadKeyPEMFile(false,"g:/rsa_public_key.pem"));
+        test2();
         /*测试java端签名*/
 //        /*数据*/
 //        String str = "123";
@@ -483,9 +483,9 @@ public final class RSACoderUtils extends CoderUtils {
                 "y3fFmjP9FJDicJFcS5MZztzTEVP4AStNk6Aqsor7Vpjf+SJ8YJQIewJAQaI5skTY\n" +
                 "M1EuMdZvGw2VLyjhhEUUeupXhzE7J44OCl/mliZ3xdP1Ye/5xBvGyFFchdqhaFU2\n" +
                 "Qh2tbwOorH9BoQ==";
-
-                System.out.println("用户私钥加密*************");
-        String msg = "123sadfsadf";
+        System.out.println(encryptBase64(encryptByPublicKey("123是可点击sdfasd12321".getBytes(),pukey)));
+        System.out.println("用户私钥加密*************");
+        String msg = "123呵呵123";
         System.out.println("==>" + msg);
         byte[] p_k_r = encryptByPrivateKey(msg.getBytes(), prkey);
         System.out.println(encryptBase64(p_k_r));
@@ -517,7 +517,7 @@ public final class RSACoderUtils extends CoderUtils {
                 "Qh2tbwOorH9BoQ==";
         byte[] signautreResult = sign("123", CoderUtils.decryptBase64(prkey));
 //        String signatureStr = bytes2String(signautreResult);
-        String signatureStr = signString("123",prkey);
+        String signatureStr = signString("123sdfzh中国",prkey);
         System.out.println(signatureStr);
         System.out.println("*****************************");
         /*前端生成签名*/

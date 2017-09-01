@@ -47,6 +47,8 @@ requirejs.config({
         bootstrapswitch:'resource/lib/switch/bootstrapSwitch',
         xss:'resource/js/xss',
         wdatepicker:'resource/lib/My97DatePicker/4.8/WdatePicker',
+        md5:'resource/lib/md5/md5',
+        jsrsasign:'resource/lib/rsa/jsrsasign-all-min',
 
         /*自定义插件扩展*/
         constant:'resource/js/base/constant',
