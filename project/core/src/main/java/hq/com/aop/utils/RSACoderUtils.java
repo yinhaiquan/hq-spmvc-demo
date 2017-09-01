@@ -303,6 +303,11 @@ public final class RSACoderUtils extends CoderUtils {
         return key;
     }
 
+    public static String formatParameter(){
+
+        return null;
+    }
+
     /**
      * 生成秘钥文件
      * @param key 密钥
