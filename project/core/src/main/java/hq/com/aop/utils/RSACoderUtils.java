@@ -4,11 +4,11 @@ import org.bouncycastle.openssl.PEMWriter;
 import org.bouncycastle.util.io.pem.PemObject;
 
 import javax.crypto.Cipher;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.EncodedKeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
@@ -67,6 +67,8 @@ public final class RSACoderUtils extends CoderUtils {
         keys.put(PKCS8_PRIVATE_KEY,privateKey);
         keys.put(PUBLIC_KEY,publicKey.replaceAll(PEM_PUB_KEY_START,"").replaceAll(PEM_PUB_KEY_END,"").trim());
         keys.put(PRIVATE_KEY,privateKey.replaceAll(PEM_PRK_KEY_START,"").replaceAll(PEM_PRK_KEY_END,"").trim());
+        saveKeyPEMFile(keyPair.getPrivate(),"g:/rsa_private_key.pem");
+        saveKeyPEMFile(keyPair.getPublic(),"g:/rsa_public_key.pem");
         return keys;
     }
 
@@ -153,9 +155,8 @@ public final class RSACoderUtils extends CoderUtils {
             signature.update(data.getBytes());
             return signature.verify(signatureResult);
         } catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     /**
@@ -254,6 +255,69 @@ public final class RSACoderUtils extends CoderUtils {
     }
 
     /**
+     * 解析秘钥文件
+     * @param ispkcs8  私钥是否是pkcs8格式 true是 false否且是公钥
+     * @param keyFile  秘钥文件路径
+     * @return
+     */
+    public final static String loadKeyPEMFile(boolean ispkcs8,String keyFile){
+        String key = null;
+        FileInputStream is = null;
+        ObjectInputStream ois = null;
+        try{
+            is = new FileInputStream(keyFile);
+            byte [] buf = new byte[is.available()];
+            KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+            is.read(buf);
+            EncodedKeySpec keySpec;
+            if (ispkcs8){
+                keySpec = new PKCS8EncodedKeySpec(buf);
+            } else {
+                keySpec = new X509EncodedKeySpec(buf);
+            }
+            key = !ispkcs8?
+                    convertToPemKey((RSAPublicKey)keyFactory.generatePublic(keySpec),null):
+                    convertToPemKey(null,(RSAPrivateKey)keyFactory.generatePrivate(keySpec));
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if (StringUtils.isNotEmpty(is)){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return key;
+    }
+
+    /**
+     * 生成秘钥文件
+     * @param key 密钥
+     * @param keyFilePath 密钥文件路径 rsa_private_key.pem
+     *                               rsa_public_key.pem
+     */
+    private static void saveKeyPEMFile(Key key,String keyFilePath){
+        FileOutputStream os = null;
+        try{
+            os = new FileOutputStream(keyFilePath);
+            os.write(key.getEncoded());
+            os.flush();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if (StringUtils.isNotEmpty(os)){
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
      * 获取公钥或者私钥
      *
      * @param publicKey
@@ -343,7 +407,12 @@ public final class RSACoderUtils extends CoderUtils {
     public static void main(String[] args) throws Exception {
 //        Map<String,String> map = getPemkey();
 //        System.out.println(map);
-        test();
+        /*解析私钥*/
+        System.out.println(loadKeyPEMFile(true,"g:/rsa_private_key.pem"));
+
+        /*解析公钥*/
+        System.out.println(loadKeyPEMFile(false,"g:/rsa_public_key.pem"));
+//        test();
         /*测试java端签名*/
 //        /*数据*/
 //        String str = "123";

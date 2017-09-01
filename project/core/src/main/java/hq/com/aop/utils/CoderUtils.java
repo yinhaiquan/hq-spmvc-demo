@@ -52,6 +52,19 @@ public class CoderUtils {
     }
 
     /**
+     * MD5加密
+     *
+     * @param data
+     * @return
+     * @throws Exception
+     */
+    public static byte[] encryptMD5(String data) throws Exception {
+        MessageDigest md5 = MessageDigest.getInstance(KEY_MD5);
+        md5.update(data.getBytes());
+        return md5.digest();
+    }
+
+    /**
      * SHA加密
      *
      * @param data
@@ -64,8 +77,23 @@ public class CoderUtils {
         return sha.digest();
     }
 
+    /**
+     * SHA加密
+     *
+     * @param data
+     * @return
+     * @throws Exception
+     */
+    public static byte[] encryptSHA(String data) throws Exception {
+        MessageDigest sha = MessageDigest.getInstance(KEY_SHA);
+        sha.update(data.getBytes());
+        return sha.digest();
+    }
+
     public static void main(String[] args) throws Exception {
         String str = "sdf234234水电费sdf";
+        System.out.println(encryptBase64(encryptMD5(str)));
+        System.out.println(encryptBase64(encryptSHA(str)));
 //        String base64 = encryptBase64(str.getBytes());
 //        System.out.println(base64);
 //        System.out.println(new String(decryptBase64(base64),"UTF-8"));
