@@ -34,9 +34,9 @@ v+bk95zT5bfoaPhNomZlFcH7ojjXEuufAclrcoiiwH/ecUmisYTQskoJBwIDAQAB
     var encrypted = encrypt.encrypt('中国呵呵1231123slkfjsdklfasdf，，，，。。。。。');
 //    console.info(encrypted);
 </script>
-<!--js端 通过私钥签名-->
+<!--js端 通过私钥签名 注意：私钥中不存在空格-->
 <script type="text/javascript">
-    var pkcs8key ="-----BEGIN PRIVATE KEY-----MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIML1BgLj+ZAUomygubuP2L3lZ6v7VOu4bB1YR9fkhNEh2soNxM4FGzHt+igEGoCtQKC0uu7TOhHPMrnrhI1j/FBvXWgkHvMWVhSAEGSiBTIiHS2GfuTEmZevk0uD9jPQ3EidBwyTHPahjFAimb0/dXOpzH6WNBiSsMfutD/xPxRAgMBAAECgYA54juo81J4jejnUaZogswU1u+LzIGz+QdPfkmMJhbL0/VM69KH9rlu4zjk0+7sJI33sfmgjncGEpFTvsow2N/fNSKST+z319LubyoBI3B5aNBOvOrf0jdqZaeAqtaIafkQQ0z8bFdDisJ8j2LYmYLM1VBrq9PQ6tQ3pBtt2yXswQJBAPCRQAstauJ30aoP4ZFj0Qm07P1jMPqpIioHjHpeO74i /S7NGlafJirUslAoeJfigdV3G+/nv87Do+1VMfz8j50CQQCLc/PEKE/xUf6gFQUCpgIUjqBCljSi43o2UwN3h7PFu3DoCeoua0L8S4TvnAzjWwP0957vYqAroADO0/hOjjNFAkBepyflvfcCKFbMbPc5t2Z2RUPB5xdMaOPSWaoCM7WZ+DZaBcVJM9FWpN2MAICCclLXZMgPOsYTWpLTPOQwQEdZAkA8PmNYonGmtt1hGrOHaWAMsXDaUzl6BPuO7F3bDWzERy2HkIDyfLP7ekR7ntaSgYc8FJ08nUbEkeLHdxsWFKhhAkA15fsjEoePuz1BH69n832uoSMaiPrl+dAxhgXM7gUFTWiglpKUiNmm4zo4+IbieRnZo6pNqu3rWrYfH+xtY5H6-----END PRIVATE KEY-----";
+    var pkcs8key ="-----BEGIN PRIVATE KEY-----MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJaEIGSDCSkqT5UhU/wgwczoAGkJmbN9gn4X1r//7ub7lcqs956Kw6huBH8+NK9qHfXphjbrNlO5IOPM68MC5/5pzYA8VDJP5NTneBh22/5qKDWAuj4KBsBIJlDlffx3Lj9mO2HbQ8NnKDijzZFw9WM6gwVA6aTyFCrmSAND3mf5AgMBAAECgYAZXdkrt13C30ucQYqq8kZXJz5ydVi/BEcKwy/BGfwEV6AuESqGQLKq3yfI3g35BjRYbmvdM5TrVUbyvWV6bzHzz2zL0uefHuiiu0Me5ZjyLMBTS7ErjUt3Ky5EP1Mc0c8IiLkrXvKjwon2+FlDKJl18DmsTn4A7V/k6IMeqxNZtQJBAMRtR4OAQwCpnvRgIFE6VEqErb6T2kIpelx9nFR64R3cFBo3rv+0b0n42mQcI4hBzQsNxEhTxqrKSxAQaQ6UnJMCQQDEKk3SILj9yi4v9lWhSg6tJskkk2PLChC2VvhZHzHy/nFMw1TYaE3CVYHXwglAIy0C5VpexQaNi4H081DqQszDAkEAj7D5baM4YJW06EQhoAoxe0nP5+g0881v65Uf9VTmtXc3ZW5yoDAYcV6QNEe5XoX0Py/U9KwEWxAdFSVMFRR17QJAJ1uJg5hXJWxUOgFFivfN3AXFI5aC1jDty3fFmjP9FJDicJFcS5MZztzTEVP4AStNk6Aqsor7Vpjf+SJ8YJQIewJAQaI5skTYM1EuMdZvGw2VLyjhhEUUeupXhzE7J44OCl/mliZ3xdP1Ye/5xBvGyFFchdqhaFU2Qh2tbwOorH9BoQ==-----END PRIVATE KEY-----";
     var rsaPrivateKey = new RSAKey();
     /*由于java后台生成的key格式是pkcs8格式 而前端js插件是pkcs1格式解析，故使用KEYUTIL.getKey(pkcs8key)获取私钥*/
     rsaPrivateKey =KEYUTIL.getKey(pkcs8key);

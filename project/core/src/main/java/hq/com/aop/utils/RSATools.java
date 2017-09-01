@@ -11,6 +11,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @title : RSA加解密工具
@@ -30,23 +32,33 @@ import java.security.spec.X509EncodedKeySpec;
  * Create By yinhaiquan
  * @date 2017/5/25 17:44 星期四
  */
-public class RSATools extends CoderUtils {
-    public static final String PEM_PUBLICKEY = "PUBLIC KEY";
-    public static final String PEM_PRIVATEKEY = "PRIVATE KEY";
-    public static final String KEY_ALGORITHM = "RSA";
-    public static final String SIGNATURE_ALGORITHEM = "SHA1WithRSA";
+public final class RSATools extends CoderUtils {
+    private static final String PEM_PUBLICKEY = "PUBLIC KEY";
+    private static final String PEM_PRIVATEKEY = "PRIVATE KEY";
+    private static final String KEY_ALGORITHM = "RSA";
+    private static final String SIGNATURE_ALGORITHEM = "SHA1WithRSA";
+    private static final String PROVIDER = "BC";
+    private static final String PEM_PRK_KEY_START = "-----BEGIN PRIVATE KEY-----";
+    private static final String PEM_PRK_KEY_END   = "-----END PRIVATE KEY-----";
+    private static final String PEM_PUB_KEY_START = "-----BEGIN PUBLIC KEY-----";
+    private static final String PEM_PUB_KEY_END   = "-----END PUBLIC KEY-----";
+    public static final String PKCS8_PUBLIC_KEY = "PKCS8RSAPublicKey";
+    public static final String PKCS8_PRIVATE_KEY = "PKCS8RSAPrivateKey";
+    public static final String PUBLIC_KEY = "RSAPublicKey";
+    public static final String PRIVATE_KEY = "RSAPrivateKey";
+
     /**
      * 生成私钥公钥对象
      *
      * @param keySize
      * @return
      */
-    public static KeyPair generateRSAKeyPair(int keySize) {
+    private final static KeyPair generateRSAKeyPair(int keySize) {
         KeyPairGenerator generator = null;
         SecureRandom random = new SecureRandom();
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         try {
-            generator = KeyPairGenerator.getInstance(KEY_ALGORITHM, "BC");
+            generator = KeyPairGenerator.getInstance(KEY_ALGORITHM, PROVIDER);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchProviderException e) {
@@ -58,6 +70,29 @@ public class RSATools extends CoderUtils {
     }
 
     /**
+     * 获取密钥公钥
+     *
+     * @description: 包括前端js签名所使用私钥，java后端使用的私钥公钥
+     *               注意：前端若使用私钥公钥加密，则跟java后端使用的私钥公钥一样【前端数据加密一般不采用rsa非对称加密】
+     * @return  PKCS8RSAPublicKey   前端js   公钥
+     *          PKCS8RSAPrivateKey  前端js   私钥
+     *          RSAPublicKey        java后端 公钥
+     *          RSAPrivateKey       java后端 私钥
+     *
+     */
+    public final static Map<String,String> getPemkey(){
+        Map<String,String> keys = new HashMap<>();
+        KeyPair keyPair = generateRSAKeyPair(1024);
+        String publicKey = convertToPemKey((RSAPublicKey) keyPair.getPublic(), null);
+        String privateKey = convertToPemKey(null, (RSAPrivateKey) keyPair.getPrivate());
+        keys.put(PKCS8_PUBLIC_KEY,publicKey);
+        keys.put(PKCS8_PRIVATE_KEY,privateKey);
+        keys.put(PUBLIC_KEY,publicKey.replaceAll(PEM_PUB_KEY_START,"").replaceAll(PEM_PUB_KEY_END,"").trim());
+        keys.put(PRIVATE_KEY,privateKey.replaceAll(PEM_PRK_KEY_START,"").replaceAll(PEM_PRK_KEY_END,"").trim());
+        return keys;
+    }
+
+    /**
      * 获取公钥或者私钥
      *
      * @param publicKey
@@ -66,14 +101,13 @@ public class RSATools extends CoderUtils {
      * @description: 1. publicKey为空 privateKey不为空 获取私钥
      *               2. publicKey不为空 privateKey为空 获取公钥
      */
-    public static String convertToPemKey(RSAPublicKey publicKey,
-                                         RSAPrivateKey privateKey) {
+    private static String convertToPemKey(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
         if (publicKey == null && privateKey == null) {
             return null;
         }
         StringWriter stringWriter = new StringWriter();
         try {
-            PEMWriter pemWriter = new PEMWriter(stringWriter, "BC");
+            PEMWriter pemWriter = new PEMWriter(stringWriter, PROVIDER);
             if (publicKey != null) {
                 pemWriter.writeObject(new PemObject(PEM_PUBLICKEY,
                         publicKey.getEncoded()));
@@ -92,9 +126,9 @@ public class RSATools extends CoderUtils {
     /**
      * 用私钥对信息生成数字签名
      *
-     * @param data       待签名数据
-     * @param privateKey 私钥
-     * @return
+     * @param data       待签名数据[string]
+     * @param privateKey 私钥[byte]
+     * @return byte
      * @throws Exception
      */
     public static byte[] sign(String data, byte[] privateKey) throws Exception {
@@ -106,6 +140,42 @@ public class RSATools extends CoderUtils {
         signature.update(data.getBytes());
         return signature.sign();
 
+    }
+
+    /**
+     * 用私钥对信息生成数字签名
+     *
+     * @param data       待签名数据[string]
+     * @param privateKey 私钥[byte]
+     * @return String
+     * @throws Exception
+     */
+    public static String signString(String data, byte[] privateKey) throws Exception {
+        return bytes2String(sign(data,privateKey));
+    }
+
+    /**
+     * 用私钥对信息生成数字签名
+     *
+     * @param data       待签名数据[string]
+     * @param privateKey 私钥[string]
+     * @return byte
+     * @throws Exception
+     */
+    public static byte[] sign(String data, String privateKey) throws Exception {
+        return sign(data,decryptBase64(privateKey));
+    }
+
+    /**
+     * 用私钥对信息生成数字签名
+     *
+     * @param data       待签名数据[string]
+     * @param privateKey 私钥[string]
+     * @return String
+     * @throws Exception
+     */
+    public static String signString(String data, String privateKey) throws Exception {
+        return signString(data,decryptBase64(privateKey));
     }
 
     /**
@@ -122,6 +192,17 @@ public class RSATools extends CoderUtils {
             string.append(hexString.length() == 1 ? "0" + hexString : hexString);
         }
         return string.toString();
+    }
+
+    /**
+     * 校验数字签名
+     * @param data              数据
+     * @param publicKey         公钥
+     * @param signatureResult   签名
+     * @return
+     */
+    public static boolean verify(String data,String publicKey,String signatureResult) throws Exception {
+        return verify(data,decryptBase64(publicKey),hexStringToByteArray(signatureResult));
     }
 
     /**
@@ -154,7 +235,7 @@ public class RSATools extends CoderUtils {
      * @param data   前端传过来的签名
      * @return
      */
-    public static byte[] hexStringToByteArray(String data) {
+    private static byte[] hexStringToByteArray(String data) {
         int k = 0;
         byte[] results = new byte[data.length() / 2];
         for (int i = 0; i + 1 < data.length(); i += 2, k++) {
@@ -195,8 +276,7 @@ public class RSATools extends CoderUtils {
      * @return
      * @throws Exception
      */
-    public static byte[] decryptByPrivateKey(byte[] data, String privateKey)
-            throws Exception {
+    public static byte[] decryptByPrivateKey(byte[] data, String privateKey) throws Exception {
         // 对密钥解密
         byte[] keyBytes = decryptBase64(privateKey);
 
@@ -245,8 +325,7 @@ public class RSATools extends CoderUtils {
      * @return
      * @throws Exception
      */
-    public static byte[] decryptByPublicKey(byte[] data, String publicKey)
-            throws Exception {
+    public static byte[] decryptByPublicKey(byte[] data, String publicKey) throws Exception {
         // 对密钥解密
         byte[] keyBytes = decryptBase64(publicKey);
 
@@ -264,7 +343,9 @@ public class RSATools extends CoderUtils {
 
 
     public static void main(String[] args) throws Exception {
-        test2();
+//        Map<String,String> map = getPemkey();
+//        System.out.println(map);
+        test();
         /*测试java端签名*/
 //        /*数据*/
 //        String str = "123";
@@ -306,24 +387,24 @@ public class RSATools extends CoderUtils {
     /*测试秘钥加解密*/
     public static void test2() throws Exception {
 /*java后台存储公钥私钥*/
-        String pukey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDC9QYC4/mQFKJsoLm7j9i95We\n" +
-                "r+1TruGwdWEfX5ITRIdrKDcTOBRsx7fooBBqArUCgtLru0zoRzzK564SNY/xQb11\n" +
-                "oJB7zFlYUgBBkogUyIh0thn7kxJmXr5NLg/Yz0NxInQcMkxz2oYxQIpm9P3Vzqcx\n" +
-                "+ljQYkrDH7rQ/8T8UQIDAQAB";
-        String prkey = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIML1BgLj+ZAUomy\n" +
-                "gubuP2L3lZ6v7VOu4bB1YR9fkhNEh2soNxM4FGzHt+igEGoCtQKC0uu7TOhHPMrn\n" +
-                "rhI1j/FBvXWgkHvMWVhSAEGSiBTIiHS2GfuTEmZevk0uD9jPQ3EidBwyTHPahjFA\n" +
-                "imb0/dXOpzH6WNBiSsMfutD/xPxRAgMBAAECgYA54juo81J4jejnUaZogswU1u+L\n" +
-                "zIGz+QdPfkmMJhbL0/VM69KH9rlu4zjk0+7sJI33sfmgjncGEpFTvsow2N/fNSKS\n" +
-                "T+z319LubyoBI3B5aNBOvOrf0jdqZaeAqtaIafkQQ0z8bFdDisJ8j2LYmYLM1VBr\n" +
-                "q9PQ6tQ3pBtt2yXswQJBAPCRQAstauJ30aoP4ZFj0Qm07P1jMPqpIioHjHpeO74i\n" +
-                "/S7NGlafJirUslAoeJfigdV3G+/nv87Do+1VMfz8j50CQQCLc/PEKE/xUf6gFQUC\n" +
-                "pgIUjqBCljSi43o2UwN3h7PFu3DoCeoua0L8S4TvnAzjWwP0957vYqAroADO0/hO\n" +
-                "jjNFAkBepyflvfcCKFbMbPc5t2Z2RUPB5xdMaOPSWaoCM7WZ+DZaBcVJM9FWpN2M\n" +
-                "AICCclLXZMgPOsYTWpLTPOQwQEdZAkA8PmNYonGmtt1hGrOHaWAMsXDaUzl6BPuO\n" +
-                "7F3bDWzERy2HkIDyfLP7ekR7ntaSgYc8FJ08nUbEkeLHdxsWFKhhAkA15fsjEoeP\n" +
-                "uz1BH69n832uoSMaiPrl+dAxhgXM7gUFTWiglpKUiNmm4zo4+IbieRnZo6pNqu3r\n" +
-                "WrYfH+xtY5H6";
+        String pukey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWhCBkgwkpKk+VIVP8IMHM6ABp\n" +
+                "CZmzfYJ+F9a//+7m+5XKrPeeisOobgR/PjSvah316YY26zZTuSDjzOvDAuf+ac2A\n" +
+                "PFQyT+TU53gYdtv+aig1gLo+CgbASCZQ5X38dy4/Zjth20PDZyg4o82RcPVjOoMF\n" +
+                "QOmk8hQq5kgDQ95n+QIDAQAB";
+        String prkey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJaEIGSDCSkqT5Uh\n" +
+                "U/wgwczoAGkJmbN9gn4X1r//7ub7lcqs956Kw6huBH8+NK9qHfXphjbrNlO5IOPM\n" +
+                "68MC5/5pzYA8VDJP5NTneBh22/5qKDWAuj4KBsBIJlDlffx3Lj9mO2HbQ8NnKDij\n" +
+                "zZFw9WM6gwVA6aTyFCrmSAND3mf5AgMBAAECgYAZXdkrt13C30ucQYqq8kZXJz5y\n" +
+                "dVi/BEcKwy/BGfwEV6AuESqGQLKq3yfI3g35BjRYbmvdM5TrVUbyvWV6bzHzz2zL\n" +
+                "0uefHuiiu0Me5ZjyLMBTS7ErjUt3Ky5EP1Mc0c8IiLkrXvKjwon2+FlDKJl18Dms\n" +
+                "Tn4A7V/k6IMeqxNZtQJBAMRtR4OAQwCpnvRgIFE6VEqErb6T2kIpelx9nFR64R3c\n" +
+                "FBo3rv+0b0n42mQcI4hBzQsNxEhTxqrKSxAQaQ6UnJMCQQDEKk3SILj9yi4v9lWh\n" +
+                "Sg6tJskkk2PLChC2VvhZHzHy/nFMw1TYaE3CVYHXwglAIy0C5VpexQaNi4H081Dq\n" +
+                "QszDAkEAj7D5baM4YJW06EQhoAoxe0nP5+g0881v65Uf9VTmtXc3ZW5yoDAYcV6Q\n" +
+                "NEe5XoX0Py/U9KwEWxAdFSVMFRR17QJAJ1uJg5hXJWxUOgFFivfN3AXFI5aC1jDt\n" +
+                "y3fFmjP9FJDicJFcS5MZztzTEVP4AStNk6Aqsor7Vpjf+SJ8YJQIewJAQaI5skTY\n" +
+                "M1EuMdZvGw2VLyjhhEUUeupXhzE7J44OCl/mliZ3xdP1Ye/5xBvGyFFchdqhaFU2\n" +
+                "Qh2tbwOorH9BoQ==";
 
                 System.out.println("用户私钥加密*************");
         String msg = "123sadfsadf";
@@ -338,33 +419,32 @@ public class RSATools extends CoderUtils {
     /*测试前端签名*/
     public static void test() throws Exception {
         /*java后台存储公钥私钥*/
-        String pukey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDC9QYC4/mQFKJsoLm7j9i95We\n" +
-                "r+1TruGwdWEfX5ITRIdrKDcTOBRsx7fooBBqArUCgtLru0zoRzzK564SNY/xQb11\n" +
-                "oJB7zFlYUgBBkogUyIh0thn7kxJmXr5NLg/Yz0NxInQcMkxz2oYxQIpm9P3Vzqcx\n" +
-                "+ljQYkrDH7rQ/8T8UQIDAQAB";
-        String prkey = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIML1BgLj+ZAUomy\n" +
-                "gubuP2L3lZ6v7VOu4bB1YR9fkhNEh2soNxM4FGzHt+igEGoCtQKC0uu7TOhHPMrn\n" +
-                "rhI1j/FBvXWgkHvMWVhSAEGSiBTIiHS2GfuTEmZevk0uD9jPQ3EidBwyTHPahjFA\n" +
-                "imb0/dXOpzH6WNBiSsMfutD/xPxRAgMBAAECgYA54juo81J4jejnUaZogswU1u+L\n" +
-                "zIGz+QdPfkmMJhbL0/VM69KH9rlu4zjk0+7sJI33sfmgjncGEpFTvsow2N/fNSKS\n" +
-                "T+z319LubyoBI3B5aNBOvOrf0jdqZaeAqtaIafkQQ0z8bFdDisJ8j2LYmYLM1VBr\n" +
-                "q9PQ6tQ3pBtt2yXswQJBAPCRQAstauJ30aoP4ZFj0Qm07P1jMPqpIioHjHpeO74i\n" +
-                "/S7NGlafJirUslAoeJfigdV3G+/nv87Do+1VMfz8j50CQQCLc/PEKE/xUf6gFQUC\n" +
-                "pgIUjqBCljSi43o2UwN3h7PFu3DoCeoua0L8S4TvnAzjWwP0957vYqAroADO0/hO\n" +
-                "jjNFAkBepyflvfcCKFbMbPc5t2Z2RUPB5xdMaOPSWaoCM7WZ+DZaBcVJM9FWpN2M\n" +
-                "AICCclLXZMgPOsYTWpLTPOQwQEdZAkA8PmNYonGmtt1hGrOHaWAMsXDaUzl6BPuO\n" +
-                "7F3bDWzERy2HkIDyfLP7ekR7ntaSgYc8FJ08nUbEkeLHdxsWFKhhAkA15fsjEoeP\n" +
-                "uz1BH69n832uoSMaiPrl+dAxhgXM7gUFTWiglpKUiNmm4zo4+IbieRnZo6pNqu3r\n" +
-                "WrYfH+xtY5H6";
+        String pukey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWhCBkgwkpKk+VIVP8IMHM6ABp\n" +
+                "CZmzfYJ+F9a//+7m+5XKrPeeisOobgR/PjSvah316YY26zZTuSDjzOvDAuf+ac2A\n" +
+                "PFQyT+TU53gYdtv+aig1gLo+CgbASCZQ5X38dy4/Zjth20PDZyg4o82RcPVjOoMF\n" +
+                "QOmk8hQq5kgDQ95n+QIDAQAB";
+        String prkey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJaEIGSDCSkqT5Uh\n" +
+                "U/wgwczoAGkJmbN9gn4X1r//7ub7lcqs956Kw6huBH8+NK9qHfXphjbrNlO5IOPM\n" +
+                "68MC5/5pzYA8VDJP5NTneBh22/5qKDWAuj4KBsBIJlDlffx3Lj9mO2HbQ8NnKDij\n" +
+                "zZFw9WM6gwVA6aTyFCrmSAND3mf5AgMBAAECgYAZXdkrt13C30ucQYqq8kZXJz5y\n" +
+                "dVi/BEcKwy/BGfwEV6AuESqGQLKq3yfI3g35BjRYbmvdM5TrVUbyvWV6bzHzz2zL\n" +
+                "0uefHuiiu0Me5ZjyLMBTS7ErjUt3Ky5EP1Mc0c8IiLkrXvKjwon2+FlDKJl18Dms\n" +
+                "Tn4A7V/k6IMeqxNZtQJBAMRtR4OAQwCpnvRgIFE6VEqErb6T2kIpelx9nFR64R3c\n" +
+                "FBo3rv+0b0n42mQcI4hBzQsNxEhTxqrKSxAQaQ6UnJMCQQDEKk3SILj9yi4v9lWh\n" +
+                "Sg6tJskkk2PLChC2VvhZHzHy/nFMw1TYaE3CVYHXwglAIy0C5VpexQaNi4H081Dq\n" +
+                "QszDAkEAj7D5baM4YJW06EQhoAoxe0nP5+g0881v65Uf9VTmtXc3ZW5yoDAYcV6Q\n" +
+                "NEe5XoX0Py/U9KwEWxAdFSVMFRR17QJAJ1uJg5hXJWxUOgFFivfN3AXFI5aC1jDt\n" +
+                "y3fFmjP9FJDicJFcS5MZztzTEVP4AStNk6Aqsor7Vpjf+SJ8YJQIewJAQaI5skTY\n" +
+                "M1EuMdZvGw2VLyjhhEUUeupXhzE7J44OCl/mliZ3xdP1Ye/5xBvGyFFchdqhaFU2\n" +
+                "Qh2tbwOorH9BoQ==";
         byte[] signautreResult = sign("123", CoderUtils.decryptBase64(prkey));
-        String signatureStr = bytes2String(signautreResult);
+//        String signatureStr = bytes2String(signautreResult);
+        String signatureStr = signString("123",prkey);
         System.out.println(signatureStr);
         System.out.println("*****************************");
         /*前端生成签名*/
-        String sign = "31ac95eb2c3f3b59018d3c465ec6f656d34f2d8f9cf815498293cf1b48209814eaf7b02e74ab8bc0fcc3db3ac74c74bf66d8a3ec36ff7be293768fe80d555b8e49894dd73b1e8e1533b8d0b9f99db75515862bb9a492c82206db41e95433fe1f2706c91ff8760007b08175bf85f4e55166468b69035736e4f044f2fc836098cc";
-        boolean b = verify("123",
-                CoderUtils.decryptBase64(pukey),
-                hexStringToByteArray(sign));
+        String sign = "13d373716b61f1ebac29c9cd7f1a4f8cd6ecf4d8d89c411efc45e671967f68414d2e2198bbad23990310e9596bc495658c18fa4a4b62b676e5db568b419c4e73580bd8d62c5fc947d6d101823f9ba762ae1ae284196a7a0276d7008de66cafafde34d6f3564a186e41e45712ed42c8ac49f97c2fafc278295d04c50c145a34c2";
+        boolean b = verify("123",pukey,signatureStr);
         System.out.print("iii   " + b);
 
     }
