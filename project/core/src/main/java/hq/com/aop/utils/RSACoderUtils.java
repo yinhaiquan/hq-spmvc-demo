@@ -29,6 +29,12 @@ import java.util.Map;
  * 2. 甲方使用私钥加密数据，然后用私钥对加密后的数据签名，发送给乙方签名以及加密后的数据；乙方使用公钥、签名来验证待解密数据是否有效，如果有效使用公钥对数据解密。
  * 3. 乙方使用公钥加密数据，向甲方发送经过加密后的数据；甲方获得加密数据，通过私钥解密。
  * </p>
+ * <b>依赖jar包：</b>
+ * <dependency>
+ *      <groupId>org.bouncycastle</groupId>
+ *      <artifactId>bcprov-jdk16</artifactId>
+ *      <version>1.46</version>
+ * </dependency>
  * Create By yinhaiquan
  * @date 2017/5/25 17:44 星期四
  */
@@ -42,6 +48,9 @@ public final class RSACoderUtils extends CoderUtils {
     private static final String PEM_PRK_KEY_END   = "-----END PRIVATE KEY-----";
     private static final String PEM_PUB_KEY_START = "-----BEGIN PUBLIC KEY-----";
     private static final String PEM_PUB_KEY_END   = "-----END PUBLIC KEY-----";
+    private static final String RSA_PRIVATE_KEY_PEM_FILE = "g:/rsa_private_key.pem";
+    private static final String RSA_PUBLIC_KEY_PEM_FILE = "g:/rsa_public_key.pem";
+    private static final boolean ISSAVEPEMFILE = false;
     public static final String PKCS8_PUBLIC_KEY = "PKCS8RSAPublicKey";
     public static final String PKCS8_PRIVATE_KEY = "PKCS8RSAPrivateKey";
     public static final String PUBLIC_KEY = "RSAPublicKey";
@@ -67,8 +76,10 @@ public final class RSACoderUtils extends CoderUtils {
         keys.put(PKCS8_PRIVATE_KEY,privateKey);
         keys.put(PUBLIC_KEY,publicKey.replaceAll(PEM_PUB_KEY_START,"").replaceAll(PEM_PUB_KEY_END,"").trim());
         keys.put(PRIVATE_KEY,privateKey.replaceAll(PEM_PRK_KEY_START,"").replaceAll(PEM_PRK_KEY_END,"").trim());
-        saveKeyPEMFile(keyPair.getPrivate(),"g:/rsa_private_key.pem");
-        saveKeyPEMFile(keyPair.getPublic(),"g:/rsa_public_key.pem");
+        if (ISSAVEPEMFILE){
+            saveKeyPEMFile(keyPair.getPrivate(),RSA_PRIVATE_KEY_PEM_FILE);
+            saveKeyPEMFile(keyPair.getPublic(),RSA_PUBLIC_KEY_PEM_FILE);
+        }
         return keys;
     }
 
