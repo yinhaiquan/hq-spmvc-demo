@@ -273,7 +273,7 @@ public class RSATools extends CoderUtils {
 //        /*前端获取公钥私钥 带-----BEGIN PRIVATE KEY-----前缀等*/
 //        /*获取公钥*/
 //        String publicKey = convertToPemKey((RSAPublicKey) k.getPublic(), null);
-//        /*获取私钥 签名时，前端使用jsrsasign-all-min.js插件使用的私钥*/
+//        /*获取私钥pkcs8格式 签名时，前端使用jsrsasign-all-min.js插件使用的私钥*/
 //        String privateKey = convertToPemKey(null, (RSAPrivateKey) k.getPrivate());
 //        System.out.println("publicKey__\n" + publicKey);
 //        System.out.println("privateKey_\n" + privateKey);
