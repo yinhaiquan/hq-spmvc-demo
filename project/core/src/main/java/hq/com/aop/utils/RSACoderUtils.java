@@ -32,7 +32,7 @@ import java.util.Map;
  * Create By yinhaiquan
  * @date 2017/5/25 17:44 星期四
  */
-public final class RSATools extends CoderUtils {
+public final class RSACoderUtils extends CoderUtils {
     private static final String PEM_PUBLICKEY = "PUBLIC KEY";
     private static final String PEM_PRIVATEKEY = "PRIVATE KEY";
     private static final String KEY_ALGORITHM = "RSA";
