@@ -1,6 +1,8 @@
 <div class="page-container">
     <div>
     <article class="cl pd-20 mr-20">
+        <!--由于switch 按钮依赖css 和js不可通过require异步方式去加载，故页面引入.css .js文件 否则多次点击会出现switch按钮加载不出来-->
+    <link rel="stylesheet" href="../../resource/lib/switch/bootstrapSwitch.css">
     <form action="" method="post" class="form form-horizontal" id="form-admin-add">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-4"><span class="c-red">*</span>jobName：</label>
@@ -46,14 +48,13 @@
             </div>
         </div>
     </form>
+    <script src="../../resource/lib/switch/bootstrapSwitch.js"></script>
         <script>
-            require(['bootstrapswitch','css!bootstrapswitchstyle'],function(){
                 $('#mySwitch').on('switch-change', function (e, data) {
                     var $el = $(data.el)
                         , value = data.value;
                     alert(value);
                 });
-            })
         </script>
     </article>
     </div>
