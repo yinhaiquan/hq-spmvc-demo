@@ -62,10 +62,7 @@ define('webSecurity',['xss','stringUtils','md5','jsrsasign','constant'],
             if(StringUtils.isEmpty_(data)){
                 return null;
             }
-            var keyarray = new Array();
-            for(var key in data){
-                keyarray.push(key);
-            }
+            var keyarray = StringUtils.getKeys(data);
             keyarray.sort();
             var sb = "";
             for(var i = 0;i<keyarray.length;i++){
