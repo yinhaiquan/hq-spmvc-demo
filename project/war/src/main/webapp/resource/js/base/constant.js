@@ -10,6 +10,7 @@ define({
         C_HTTP: 'http://',
         C_HTTPS: 'https://'
     },
+    /*ajax请求超时时间(单位/ms)*/
     Ajax:{
         TIME_OUT :30000
     },
