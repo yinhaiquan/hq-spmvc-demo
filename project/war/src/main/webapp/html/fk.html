@@ -16,6 +16,10 @@
         </select>
     </span>
     <b>搜索</b>
+    <form method="get" action="">
+        <input type="text" placeholder="请输入关键词" class="input-text ac_input" name="search_text" value="" id="search_text" autocomplete="off" style="width:300px"><button type="submit" class="btn btn-default" id="search_button">搜索</button>
+    </form>
+
     <div class="text-c"> 日期范围：
         <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
         -

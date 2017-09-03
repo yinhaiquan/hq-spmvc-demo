@@ -39,11 +39,11 @@
     </style>
 
     <div class="Huialert Huialert-success"><i class="icon-remove"></i>
-        <span>容器总量(单位/个)</span>:<span id="task_total">0</span> &#124;
-        <span class="running">运行中</span>：<span class="running" id="task_running_total">0</span> &#124;
-        <span class="pausing">暂停中</span>: <span class="pausing" id="task_pausing_total">0</span> &#124;
-        <span class="initialing">初始化中</span>: <span class="initialing" id="task_initialing_total">0</span> &#124;
-        <span class="shutdowning">关闭中</span>: <span class="shutdowning" id="task_shutdowning_total">0</span> &#124;
+        <span>容器总量(单位/个)</span>:<span id="task_total">0</span> <span class="pipe">|</span>
+        <span class="running">运行中</span>：<span class="running" id="task_running_total">0</span> <span class="pipe">|</span>
+        <span class="pausing">暂停中</span>: <span class="pausing" id="task_pausing_total">0</span> <span class="pipe">|</span>
+        <span class="initialing">初始化中</span>: <span class="initialing" id="task_initialing_total">0</span> <span class="pipe">|</span>
+        <span class="shutdowning">关闭中</span>: <span class="shutdowning" id="task_shutdowning_total">0</span> <span class="pipe">|</span>
         <span class="failuring">故障中</span>: <span class="failuring" id="task_failuring_total">0</span>
         <i class="Hui-iconfont" style="float: right;font-size: 1.5pc;color: #429842;" onclick="task_monitor()">&#xe68f;</i>
     </div>
@@ -294,10 +294,10 @@
                         iShow:true,
                         formartVal:function(row){
                             if(row.statusEnum=='initialing'){
-                                return '<span class="tips"/>&#124;<span class="tips"/>&#124;<span class="tips"/>';
+                                return '<span class="tips"/><span class="pipe">|</span><span class="tips"/><span class="pipe">|</span><span class="tips"/>';
                             }else{
-                                var tips = row.started==true?'<span class="tips success"/>&#124;':'<span class="tips error"/>&#124;';
-                                tips+=row.shutdown==true?'<span class="tips success"/>&#124;':'<span class="tips error"/>&#124;';
+                                var tips = row.started==true?'<span class="tips success"/><span class="pipe">|</span>':'<span class="tips error"/><span class="pipe">|</span>';
+                                tips+=row.shutdown==true?'<span class="tips success"/><span class="pipe">|</span>':'<span class="tips error"/><span class="pipe">|</span>';
                                 tips+=row.inStandbyMode==true?'<span class="tips success"/>':'<span class="tips error"/>';
                             }
                             return tips;
