@@ -45,14 +45,33 @@ define('webSecurity',['xss','stringUtils','md5','jsrsasign','constant'],
         },
         /**
          * 基于PKCS8格式RSA私钥签名
-         * @description: 通过pkcs8格式私钥签名 注意：私钥中不存在空格
-         * @param data
+         * @description: 通过pkcs8格式私钥签名 注意：私钥中不存在空格,且签名前必须将数据格式化
+         * @param data 待签名数据
          */
         sign : function(data){
             var rsaPrivateKey = new RSAKey();
             /*由于java后台生成的key格式是pkcs8格式 而前端js插件是pkcs1格式解析，故使用KEYUTIL.getKey(pkcs8key)获取私钥*/
             rsaPrivateKey =KEYUTIL.getKey(Constant.RsaKey.PRIVATE_KEY_PKCS8_PEM);
             return rsaPrivateKey.sign(data,"sha1");
+        },
+        /**
+         * 格式化签名数据
+         * @param data 待格式化数据
+         */
+        formatParameter : function(data){
+            if(StringUtils.isEmpty_(data)){
+                return null;
+            }
+            var keyarray = new Array();
+            for(var key in data){
+                keyarray.push(key);
+            }
+            keyarray.sort();
+            var sb = "";
+            for(var i = 0;i<keyarray.length;i++){
+                sb+= keyarray[i]+"="+data[keyarray[i]]+"&";
+            }
+            return sb.substring(0,sb.length-1);
         }
     }
     return webSecurityFunctions;

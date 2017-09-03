@@ -41,6 +41,29 @@ v+bk95zT5bfoaPhNomZlFcH7ojjXEuufAclrcoiiwH/ecUmisYTQskoJBwIDAQAB
     /*md5加密*/
 //    var str = md5("sdf234234水电费sdf");
 //    alert(str);
+   var data = {
+       "2dfsd":"sdf",
+       "23fsd":"234sdf",
+       "546521":"dd",
+       "2DFsd":"sdf",
+       "23Fsd":"234sdf",
+       "A46521":"dd",
+       "adfsd":"12312",
+       "adssd":"sd",
+       "dfsd":12312,
+       "bdfsd":12312
+   }
+   var keyarray = new Array();
+    for(var key in data){
+       keyarray.push(key);
+    }
+    keyarray.sort();
+    var sb="";
+    for(var i = 0;i<keyarray.length;i++){
+        sb+= keyarray[i]+"="+data[keyarray[i]]+"&";
+    }
+    console.info(keyarray);
+    console.info(sb.substring(0,sb.length-1));
 </script>
 </body>
 </html>

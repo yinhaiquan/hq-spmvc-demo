@@ -11,8 +11,9 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @title : RSA加解密工具
@@ -303,10 +304,34 @@ public final class RSACoderUtils extends CoderUtils {
         return key;
     }
 
-    public static String formatParameter(){
-
-        return null;
+    /**
+     * 签名数据格式化（配合前端webSecurity.js中签名数据格式化生成一致签名数据）
+     *
+     * @decription: 规则：按照map中键排序，键按照ASCII码顺序从小至大
+     * @param data
+     * @return
+     */
+    public static String formatParameter(Map<String,Object> data){
+        if (StringUtils.isEmpty(data)){
+            return null;
+        }
+        Set<String> set = data.keySet();
+        List<String> keyList = new ArrayList<>();
+        keyList.addAll(set);
+        Collections.sort(keyList, new Comparator<String>() {
+            @Override
+            public int compare(String key_1, String key_2) {
+                return key_1.compareTo(key_2);
+            }
+        });
+        System.out.println(keyList);
+        StringBuilder sb = new StringBuilder();
+        for (String key : keyList) {
+            sb.append(key).append("=").append(data.get(key)).append("&");
+        }
+        return StringUtils.isNotEmpty(sb)?sb.toString().substring(0,sb.toString().length()-1):null;
     }
+
 
     /**
      * 生成秘钥文件
@@ -421,6 +446,9 @@ public final class RSACoderUtils extends CoderUtils {
     }
 
     public static void main(String[] args) throws Exception {
+
+
+
 //        Map<String,String> map = getPemkey();
 //        System.out.println(map);
         /*解析私钥*/
@@ -428,7 +456,7 @@ public final class RSACoderUtils extends CoderUtils {
 
         /*解析公钥*/
 //        System.out.println(loadKeyPEMFile(false,"g:/rsa_public_key.pem"));
-        test2();
+        test();
         /*测试java端签名*/
 //        /*数据*/
 //        String str = "123";
@@ -520,14 +548,27 @@ public final class RSACoderUtils extends CoderUtils {
                 "y3fFmjP9FJDicJFcS5MZztzTEVP4AStNk6Aqsor7Vpjf+SJ8YJQIewJAQaI5skTY\n" +
                 "M1EuMdZvGw2VLyjhhEUUeupXhzE7J44OCl/mliZ3xdP1Ye/5xBvGyFFchdqhaFU2\n" +
                 "Qh2tbwOorH9BoQ==";
-        byte[] signautreResult = sign("123", CoderUtils.decryptBase64(prkey));
+        Map<String,Object> data = new HashMap<>();
+        data.put("2dfsd","sdf");
+        data.put("23fsd","234sdf");
+        data.put("546521","dd");
+        data.put("2DFsd","sdf");
+        data.put("23Fsd","234sdf");
+        data.put("A46521","dd");
+        data.put("adfsd","12312");
+        data.put("adssd","sd");
+        data.put("dfsd",12312);
+        data.put("bdfsd",12312);
+        System.out.println(formatParameter(data));
+        String str = formatParameter(data);
+        byte[] signautreResult = sign(str, CoderUtils.decryptBase64(prkey));
 //        String signatureStr = bytes2String(signautreResult);
-        String signatureStr = signString("123sdfzh中国",prkey);
+        String signatureStr = signString(str,prkey);
         System.out.println(signatureStr);
         System.out.println("*****************************");
         /*前端生成签名*/
         String sign = "13d373716b61f1ebac29c9cd7f1a4f8cd6ecf4d8d89c411efc45e671967f68414d2e2198bbad23990310e9596bc495658c18fa4a4b62b676e5db568b419c4e73580bd8d62c5fc947d6d101823f9ba762ae1ae284196a7a0276d7008de66cafafde34d6f3564a186e41e45712ed42c8ac49f97c2fafc278295d04c50c145a34c2";
-        boolean b = verify("123",pukey,signatureStr);
+        boolean b = verify("123sdfzh中国",pukey,signatureStr);
         System.out.print("iii   " + b);
 
     }

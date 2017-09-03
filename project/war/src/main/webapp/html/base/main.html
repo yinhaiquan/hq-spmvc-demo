@@ -65,6 +65,18 @@
 	 * 防xss攻击demo
 	 */
 	require(['webSecurity'],function(WebSecurity){
+        var data = {
+            "2dfsd":"sdf",
+            "23fsd":"234sdf",
+            "546521":"dd",
+            "2DFsd":"sdf",
+            "23Fsd":"234sdf",
+            "A46521":"dd",
+            "adfsd":"12312",
+            "adssd":"sd",
+            "dfsd":12312,
+            "bdfsd":12312
+        }
 	    //使用方式filterXSS(过滤内容);
         console.log(WebSecurity.filterXSS('<a href="#" onclick="alert(/xss/)">click me</a>'));
         console.log(WebSecurity.filterXSS('<script type="text/javascript" src="../../resource/js/config.js">'));
@@ -73,7 +85,7 @@
         console.log("md5加密:");
         console.log(WebSecurity.md5("sdf234234水电费sdf"));
         console.log("rsa私钥签名:");
-        console.log(WebSecurity.sign("123sdfzh中国"));
+        console.log(WebSecurity.sign(WebSecurity.formatParameter(data)));
 	})
 	/**
 	 * 加载h-ui核心js库 jQuery jQueryi18n等初始js库
