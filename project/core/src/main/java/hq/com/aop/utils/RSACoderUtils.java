@@ -12,8 +12,6 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @title : RSA加解密工具
@@ -456,7 +454,7 @@ public final class RSACoderUtils extends CoderUtils {
 
         /*解析公钥*/
 //        System.out.println(loadKeyPEMFile(false,"g:/rsa_public_key.pem"));
-        test();
+        test2();
         /*测试java端签名*/
 //        /*数据*/
 //        String str = "123";
@@ -495,7 +493,7 @@ public final class RSACoderUtils extends CoderUtils {
 //        }
     }
 
-    /*测试秘钥加解密*/
+    /*测试秘钥加解密 与前端rsa密钥加解密不一致*/
     public static void test2() throws Exception {
 /*java后台存储公钥私钥*/
         String pukey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWhCBkgwkpKk+VIVP8IMHM6ABp\n" +
@@ -516,7 +514,6 @@ public final class RSACoderUtils extends CoderUtils {
                 "y3fFmjP9FJDicJFcS5MZztzTEVP4AStNk6Aqsor7Vpjf+SJ8YJQIewJAQaI5skTY\n" +
                 "M1EuMdZvGw2VLyjhhEUUeupXhzE7J44OCl/mliZ3xdP1Ye/5xBvGyFFchdqhaFU2\n" +
                 "Qh2tbwOorH9BoQ==";
-        System.out.println(encryptBase64(encryptByPublicKey("123是可点击sdfasd12321".getBytes(),pukey)));
         System.out.println("用户私钥加密*************");
         String msg = "123呵呵123";
         System.out.println("==>" + msg);

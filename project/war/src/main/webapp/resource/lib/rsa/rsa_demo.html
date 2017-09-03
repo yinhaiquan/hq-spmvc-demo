@@ -24,8 +24,16 @@ GW1t7F0GFzno
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQClVNJfuTWsDavS2byXsmPEBwFsFtjhA2QTI/RF
 1lN+4PxAdRq9V10P8SgdsLOerFlj7p/sWE4SvspDOLlEIf9PioIiWqDnZ/u3fI7+RJFhPXuPkO/F
 v+bk95zT5bfoaPhNomZlFcH7ojjXEuufAclrcoiiwH/ecUmisYTQskoJBwIDAQAB
+<script src="./jsencrypt.min.js"></script>
 <script src="./jsrsasign-all-min.js"></script>
-<script src="../md5/md5.js"></script>
+
+<!--js端 通过私钥公钥rsa加解密-->
+<script type="text/javascript">
+    var encrypt = new JSEncrypt();
+    encrypt.setPrivateKey('MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJaEIGSDCSkqT5UhU/wgwczoAGkJmbN9gn4X1r//7ub7lcqs956Kw6huBH8+NK9qHfXphjbrNlO5IOPM68MC5/5pzYA8VDJP5NTneBh22/5qKDWAuj4KBsBIJlDlffx3Lj9mO2HbQ8NnKDijzZFw9WM6gwVA6aTyFCrmSAND3mf5AgMBAAECgYAZXdkrt13C30ucQYqq8kZXJz5ydVi/BEcKwy/BGfwEV6AuESqGQLKq3yfI3g35BjRYbmvdM5TrVUbyvWV6bzHzz2zL0uefHuiiu0Me5ZjyLMBTS7ErjUt3Ky5EP1Mc0c8IiLkrXvKjwon2+FlDKJl18DmsTn4A7V/k6IMeqxNZtQJBAMRtR4OAQwCpnvRgIFE6VEqErb6T2kIpelx9nFR64R3cFBo3rv+0b0n42mQcI4hBzQsNxEhTxqrKSxAQaQ6UnJMCQQDEKk3SILj9yi4v9lWhSg6tJskkk2PLChC2VvhZHzHy/nFMw1TYaE3CVYHXwglAIy0C5VpexQaNi4H081DqQszDAkEAj7D5baM4YJW06EQhoAoxe0nP5+g0881v65Uf9VTmtXc3ZW5yoDAYcV6QNEe5XoX0Py/U9KwEWxAdFSVMFRR17QJAJ1uJg5hXJWxUOgFFivfN3AXFI5aC1jDty3fFmjP9FJDicJFcS5MZztzTEVP4AStNk6Aqsor7Vpjf+SJ8YJQIewJAQaI5skTYM1EuMdZvGw2VLyjhhEUUeupXhzE7J44OCl/mliZ3xdP1Ye/5xBvGyFFchdqhaFU2Qh2tbwOorH9BoQ==');
+    var encrypted = encrypt.encrypt('123呵呵123');
+    console.info(encrypted);
+</script>
 <!--js端 通过pkcs8格式私钥签名 注意：私钥中不存在空格-->
 <script type="text/javascript">
 //    var pkcs8key ="-----BEGIN PRIVATE KEY-----MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJaEIGSDCSkqT5UhU/wgwczoAGkJmbN9gn4X1r//7ub7lcqs956Kw6huBH8+NK9qHfXphjbrNlO5IOPM68MC5/5pzYA8VDJP5NTneBh22/5qKDWAuj4KBsBIJlDlffx3Lj9mO2HbQ8NnKDijzZFw9WM6gwVA6aTyFCrmSAND3mf5AgMBAAECgYAZXdkrt13C30ucQYqq8kZXJz5ydVi/BEcKwy/BGfwEV6AuESqGQLKq3yfI3g35BjRYbmvdM5TrVUbyvWV6bzHzz2zL0uefHuiiu0Me5ZjyLMBTS7ErjUt3Ky5EP1Mc0c8IiLkrXvKjwon2+FlDKJl18DmsTn4A7V/k6IMeqxNZtQJBAMRtR4OAQwCpnvRgIFE6VEqErb6T2kIpelx9nFR64R3cFBo3rv+0b0n42mQcI4hBzQsNxEhTxqrKSxAQaQ6UnJMCQQDEKk3SILj9yi4v9lWhSg6tJskkk2PLChC2VvhZHzHy/nFMw1TYaE3CVYHXwglAIy0C5VpexQaNi4H081DqQszDAkEAj7D5baM4YJW06EQhoAoxe0nP5+g0881v65Uf9VTmtXc3ZW5yoDAYcV6QNEe5XoX0Py/U9KwEWxAdFSVMFRR17QJAJ1uJg5hXJWxUOgFFivfN3AXFI5aC1jDty3fFmjP9FJDicJFcS5MZztzTEVP4AStNk6Aqsor7Vpjf+SJ8YJQIewJAQaI5skTYM1EuMdZvGw2VLyjhhEUUeupXhzE7J44OCl/mliZ3xdP1Ye/5xBvGyFFchdqhaFU2Qh2tbwOorH9BoQ==-----END PRIVATE KEY-----";
