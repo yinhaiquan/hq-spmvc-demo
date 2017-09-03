@@ -169,12 +169,33 @@
     <div id="editor">
         <p>欢迎使用 wangEditor 富文本编辑器</p>
     </div>
+    <h3>颜色（Colors）</h3>
+    <link rel="stylesheet" href="../../resource/lib/switch/bootstrapSwitch.css">
+    <div class="bs-docs-example">
+        <div class="switch" data-on="primary" data-off="info">
+            <input type="checkbox" checked />
+        </div>
+        <div class="switch" data-on="info" data-off="success">
+            <input type="checkbox" checked />
+        </div>
+        <div class="switch" data-on="success" data-off="warning">
+            <input type="checkbox" checked />
+        </div>
+        <div class="switch" data-on="warning" data-off="danger">
+            <input type="checkbox" checked />
+        </div>
+        <div class="switch" data-on="danger" data-off="primary">
+            <input type="checkbox" checked />
+        </div>
+    </div>
+    <script src="../../resource/lib/switch/bootstrapSwitch.js"></script>
     <div id="mySwitch" class="switch">
         <input type="checkbox" checked />
     </div>
     <script>
-        require(['editorUtils','bootstrapswitch','css!bootstrapswitchstyle'],function(EditorUitls){
-
+        require(['editorUtils'],function(EditorUitls){
+            console.info("---------------------------------------")
+            console.info(EditorUitls)
             var editor = EditorUitls.create("#editor");
             EditorUitls.create("#editor1","#editor2");
             $('#mySwitch').on('switch-change', function (e, data) {
@@ -222,6 +243,23 @@
         })
     </script>
     <b>HTML CSS代码</b>
+    <pre class="prettyprint linenums">
+        pre{display:block;font-family:Monaco,Menlo,Consolas,&quot;Courier New&quot;,monospace；padding:9.5px;margin-bottom:10px;font-size:12px;line-height:20px;word-break:break-all;word-wrap:break-word;white-space:pre;white-space:pre-wrap;background-color:#f5f5f5;border:1px solid #ccc;border-radius:4px;color:#333}
+        .prettyprint{margin-bottom:20px；padding:8px;background-color:#f7f7f9;border:1px solid #e1e1e8}
+        .prettyprint .com { color: #998;font-style:italic }/*注释*/
+        .prettyprint .tag{color:#007}/*标签*/
+        .prettyprint .lit { color: #195f91}
+        .prettyprint .pun,.prettyprint .opn,.prettyprint .clo { color: #93a1a1}/*等于*/
+        .prettyprint .fun { color: #dc322f}
+        .prettyprint .str,.prettyprint .atv { color: #D14}/*值*/
+        .prettyprint .kwd,.prettyprint .prettyprint .tag { color: #1e347b}
+        .prettyprint .typ,.prettyprint .atn,.prettyprint .dec,.prettyprint .var { color: teal}/*文档声明，属性*/
+        .prettyprint .pln { color: #48484c}
+        .prettyprint.linenums{box-shadow:inset 40px 0 0 #fbfbfc,inset 41px 0 0 #ececf0}
+        .pre-scrollable{max-height:340px;overflow-y:scroll}
+        pre ol.linenums{list-style:decimal outside none;margin:0 0 0 33px}
+        pre ol.linenums li{padding-left:12px;color:#bbb;line-height:18px;text-shadow:0 1px 0 #fff}
+    </pre>
     <pre class="prettyprint linenums">
         pre{display:block;font-family:Monaco,Menlo,Consolas,&quot;Courier New&quot;,monospace；padding:9.5px;margin-bottom:10px;font-size:12px;line-height:20px;word-break:break-all;word-wrap:break-word;white-space:pre;white-space:pre-wrap;background-color:#f5f5f5;border:1px solid #ccc;border-radius:4px;color:#333}
         .prettyprint{margin-bottom:20px；padding:8px;background-color:#f7f7f9;border:1px solid #e1e1e8}
