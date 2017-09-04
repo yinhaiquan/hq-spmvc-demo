@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @title :
+ * @title : SM2工具类
  * @describle :
  * <p>
  * Create By yinhaiquan
@@ -38,12 +38,16 @@ public class SM2Utils {
         ECPoint publicKey = ecpub.getQ();
         map.put(PRIVATEKEY,Util.byteToHex(privateKey.toByteArray()));
         map.put(PUBLICKEY,Util.byteToHex(publicKey.getEncoded()));
-        System.out.println("公钥: " + Util.byteToHex(publicKey.getEncoded()));
-        System.out.println("私钥: " + Util.byteToHex(privateKey.toByteArray()));
         return map;
     }
 
-    //数据加密
+    /**
+     * 数据加密
+     * @param publicKey 公钥
+     * @param data 待加密数据
+     * @return
+     * @throws IOException
+     */
     public static String encrypt(byte[] publicKey, byte[] data) throws IOException {
         if (StringUtils.isEmpty(publicKey)||StringUtils.isEmpty(data)){
             return null;
@@ -62,7 +66,13 @@ public class SM2Utils {
 
     }
 
-    //数据解密
+    /**
+     * 数据解密
+     * @param privateKey    私钥
+     * @param encryptedData 待解密数据
+     * @return
+     * @throws IOException
+     */
     public static byte[] decrypt(byte[] privateKey, byte[] encryptedData) throws IOException {
         if (StringUtils.isEmpty(privateKey)||StringUtils.isEmpty(encryptedData)){
             return null;

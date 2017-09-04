@@ -3,7 +3,7 @@ package hq.com.aop.sm.sm3;
 import hq.com.aop.sm.base.Util;
 
 /**
- * @title :
+ * @title : SM3算法
  * @describle :
  * <p>
  * Create By yinhaiquan

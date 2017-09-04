@@ -1,6 +1,5 @@
 package hq.com.aop.sm.sm3;
 
-import hq.com.aop.utils.SMCoderUtils;
 import org.bouncycastle.util.encoders.Hex;
 
 /**

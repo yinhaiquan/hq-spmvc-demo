@@ -1,9 +1,11 @@
 package hq.com.aop.sm.base;
 
+import hq.com.aop.utils.StringUtils;
+
 import java.math.BigInteger;
 
 /**
- * @title :
+ * @title : 字符转换工具类
  * @describle :
  * <p>
  * Create By yinhaiquan
@@ -67,7 +69,7 @@ public class Util {
      * @return
      */
     public static byte[] byteConvert32Bytes(BigInteger n) {
-        byte tmpd[] = (byte[]) null;
+        byte tmpd[];
         if (n == null) {
             return null;
         }
@@ -151,10 +153,9 @@ public class Util {
      * @return byte[]
      */
     public static byte[] hexStringToBytes(String hexString) {
-        if (hexString == null || hexString.equals("")) {
+        if (hexString == null || hexString.equals(StringUtils.NULL)) {
             return null;
         }
-
         hexString = hexString.toUpperCase();
         int length = hexString.length() / 2;
         char[] hexChars = hexString.toCharArray();
@@ -307,7 +308,7 @@ public class Util {
     /**
      * 数字字符串转ASCII码字符串
      *
-     * @param String 字符串
+     * @param content 字符串
      * @return ASCII字符串
      */
     public static String StringToAsciiString(String content) {
@@ -431,7 +432,7 @@ public class Util {
     /**
      * ASCII码字符串转数字字符串
      *
-     * @param String ASCII字符串
+     * @param content ASCII字符串
      * @return 字符串
      */
     public static String AsciiStringToString(String content) {
