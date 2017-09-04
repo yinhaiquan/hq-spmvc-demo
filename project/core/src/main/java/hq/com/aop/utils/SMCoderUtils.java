@@ -1,7 +1,6 @@
 package hq.com.aop.utils;
 
 import hq.com.aop.sm.base.Util;
-import hq.com.aop.sm.sm2.SM2;
 import hq.com.aop.sm.sm2.SM2Utils;
 import hq.com.aop.sm.sm3.SM3Digest;
 import org.bouncycastle.util.encoders.Hex;

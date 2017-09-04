@@ -622,4 +622,10 @@ public class Util {
         return bt;
     }
 
+    public static void main(String[] args) {
+        String str1 = byteToHex("yinhaiquan".getBytes());
+        String str2 = byteToHex("殷海泉".getBytes());
+        System.out.println(str1+"==="+str1.length());
+        System.out.println(str2+"==="+str2.length());
+    }
 }
