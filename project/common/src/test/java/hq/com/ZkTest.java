@@ -6,7 +6,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * @title :
+ * @title : 测试zk配置管理装载
  * @describle :
  * <p>
  * Create By yinhaiquan
