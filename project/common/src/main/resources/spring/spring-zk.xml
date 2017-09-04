@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean class="hq.com.zk.config.ZkPropertyPlaceHolderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+        <property name="ignoreResourceNotFound" value="true" />
+        <property name="locations">
+            <list>
+                <value>classpath:config/config.properties</value>
+            </list>
+        </property>
+        <property name="zookeeperDao" ref="zkDao"/>
+    </bean>
+    <!--zk客户端连接管理配置-->
+    <bean id="config" class="hq.com.zk.client.curator.ZookeeperBuilderFactoryConfig">
+        <property name="ips" value="127.0.0.1:2181"/>
+        <property name="connectionTimeoutMs" value="6000"/>
+        <property name="sessionTimeoutMs" value="6000"/>
+        <property name="baseSleepTimesMs" value="2000"/>
+        <property name="canBeReadOnly" value="false"/>
+        <property name="maxRetries" value="1"/>
+        <property name="namespace" value="foo"/>
+        <property name="auth" value="false"/>
+        <property name="scheme" value="digest"/>
+        <property name="username_password">
+            <array>
+                <value>admin:admin</value>
+            </array>
+        </property>
+    </bean>
+
+    <!--zk API-->
+    <bean id="zkDao" class="hq.com.zk.dao.impl.ZookeeperDaoImpl">
+        <property name="builder" ref="config"/>
+    </bean>
+</beans>

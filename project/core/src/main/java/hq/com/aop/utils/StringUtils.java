@@ -21,6 +21,8 @@ public final class StringUtils {
     public final static String POINT = ".";
     public final static String RAIL = "-";
     public final static String NULL = "";
+    public final static String EQUAL = "=";
+    public final static String DEFAULT_ENCODING = "UTF-8";
 
     public final static boolean isEmpty(List list) {
         if (null == list || list.size() == 0) {
