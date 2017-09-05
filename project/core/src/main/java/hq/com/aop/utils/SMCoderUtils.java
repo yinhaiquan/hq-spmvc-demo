@@ -13,6 +13,7 @@ import java.util.Map;
  * @describle :
  * <p>
  * <b>note:</b>
+ * 参考：http://www.jonllen.com/upload/jonllen/case/jsrsasign-master/sample-sm2_crypt.html
  * 包含SM2和SM3算法。
  * 1. SM2 非对称加解密 速度快于RSA1024
  * 2. SM3 类似MD5
@@ -80,19 +81,21 @@ public final class SMCoderUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        String str = "水电费框架zhongsdjfkl23234..][=-2=423-4o[ps/a;dkf20-3423;sdf";
+        String str = "jonllen";
         System.out.println(str.length());
         System.out.println(SM3encrypt(str));
-        Map<String,String> keyPair = initKeyPair();
-        String privateKey = keyPair.get(SM2Utils.PRIVATEKEY);
-        String publicKey = keyPair.get(SM2Utils.PUBLICKEY);
+//        Map<String,String> keyPair = initKeyPair();
+//        String privateKey = keyPair.get(SM2Utils.PRIVATEKEY);
+//        String publicKey = keyPair.get(SM2Utils.PUBLICKEY);
+//        System.out.println("私钥:"+privateKey);
+//        System.out.println("公钥:"+publicKey);
+        String privateKey = "00CA077BA4D5769932AD3334B2CD320249FAE81E6231D736EC0C26A8010F334F84";
+        String publicKey = "04ABEDEC038D58BA169748153C9C7474E183A6116CDA97AFDE212FFA239AB19B7250D38E672731539AEB21A94838A88ED7FCDAEC06F741AB6E82E243693C97312F";
         System.out.println("加密:");
         String result = encrypt(publicKey,str);
+//        String result = "D9B791DA8786CC263EAE80EBE8384D8B4DEB03BFAFEA7781AEF6133D2D02FA372A72C53E8F66685D5980DC0266C45CDC870FBFD47CE5AB2E19CE1FB3DC0DBB283ADDBF891C889898AEF26DCFE1A9EAE795916F5EC61DED1AAA9A7D9C73E5F9D347DE684EE8718C";
         System.out.println(result);
         System.out.println(result.length());
-        String result2 = encrypt(publicKey,str+"12222222222222222222222223sdfasdfsadfwer.sdfa,.,123");
-        System.out.println(result2);
-        System.out.println(result2.length());
         System.out.println("解密:");
         System.out.println(decrypt(privateKey,result));
     }

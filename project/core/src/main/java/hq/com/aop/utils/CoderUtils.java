@@ -68,7 +68,7 @@ public class CoderUtils {
     /**
      * MD5加密
      * @description: 于前端md5.js生成md5加密字符一致
-     * @param data
+     * @param data 待加密数据
      * @return
      * @throws Exception
      */
@@ -76,7 +76,16 @@ public class CoderUtils {
         return byteToString(encryptMD5(data));
     }
 
-
+    /**
+     * MD5盐值加密
+     * @param data 待加密数据
+     * @param salt 加盐
+     * @return
+     * @throws Exception
+     */
+    public final static String encryptMD5ToString(String data , String salt) throws Exception {
+        return byteToString(encryptMD5(data+salt));
+    }
 
     /**
      * SHA加密
@@ -130,6 +139,7 @@ public class CoderUtils {
     public static void main(String[] args) throws Exception {
         String str = "sdf234234水电费sdf";
         System.out.println(encryptMD5ToString(str));
+        System.out.println(encryptMD5ToString(str+"0000"));
 //        String base64 = encryptBase64(str.getBytes());
 //        System.out.println(base64);
 //        System.out.println(new String(decryptBase64(base64),"UTF-8"));
