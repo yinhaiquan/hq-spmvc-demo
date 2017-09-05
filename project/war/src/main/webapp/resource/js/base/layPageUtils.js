@@ -79,7 +79,6 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
             }
             //table 首行加载
             layPageFunction.titleTable(setting,null);
-            alert("fuck");
             layPageFunction.dataLoading(setting,null,false);
             $("table").find('.check-box input').iCheck({
                 checkboxClass: 'icheckbox-grey',
@@ -134,12 +133,10 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
          * @param msg
          */
         dataLoading : function(setting,msg,currenPageSize){
-            alert(currenPageSize);
             currenPageSize = currenPageSize?SelectGroup.getValue($(setting.cont).find('div select')):undefined;
             var data_;
             setting.params.root.msg = msg || setting.params.root.msg;
             setting.params=setting.params;
-            alert(setting.params);
             console.info(setting.params)
             //请求数据
             var pager = layPageFunction.dataOption(setting,1);

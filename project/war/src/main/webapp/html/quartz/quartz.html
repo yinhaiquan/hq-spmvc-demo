@@ -262,13 +262,13 @@
                         iShow:true,
                         formartVal:function(value,row){
                             switch(value){
-                                case 'initialing':
+                                case 'INITIALING':
                                     return '<span class="label label-default  radius">初始化中</span>';
-                                case 'running':
+                                case 'RUNNING':
                                     return '<span class="label label-success radius">运行中</span>';
-                                case 'pausing':
+                                case 'PAUSING':
                                     return '<span class="label label-secondary radius">暂停中</span>';
-                                case 'shutdowning':
+                                case 'SHUTDOWNING':
                                     return '<span class="label label-warning radius">关闭中</span>';
                                 default :
                                     return '<span class="label label-danger radius">故障中</span>';
