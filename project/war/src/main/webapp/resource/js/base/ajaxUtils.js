@@ -25,7 +25,10 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
             ajaxParam:{
                 root:{
                     route: {
-                        lang: "cn_ZH"
+                        lang: "cn_ZH",
+                        auth:{
+                            sign:"sign"
+                        }
                     },
                     msg:{}
                 }
