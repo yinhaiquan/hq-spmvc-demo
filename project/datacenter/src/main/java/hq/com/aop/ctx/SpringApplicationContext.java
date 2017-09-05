@@ -23,7 +23,7 @@ import java.util.Locale;
 public class SpringApplicationContext implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
-    public static Locale LOCALE = Locale.US;
+    public static Locale LOCALE = Locale.SIMPLIFIED_CHINESE;
 
     public static void setLOCALE(String language) {
         switch (language) {

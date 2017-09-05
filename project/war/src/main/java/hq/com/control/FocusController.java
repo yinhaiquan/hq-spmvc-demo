@@ -1,6 +1,5 @@
 package hq.com.control;
 
-import com.alibaba.fastjson.JSONObject;
 import hq.com.aop.ctx.SpringApplicationContext;
 import hq.com.aop.exception.IllegalArgumentsException;
 import hq.com.aop.handler.ProxyHandler;
@@ -43,11 +42,13 @@ public class FocusController extends BaseController {
      * <p>
      * Request/response processing
      * root:{
-     * route:{
-     * fk:"fuck"//路由信息 待用
+     * route:{ //路由信息 待用
+     *       lang:'zh_CN',    //本地语言
+     *       auth{            //签名验证
+     *           sign:""      //签名基于RSA签名验签
+     *       }
      * },
      * msg:{//请求参数位置，若msg里面包含字符串和对象，则必须按照接收方法顺序传递。
-     * name:"sdf",
      * userInfo:{
      * name:"hehe",
      * age:90,
@@ -83,11 +84,13 @@ public class FocusController extends BaseController {
      * <p>
      * Request/response processing
      * root:{
-     * route:{
-     * fk:"fuck"//路由信息 待用
+     * route:{ //路由信息 待用
+     *       lang:'zh_CN',    //本地语言
+     *       auth{            //签名验证
+     *           sign:""      //签名基于RSA签名验签
+     *       }
      * },
      * msg:{//请求参数位置，若msg里面包含字符串和对象，则必须按照接收方法顺序传递。
-     * name:"sdf",
      * userInfo:{
      * name:"hehe",
      * age:90,
@@ -125,11 +128,8 @@ public class FocusController extends BaseController {
             params = rr.getMsg();
             route = rr.getRoute();
         }
-        //针对route路由信息处理,国际化信息也在此处理
-        SpringApplicationContext.setLOCALE("zh_CN");
-        //
         //route处理
-        //
+        routeHandler(route,params);
         return proxyHandler.handler(className, methodName, params);
     }
 

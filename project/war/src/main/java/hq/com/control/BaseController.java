@@ -1,6 +1,9 @@
 package hq.com.control;
 
+import hq.com.aop.ctx.SpringApplicationContext;
 import hq.com.aop.exception.IllegalArgumentsException;
+import hq.com.aop.handler.ClassMethodHandler;
+import hq.com.aop.utils.ClassObject;
 import hq.com.aop.utils.StringUtils;
 import hq.com.exception.IllegalOptionException;
 
@@ -21,6 +24,10 @@ public abstract class BaseController {
     public final static String REGROUTE = "root\\[route]\\[";
     public final static String MSG = "msg";
     public final static String ROUTE = "route";
+    private final static String PUBLICKEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWhCBkgwkpKk+VIVP8IMHM6ABp\n" +
+            "CZmzfYJ+F9a//+7m+5XKrPeeisOobgR/PjSvah316YY26zZTuSDjzOvDAuf+ac2A\n" +
+            "PFQyT+TU53gYdtv+aig1gLo+CgbASCZQ5X38dy4/Zjth20PDZyg4o82RcPVjOoMF\n" +
+            "QOmk8hQq5kgDQ95n+QIDAQAB";
 
     public abstract Object decodeRequest(HttpServletRequest request) throws IllegalArgumentsException;
 
@@ -47,5 +54,24 @@ public abstract class BaseController {
             return matcher.find();
         }
         return false;
+    }
+
+    /**
+     * 路由信息处理
+     * @param params 路由数据
+     */
+    public void routeHandler(Map<String, String[]> route,Map<String, String[]> params) throws IllegalOptionException, IllegalArgumentsException {
+        if (StringUtils.isNotEmpty(route)){
+            /*国际化信息也在此处理*/
+            String [] lgs = route.get("lang");
+            SpringApplicationContext.setLOCALE(StringUtils.isEmpty(lgs)?"zh_CN":lgs[0]);
+            /*签名处理*/
+            String [] routeAuths = route.get("auth[sign]");
+            if (StringUtils.isNotEmpty(routeAuths)){
+                ClassObject co = ClassMethodHandler.formatParams(params);
+                System.out.println(co.getCls());
+                System.out.println(co.getObjs());
+            }
+        }
     }
 }

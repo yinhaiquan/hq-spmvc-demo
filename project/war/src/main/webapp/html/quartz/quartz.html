@@ -68,9 +68,10 @@
 
         })
 
-        task_monitor();
+//        task_monitor();
         function task_monitor(){
             require(['ajax'],function(AjaxUtils){
+                AjaxUtils.ajaxParam.root.msg={};
                 AjaxUtils.ajaxSimple(
                     'post',
                     AjaxUtils.URLS.quartzURLS.monitorContainerScheduler,
@@ -78,19 +79,6 @@
                     AjaxUtils.ajaxParam,
                     AjaxUtils.Constant.Ajax.TIME_OUT,
                     function(data){
-                        /**
-                         * 分页返回结果格式，其中content内为分页对象Pager
-                         * {
-                                     *   code : 0,
-                                     *   desc : 'response ok',
-                                     *   content : {
-                                     *       pages : 5,       --总页数
-                                     *       rows : [{},{}],  --数据列表
-                                     *       total : 100,     --总数
-                                     *       pageSize : 10    --页面大小
-                                     *   }
-                                     * }
-                         */
                         if(data&&data.code==0){
                             if(!AjaxUtils.StringUtils.isEmpty_(data.content)){
                                 $("#task_total").html(data.content.total||0);
@@ -185,7 +173,7 @@
                 }
             ]
             options = LayPageUtils.dataGride({
-                data_:data,
+//                data_:data,
                 url : LayPageUtils.AjaxUtils.URLS.quartzURLS.getSchedulerList,
                 params :LayPageUtils.AjaxUtils.ajaxParam,
                 type:'json',
@@ -199,7 +187,7 @@
                 first:"首页",
                 last:"尾页",
                 prev:"<em><</em>",
-                next:"<em>>/em>",
+                next:"<em>></em>",
                 pageSize:[10,20,30,40,50],
                 currentSize:10,
                 data:[
