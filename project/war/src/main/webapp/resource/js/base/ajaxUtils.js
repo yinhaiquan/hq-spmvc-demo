@@ -75,7 +75,7 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
             /**
              * ajax 请求函数(简版)
              *
-             * @note: 默认异步请求async:false
+             * @note: 默认异步请求async:true
              *        默认不使用缓存cache: false
              *
              * @param type      请求类型 post|get
