@@ -236,7 +236,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                     params_,
                     AjaxUtils.Constant.Ajax.TIME_OUT,
                     function(data){
-                        $("#"+id+tableIdSuffix).find("tbody").remove('div');
+                        // $("#"+id+tableIdSuffix).find("tbody").remove('div');
                         /**
                          * 分页返回结果格式，其中content内为分页对象Pager
                          * {
@@ -260,7 +260,8 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                             }
                         }
                     },
-                    id+tableIdSuffix
+                    id+tableIdSuffix,
+                    "tbody"
                 )
             }
             return pager;

@@ -8,7 +8,9 @@ import hq.com.aop.utils.StringUtils;
 import hq.com.exception.IllegalOptionException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,19 +60,29 @@ public abstract class BaseController {
 
     /**
      * 路由信息处理
+     * @description:
+     *               1. 国际化信息处理
+     *               2. 签名处理
+     *               3. ...
      * @param params 路由数据
      */
     public void routeHandler(Map<String, String[]> route,Map<String, String[]> params) throws IllegalOptionException, IllegalArgumentsException {
         if (StringUtils.isNotEmpty(route)){
-            /*国际化信息也在此处理*/
+            /*1. 国际化信息也在此处理*/
             String [] lgs = route.get("lang");
             SpringApplicationContext.setLOCALE(StringUtils.isEmpty(lgs)?"zh_CN":lgs[0]);
-            /*签名处理*/
+            /*2. 签名处理*/
             String [] routeAuths = route.get("auth[sign]");
             if (StringUtils.isNotEmpty(routeAuths)){
-                ClassObject co = ClassMethodHandler.formatParams(params);
-                System.out.println(co.getCls());
-                System.out.println(co.getObjs());
+                String sign = routeAuths[0];
+                Map<String,Object> data = new HashMap<>();
+                Set<Map.Entry<String, String[]>> set = params.entrySet();
+                for (Map.Entry<String, String[]> entry: set){
+                    String key = entry.getKey();
+                    String _key = key.substring(key.indexOf(StringUtils.PREFIX),key.indexOf(StringUtils.SUFFIX));
+                    data.put(_key,entry.getValue());
+                }
+                System.out.println(data);
             }
         }
     }

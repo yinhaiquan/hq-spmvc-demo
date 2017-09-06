@@ -85,8 +85,9 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
              * @param timeout   ajax请求超时时间(单位ms)
              * @param sucessfn  请求成功处理函数
              * @param id        扩展字段 暂时用于取消加载效果
+             * @param item      扩展字段 暂时用于加载效果容器
              */
-            ajaxSimple : function(type,url,dataType,data,timeout,sucessfn,id){
+            ajaxSimple : function(type,url,dataType,data,timeout,sucessfn,id,item){
                 $.ajax({
                     async:false,
                     type: type,
@@ -94,18 +95,19 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
                     cache: false,
                     dataType: dataType,
                     data: data,
-                    timeout: timeout,
+                    timeout: 10000,
                     success:function(data, textStatus){
                         if(sucessfn){
                             sucessfn(data);
                         }
                     },
                     error:function (XMLHttpRequest, textStatus, errorThrown) {
-                       console.info("ajax 异常日志：");
+                        console.info("ajax 异常日志：");
                         //取消加载效果
-                        if(id){
-                            $("#"+id).find("tbody").html('');
+                        if(id&&item){
+                            $("#"+id).find(item).html('');
                         }
+
                        if(textStatus == 'timeout'){
                            layer.alert("网络请求超时！",{icon: 5});
                            console.info('网络请求超时!');
