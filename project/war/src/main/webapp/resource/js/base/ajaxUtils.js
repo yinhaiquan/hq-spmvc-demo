@@ -89,13 +89,13 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
              */
             ajaxSimple : function(type,url,dataType,data,timeout,sucessfn,id,item){
                 $.ajax({
-                    async:false,
+                    async:true,
                     type: type,
                     url: ajaxContent.formartURL(url),
                     cache: false,
                     dataType: dataType,
                     data: data,
-                    timeout: 10000,
+                    timeout: timeout,
                     success:function(data, textStatus){
                         if(sucessfn){
                             sucessfn(data);

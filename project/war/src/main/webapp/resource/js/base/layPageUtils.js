@@ -102,15 +102,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
          * @param obj
          */
         dataPage : function(setting,obj,currentPageSize){
-            var data_;
-            var pager = layPageFunction.dataOption(setting,obj.curr);
-            if(!StringUtils.isEmpty_(pager)){
-                data_ = pager.rows;
-            }else{
-                data_ = null;
-            }
-            layPageFunction.dataTable(setting,data_,obj);
-            layPageFunction.selectGroupShow(setting,currentPageSize);
+            layPageFunction.dataOption(setting,obj.curr,currentPageSize,false,true);
         },
         /**
          * 页数大小下拉列表加载
@@ -128,52 +120,16 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
         },
         /**
          * 重新加载
-         * 注意：currenPageSize当前页再页面调用时可不传
+         * 注意：currenPageSize当前页输入查询条件调用时可不传
          * @param setting
          * @param msg
          */
         dataLoading : function(setting,msg,currenPageSize){
-            currenPageSize = currenPageSize?SelectGroup.getValue($(setting.cont).find('div select')):undefined;
-            var data_;
+            currenPageSize = currenPageSize?SelectGroup.getValue($(setting.cont).find('div select')):setting.currentSize;
             setting.params.root.msg = msg || setting.params.root.msg;
             setting.params=setting.params;
-            console.info(setting.params)
             //请求数据
-            var pager = layPageFunction.dataOption(setting,1);
-            var pages = 0;
-            data_ = setting.data_;
-            //首页加载
-            if(!StringUtils.isEmpty_(pager)){
-                data_ = pager.rows;
-                pages = pager.pages;
-            }
-            if(layPageFunction.noDateShow(setting.tableId,data_)){
-                return;
-            }
-            //数据加载
-            layPageFunction.dataTable(setting,data_,null);
-            laypager({
-                cont: setting.cont,
-                pages: pages || 1,
-                skip: StringUtils.isEmpty_(setting.skip)?false:setting.skip,
-                skin: StringUtils.isEmpty_(setting.skin)?'#00AA91':setting.skin,
-                groups: StringUtils.isEmpty_(setting.groups)?5:setting.groups,
-                first: StringUtils.isEmpty_(setting.first)?false:setting.first,
-                last: StringUtils.isEmpty_(setting.last)?false:setting.last,
-                prev: StringUtils.isEmpty_(setting.prev)?false:setting.prev,
-                next: StringUtils.isEmpty_(setting.next)?false:setting.next,
-                jump: function(obj,first){
-                    if(!first){
-                        if(setting.fn){
-                            setting.fn(data_);
-                        }else{
-                            //分页点击加载
-                            layPageFunction.dataPage(setting,obj,currenPageSize);
-                        }
-                    }
-                }
-            })
-            layPageFunction.selectGroupShow(setting,currenPageSize);
+            layPageFunction.dataOption(setting,1,currenPageSize,true,true);
         },
         /**
          * 页数下拉表展示
@@ -195,12 +151,16 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
          * 请求数据
          * @param setting
          * @param curr
+         * @param currenPageSize 当前页面大小
+         * @param isPage 是否需要刷新分页控件
+         * @param iSelect 是否重新加载页面大小列表
          * @returns {*}
          */
-        dataOption : function(setting,curr){
+        dataOption : function(setting,curr,currenPageSize,isPage,iSelect){
             /*table id*/
             var id = setting.tableId;
             //添加加载loading
+            $("#"+id+tableIdSuffix).find("tbody").remove('div');
             var list = $("#"+id+tableIdSuffix).find("thead tr th");
             $("#"+id+tableIdSuffix).find("tbody").append("<tr><td colspan='"+list.length+"'><div class='load'></div></td></tr>");
             var pager =null;
@@ -227,7 +187,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                  */
 
                 setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].page = curr || 1;
-                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = $(setting.cont).find('div select').val()||setting.currentSize;
+                setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].pageSize = currenPageSize;
                 var params_ = setting.params;
                 AjaxUtils.ajaxSimple(
                     setting.method,
@@ -236,7 +196,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                     params_,
                     AjaxUtils.Constant.Ajax.TIME_OUT,
                     function(data){
-                        // $("#"+id+tableIdSuffix).find("tbody").remove('div');
+                        $("#"+id+tableIdSuffix).find("tbody").remove('div');
                         /**
                          * 分页返回结果格式，其中content内为分页对象Pager
                          * {
@@ -257,6 +217,45 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                                 pager.rows = data.content.rows;
                                 pager.total = data.content.total;
                                 pager.pageSize = data.content.pageSize;
+                                var data_;
+                                var pages = 0;
+                                data_ = setting.data_;
+                                //首页加载
+                                if(!StringUtils.isEmpty_(pager)){
+                                    data_ = pager.rows;
+                                    pages = pager.pages;
+                                }
+                                if(layPageFunction.noDateShow(setting.tableId,data_)){
+                                    return;
+                                }
+                                //数据加载
+                                layPageFunction.dataTable(setting,data_,null);
+                                if(isPage){
+                                    laypager({
+                                        cont: setting.cont,
+                                        pages: pages || 1,
+                                        skip: StringUtils.isEmpty_(setting.skip)?false:setting.skip,
+                                        skin: StringUtils.isEmpty_(setting.skin)?'#00AA91':setting.skin,
+                                        groups: StringUtils.isEmpty_(setting.groups)?5:setting.groups,
+                                        first: StringUtils.isEmpty_(setting.first)?false:setting.first,
+                                        last: StringUtils.isEmpty_(setting.last)?false:setting.last,
+                                        prev: StringUtils.isEmpty_(setting.prev)?false:setting.prev,
+                                        next: StringUtils.isEmpty_(setting.next)?false:setting.next,
+                                        jump: function(obj,first){
+                                            if(!first){
+                                                if(setting.fn){
+                                                    setting.fn(data_);
+                                                }else{
+                                                    //分页点击加载
+                                                    layPageFunction.dataPage(setting,obj,currenPageSize);
+                                                }
+                                            }
+                                        }
+                                    })
+                                }
+                                if (iSelect){
+                                    layPageFunction.selectGroupShow(setting,currenPageSize);
+                                }
                             }
                         }
                     },
@@ -321,17 +320,7 @@ define('layPageUtils',['jquery','laypager','css!laypagestyle','stringUtils','aja
                 //请求数据
                 setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].order = order_name;
                 setting.params.root.msg[StringUtils.getKeys(setting.params.root.msg)[0]].orderType = order_type || 'desc';
-                var pager = layPageFunction.dataOption(setting,1);
-                var data_;
-                //首页加载
-                if(!StringUtils.isEmpty_(pager)){
-                    data_ = pager.rows;
-                }
-                if(layPageFunction.noDateShow(setting.tableId,data_)){
-                    return;
-                }
-                //数据加载
-                layPageFunction.dataTable(setting,data_,null);
+                layPageFunction.dataOption(setting,1,SelectGroup.getValue($(setting.cont).find('div select'))||setting.currentSize,false,false);
             })
         },
         /**
