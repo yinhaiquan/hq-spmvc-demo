@@ -41,3 +41,12 @@ CREATE TABLE t_user_role_rel
     n_user_id INT(11) NOT NULL,
     n_role_id INT(11) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户与角色关系表';
+CREATE TABLE t_interface_auth (
+   n_id int(11) NOT NULL AUTO_INCREMENT,
+   c_interface_name varchar(255) DEFAULT NULL COMMENT '接口名称',
+   b_iSign tinyint(1) DEFAULT '1' COMMENT '是否签名 0是 1否',
+   b_isLogin tinyint(1) DEFAULT '1' COMMENT '是否验证登录token 0是 1否',
+   t_create_date datetime DEFAULT NULL,
+   t_update_date datetime DEFAULT NULL,
+  PRIMARY KEY (n_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

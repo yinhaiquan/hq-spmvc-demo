@@ -1,7 +1,5 @@
 package hq.com.enums;
 
-import hq.com.aop.utils.StringUtils;
-
 /**
  * @title : 系统状态枚举
  * @describle :
@@ -45,7 +43,7 @@ public enum SystemCodeEnum {
 
     public final static SystemCodeEnum newInstance(int code) {
         SystemCodeEnum[] s_ = SystemCodeEnum.values();
-        if (StringUtils.isNotEmpty(s_)) {
+        if (null!=s_&&s_.length>0) {
             for (SystemCodeEnum s_s : s_) {
                 if (s_s.getCode() == code) {
                     return s_s;
