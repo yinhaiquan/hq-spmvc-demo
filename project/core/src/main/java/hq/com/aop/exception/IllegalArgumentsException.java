@@ -12,6 +12,11 @@ import java.security.PrivilegedActionException;
 public class IllegalArgumentsException extends Exception {
     private String title;
 
+    public IllegalArgumentsException(String title,String message){
+        super(message);
+        this.title = title;
+    }
+
     /**
      * Constructs a new exception with the specified detail message.  The
      * cause is not initialized, and may subsequently be initialized by

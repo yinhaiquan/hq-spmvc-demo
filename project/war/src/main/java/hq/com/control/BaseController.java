@@ -119,19 +119,19 @@ public abstract class BaseController {
                     data.put(_key, entry.getValue());
                 }
             } catch (Exception e) {
-                throw new IllegalArgumentsException("请求参数不合法");
+                throw new IllegalArgumentsException(SpringApplicationContext.getMessage("exception.auth.title"),SpringApplicationContext.getMessage("exception.auth.params"));
             }
             String sign_data = RSACoderUtils.formatParameter(data);
             try {
                 boolean iSign = RSACoderUtils.verify(sign_data,PUBLICKEY,sign);
                 if (!iSign){
-                    throw new IllegalArgumentsException("验签不通过!请检查客户端安全证书");
+                    throw new IllegalArgumentsException(SpringApplicationContext.getMessage("exception.auth.title"),SpringApplicationContext.getMessage("exception.auth.verify"));
                 }
             } catch (Exception e) {
-                throw new IllegalArgumentsException(e);
+                throw new IllegalArgumentsException(SpringApplicationContext.getMessage("exception.auth.title"),e.getMessage());
             }
         }else{
-            throw new IllegalArgumentsException("非法请求");
+            throw new IllegalArgumentsException(SpringApplicationContext.getMessage("exception.auth.title"),SpringApplicationContext.getMessage("exception.auth.illegal"));
         }
     }
 }
