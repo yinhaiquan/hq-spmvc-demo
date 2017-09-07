@@ -95,7 +95,7 @@ public abstract class BaseController {
             //           1. 判断是否需要签名验签
             //           2. 判断是否需要token验证
             /*---------------------安全处理-------------------------*/
-            verifySignature(route,params);
+//            verifySignature(route,params);
         }
     }
 
