@@ -123,7 +123,8 @@
         }
 
         require(['layPageUtils','selectGroup'],function(LayPageUtils,SelectGroup){
-            LayPageUtils.AjaxUtils.ajaxParam.root.msg = {
+            var params = LayPageUtils.AjaxUtils.ajaxParam;
+            params.root.msg = {
                 quartzInfo: {
                     /*"schedulerId": "d43ff64a173d4c4f9c125a501c4f5b73",
                     "jobName": "test1",
@@ -134,6 +135,7 @@
                     "switchType": "33"*/
                 }
             }
+
             var data =[
                 {
                     schedulerId :"123456",
@@ -175,7 +177,7 @@
             options = LayPageUtils.dataGride({
 //                data_:data,
                 url : LayPageUtils.AjaxUtils.URLS.quartzURLS.getSchedulerList,
-                params :LayPageUtils.AjaxUtils.ajaxParam,
+                params :params,
                 type:'json',
                 method : 'post',
                 tableId:'quartz_list',

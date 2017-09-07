@@ -128,8 +128,8 @@ public class FocusController extends BaseController {
             params = rr.getMsg();
             route = rr.getRoute();
         }
-        //route处理
-        routeHandler(route,params);
+        //路由处理
+        routeHandler(className, methodName,route,params);
         return proxyHandler.handler(className, methodName, params);
     }
 

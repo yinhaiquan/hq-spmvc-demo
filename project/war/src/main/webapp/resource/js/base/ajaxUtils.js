@@ -27,7 +27,8 @@ define('ajax',['url','stringUtils','constant'],function(url,stringUtils,constant
                     route: {
                         lang: "cn_ZH",
                         auth:{
-                            sign:"sign"
+                            sign:"",  //签名
+                            token:"", //登录成功后返回的token
                         }
                     },
                     msg:{}

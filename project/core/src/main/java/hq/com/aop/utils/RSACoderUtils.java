@@ -49,7 +49,7 @@ public final class RSACoderUtils extends CoderUtils {
     private static final String PEM_PUB_KEY_END   = "-----END PUBLIC KEY-----";
     private static final String RSA_PRIVATE_KEY_PEM_FILE = "g:/rsa_private_key.pem";
     private static final String RSA_PUBLIC_KEY_PEM_FILE = "g:/rsa_public_key.pem";
-    private static final boolean ISSAVEPEMFILE = false;
+    private static final boolean ISSAVEPEMFILE = true;
     public static final String PKCS8_PUBLIC_KEY = "PKCS8RSAPublicKey";
     public static final String PKCS8_PRIVATE_KEY = "PKCS8RSAPrivateKey";
     public static final String PUBLIC_KEY = "RSAPublicKey";
@@ -447,14 +447,14 @@ public final class RSACoderUtils extends CoderUtils {
 
 
 
-//        Map<String,String> map = getPemkey();
-//        System.out.println(map);
+        Map<String,String> map = getPemkey();
+        System.out.println(map);
         /*解析私钥*/
-//        System.out.println(loadKeyPEMFile(true,"g:/rsa_private_key.pem"));
+        System.out.println(loadKeyPEMFile(true,"g:/rsa_private_key.pem"));
 
         /*解析公钥*/
-//        System.out.println(loadKeyPEMFile(false,"g:/rsa_public_key.pem"));
-        test2();
+        System.out.println(loadKeyPEMFile(false,"g:/rsa_public_key.pem"));
+//        test2();
         /*测试java端签名*/
 //        /*数据*/
 //        String str = "123";
