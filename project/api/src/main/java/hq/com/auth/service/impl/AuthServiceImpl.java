@@ -2,10 +2,11 @@ package hq.com.auth.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import hq.com.aop.utils.StringUtils;
+import hq.com.aop.utils.DateUtils;
 import hq.com.aop.vo.OutParam;
 import hq.com.aop.vo.Pager;
 import hq.com.auth.dao.AuthDao;
+import hq.com.auth.dto.InterfaceAuthDto;
 import hq.com.auth.po.InterfaceAuth;
 import hq.com.auth.service.AuthService;
 import hq.com.auth.vo.InterfaceAuthInParam;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,10 +48,22 @@ public class AuthServiceImpl extends BaseService implements AuthService{
         try{
             isNull(interfaceAuthInParam);
             Pager pager = new Pager();
+            List<InterfaceAuthDto> data = new ArrayList<>();
             Page page = PageHelper.startPage(interfaceAuthInParam.getPage(), interfaceAuthInParam.getPageSize(), true);
             setOrderBy(page,converTotableField(InterfaceAuth.class,interfaceAuthInParam.getOrder()),interfaceAuthInParam.getOrderType());
             List<InterfaceAuth> list = authDao.findInterfaceAuthList(interfaceAuthInParam.getName(),interfaceAuthInParam.getStartDate(),interfaceAuthInParam.getEnDate());
-            pager.setRows(list);
+            for (InterfaceAuth ifa : list) {
+                InterfaceAuthDto ifad = new InterfaceAuthDto();
+                ifad.setClassName(ifa.getClassName());
+                ifad.setMethodName(ifa.getMethodName());
+                ifad.setId(ifa.getId());
+                ifad.setiSign(ifa.isiSign());
+                ifad.setLogin(ifa.isLogin());
+                ifad.setCreateDate(DateUtils.dateToString(ifa.getCreateDate(),DateUtils.YYYY_MM_DD));
+                ifad.setUpdateDate(DateUtils.dateToString(ifa.getUpdateDate(),DateUtils.YYYY_MM_DD));
+                data.add(ifad);
+            }
+            pager.setRows(data);
             pager.setPages(page.getPages());
             pager.setTotal(page.getTotal());
             pager.setPageSize(page.getPageSize());

@@ -64,6 +64,9 @@ public final class DateUtils {
      * @return
      */
     public static String dateToString(Date date, String format) {
+        if (StringUtils.isEmpty(date)){
+            return null;
+        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         return simpleDateFormat.format(date);
     }
@@ -79,7 +82,6 @@ public final class DateUtils {
         if (StringUtils.isEmpty(date)) {
             return null;
         }
-
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         try {
             return simpleDateFormat.parse(date);
