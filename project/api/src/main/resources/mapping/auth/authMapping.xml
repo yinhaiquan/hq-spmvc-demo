@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hq.com.auth.dao.AuthDao">
+    <resultMap type="hq.com.auth.po.InterfaceAuth" id="interfaceAuthRes">
+        <id jdbcType="INTEGER" property="id" column="n_id"/>
+        <result jdbcType="VARCHAR" property="methodName" column="c_method_name"/>
+        <result jdbcType="VARCHAR" property="className" column="c_class_name"/>
+        <result jdbcType="TINYINT" property="iSign" column="b_iSign"/>
+        <result jdbcType="TINYINT" property="isLogin" column="b_isLogin"/>
+        <result jdbcType="TIMESTAMP" property="updateDate" column="t_update_date"/>
+        <result jdbcType="TIMESTAMP" property="createDate" column="t_create_date"/>
+    </resultMap>
+
+    <select id="findInterfaceAuthList" resultMap="interfaceAuthRes">
+        select
+            n_id,
+            c_class_name,
+            c_method_name,
+            b_iSign,
+            b_isLogin,
+            t_create_date,
+            t_update_date
+        from
+            t_interface_auth
+        <where>
+            <if test="name != null and '' != name">
+                (c_class_name like CONCAT(#{name},"%")
+                or c_method_name like CONCAT(#{name},"%"))
+            </if>
+            <if test="startDate != null and '' != startDate and enDate != null and '' != enDate">
+                and t_create_date between #{startDate} and #{enDate}
+            </if>
+        </where>
+    </select>
+    <update id="updateISign">
+        update t_interface_auth set b_iSign = #{iSign} where n_id = #{id}
+    </update>
+    <update id="updateISLogin">
+        update t_interface_auth set b_isLogin = #{iSLogin} where n_id = #{id}
+    </update>
+</mapper>

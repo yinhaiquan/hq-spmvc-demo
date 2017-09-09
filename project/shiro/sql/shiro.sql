@@ -43,9 +43,10 @@ CREATE TABLE t_user_role_rel
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户与角色关系表';
 CREATE TABLE t_interface_auth (
    n_id int(11) NOT NULL AUTO_INCREMENT,
-   c_interface_name varchar(255) DEFAULT NULL COMMENT '接口名称',
-   b_iSign tinyint(1) DEFAULT '1' COMMENT '是否签名 0是 1否',
-   b_isLogin tinyint(1) DEFAULT '1' COMMENT '是否验证登录token 0是 1否',
+   c_method_name varchar(255) DEFAULT NULL COMMENT '接口名称',
+   c_class_name varchar(255) DEFAULT NULL COMMENT '接口类名',
+   b_iSign tinyint(1) DEFAULT '1' COMMENT '是否签名 1是(true) 0否(false)',
+   b_isLogin tinyint(1) DEFAULT '1' COMMENT '是否验证登录token 1是(true) 0否(false)',
    t_create_date datetime DEFAULT NULL,
    t_update_date datetime DEFAULT NULL,
   PRIMARY KEY (n_id)

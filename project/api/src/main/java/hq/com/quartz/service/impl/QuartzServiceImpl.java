@@ -3,6 +3,7 @@ package hq.com.quartz.service.impl;
 import hq.com.aop.utils.StringUtils;
 import hq.com.aop.vo.OutParam;
 import hq.com.aop.vo.Pager;
+import hq.com.base.BaseService;
 import hq.com.enums.SystemCodeEnum;
 import hq.com.exception.IllegalOptionException;
 import hq.com.quartz.base.SwitchTypeEnum;
@@ -26,8 +27,9 @@ import java.util.Map;
  * @date 2017/8/10 17:33 星期四
  */
 @Service("quartzSvc")
-public class QuartzServiceImpl implements QuartzService{
+public class QuartzServiceImpl extends BaseService implements QuartzService{
     private static Logger log = LoggerFactory.getLogger(QuartzServiceImpl.class);
+
     @Resource(name = "quartzDao")
     private QuartzDao quartzDao;
 
@@ -41,6 +43,7 @@ public class QuartzServiceImpl implements QuartzService{
     public OutParam addJob(QuartzInParam quartzInParam) throws IllegalOptionException {
         OutParam op = new OutParam();
         try{
+            isNull(quartzInParam);
             quartzDao.addJob(quartzInParam.getJobName(),
                     quartzInParam.getJobClass(),
                     quartzInParam.getJobGroupName(),
@@ -50,7 +53,7 @@ public class QuartzServiceImpl implements QuartzService{
             op.setDesc(SystemCodeEnum.SYSTEM_OK.getDesc());
         } catch (Exception e) {
             log.info("新增任务【addJob】抛出异常:{}", e.getMessage());
-            throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);
+            exception(e);
         }
         return op;
     }
@@ -65,12 +68,13 @@ public class QuartzServiceImpl implements QuartzService{
     public OutParam updateJobTime(QuartzInParam quartzInParam) throws IllegalOptionException {
         OutParam op = new OutParam();
         try{
+            isNull(quartzInParam);
             quartzDao.updateJobTime(quartzInParam.getSchedulerId(),quartzInParam.getTime());
             op.setCode(SystemCodeEnum.SYSTEM_OK.getCode());
             op.setDesc(SystemCodeEnum.SYSTEM_OK.getDesc());
         } catch (Exception e) {
             log.info("修改任务触发时间【updateJobTime】抛出异常:{}", e.getMessage());
-            throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);
+            exception(e);
         }
         return op;
     }
@@ -85,12 +89,13 @@ public class QuartzServiceImpl implements QuartzService{
     public OutParam deleteJob(QuartzInParam quartzInParam) throws IllegalOptionException {
         OutParam op = new OutParam();
         try{
+            isNull(quartzInParam);
             quartzDao.deleteJob(quartzInParam.getSchedulerId());
             op.setCode(SystemCodeEnum.SYSTEM_OK.getCode());
             op.setDesc(SystemCodeEnum.SYSTEM_OK.getDesc());
         } catch (Exception e) {
             log.info("删除任务【deleteJob】抛出异常:{}", e.getMessage());
-            throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);
+            exception(e);
         }
         return op;
     }
@@ -105,13 +110,14 @@ public class QuartzServiceImpl implements QuartzService{
     public OutParam switchJob(QuartzInParam quartzInParam) throws IllegalOptionException {
         OutParam op = new OutParam();
         try{
+            isNull(quartzInParam);
             quartzDao.switchJob(quartzInParam.getSchedulerId(),
                    SwitchTypeEnum.newInstance(quartzInParam.getSwitchType()));
             op.setCode(SystemCodeEnum.SYSTEM_OK.getCode());
             op.setDesc(SystemCodeEnum.SYSTEM_OK.getDesc());
         } catch (Exception e) {
             log.info("任务开关【switchJob】抛出异常:{}", e.getMessage());
-            throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);
+            exception(e);
         }
         return op;
     }
@@ -126,13 +132,14 @@ public class QuartzServiceImpl implements QuartzService{
     public OutParam getSchedulerList(QuartzInParam quartzInParam) throws IllegalOptionException {
         OutParam op = new OutParam();
         try{
+            isNull(quartzInParam);
             Pager pager = quartzDao.getSchedulerList(quartzInParam.getPage(),quartzInParam.getPageSize());
             op.setCode(SystemCodeEnum.SYSTEM_OK.getCode());
             op.setDesc(SystemCodeEnum.SYSTEM_OK.getDesc());
             op.setContent(pager);
         } catch (Exception e) {
             log.info("分页获取任务列表【getSchedulerList】抛出异常:{}", e.getMessage());
-            throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);
+            exception(e);
         }
         return op;
     }
@@ -188,7 +195,7 @@ public class QuartzServiceImpl implements QuartzService{
             op.setContent(map);
         } catch (Exception e) {
             log.info("监控容器中任务量【monitorContainerScheduler】抛出异常:{}", e.getMessage());
-            throw new IllegalOptionException(SystemCodeEnum.SYSTEM_ERROR);
+            exception(e);
         }
         return op;
     }

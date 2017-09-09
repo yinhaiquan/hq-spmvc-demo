@@ -15,7 +15,8 @@ public enum SystemCodeEnum {
     SYSTEM_USER_DISABLED_ACCOUNT(3,"账号被禁用"),
     SYSTEM_USER_EXCESSIVE_ATTEMPTS(4,"超过登录失败次数限制"),
     SYSTEM_PARAMS_NOT_EXIST(5,"缺失参数"),
-    SYSTEM_SIGN_ILLEGAL(6,"验签不通过");
+    SYSTEM_SIGN_ILLEGAL(6,"验签不通过"),
+    SYSTEM_FIELD_MAPPING_NOT_FOUND(7,"找不到对应映射表字段或实体字段");
 
     private int code;
     private String desc;
