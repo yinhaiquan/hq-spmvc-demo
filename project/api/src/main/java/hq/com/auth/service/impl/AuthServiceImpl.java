@@ -50,7 +50,7 @@ public class AuthServiceImpl extends BaseService implements AuthService{
             Pager pager = new Pager();
             List<InterfaceAuthDto> data = new ArrayList<>();
             Page page = PageHelper.startPage(interfaceAuthInParam.getPage(), interfaceAuthInParam.getPageSize(), true);
-            setOrderBy(page,converTotableField(InterfaceAuth.class,interfaceAuthInParam.getOrder()),interfaceAuthInParam.getOrderType());
+            setOrderBy(page,converTotableField(InterfaceAuthDto.class,interfaceAuthInParam.getOrder()),interfaceAuthInParam.getOrderType());
             List<InterfaceAuth> list = authDao.findInterfaceAuthList(interfaceAuthInParam.getName(),interfaceAuthInParam.getStartDate(),interfaceAuthInParam.getEnDate());
             for (InterfaceAuth ifa : list) {
                 InterfaceAuthDto ifad = new InterfaceAuthDto();
