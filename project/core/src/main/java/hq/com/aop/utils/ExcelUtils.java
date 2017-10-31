@@ -411,7 +411,10 @@ public class ExcelUtils {
         private void configResponse() throws IOException {
             this.response.reset();
             this.response.setContentType("application/msexcel;charset=GBK");
-            String filename;
+            String filename = "";
+            if (StringUtils.isEmpty(this.fileName)){
+                fileName = UUID.randomUUID().toString().replaceAll(StringUtils.RAIL,StringUtils.BLANK);
+            }
             try {
                 filename = URLEncoder.encode(this.fileName, "UTF-8");
             } catch (UnsupportedEncodingException e) {
@@ -420,12 +423,11 @@ public class ExcelUtils {
                     filename = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
                 } catch (UnsupportedEncodingException e1) {
                     System.err.println(e1.getMessage());
-                    StringBuffer sb = new StringBuffer();
-                    sb.append(UUID.randomUUID().toString().replaceAll(StringUtils.RAIL,StringUtils.BLANK)).
-                            append(StringUtils.POINT).append(XLSX_SUFFIX);
-                    filename = sb.toString();
                 }
             }
+            StringBuffer sb = new StringBuffer();
+            sb.append(filename).append(StringUtils.POINT).append(XLSX_SUFFIX);
+            filename = sb.toString();
             this.response.setHeader("content-disposition", "attachment; filename=" + filename);
             this.outputStream = response.getOutputStream();
         }
@@ -434,6 +436,7 @@ public class ExcelUtils {
     }
 
     public static void main(String[] args) throws IOException {
+        /**测试生成Excel文件*/
         ExcelUtils.WriteExcel we = new ExcelUtils.WriteExcel();
         ExcelParam ep = new ExcelParam();
         List<ExcelParam.WriteParam> sheets = new ArrayList<>();

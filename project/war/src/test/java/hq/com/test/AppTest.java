@@ -1,7 +1,5 @@
 package hq.com.test;
 
-import hq.com.demo.App;
-import hq.com.aop.ctx.SpringApplicationContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,12 +16,6 @@ public class AppTest {
     @Test
     public void testSpring() throws ClassNotFoundException {
 
-        App obj = (App) SpringApplicationContext.getBean("appSvc");
-        System.out.println(SpringApplicationContext.getBean("appSvc").getClass().getName());
-        System.out.println(SpringApplicationContext.getBean("appSvc").getClass().getSimpleName());
-        System.out.println(SpringApplicationContext.getBean("appSvc").getClass().getPackage().getName());
-
-        System.out.println(obj.say("123"));
     }
 
 }

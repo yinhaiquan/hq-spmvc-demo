@@ -1,11 +1,6 @@
 package hq.com.control;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -13,10 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import hq.com.aop.utils.DateUtils;
+import hq.com.aop.utils.ExcelParam;
+import hq.com.aop.utils.ExcelUtils;
 import hq.com.aop.utils.StringUtils;
 import hq.com.aop.vo.OutParam;
 import hq.com.enums.SystemCodeEnum;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +31,78 @@ public class FileController {
 	Logger logger  =  Logger.getLogger(FileController.class);
 
 	private final String path = "g:/";
+
+	/**
+	 * 测试生成Excel文件流至客户端
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/excel",method={RequestMethod.POST,RequestMethod.GET})
+	public void excel(HttpServletResponse response) throws IOException {
+		ExcelUtils.WriteExcel we = new ExcelUtils.WriteExcel();
+		ExcelParam ep = new ExcelParam();
+		List<ExcelParam.WriteParam> sheets = new ArrayList<>();
+		ExcelParam.WriteParam sheet = ep.new WriteParam();
+		sheet.setSheetHead("测试");
+		sheet.setSheetName("超过规定数据");
+		List<String> title = new ArrayList<>();
+		title.add("呵呵1");
+		title.add("呵呵2");
+		title.add("呵呵3");
+		title.add("呵呵4");
+		title.add("呵呵5");
+		title.add("呵呵6");
+		sheet.setTitles(title);
+		List<String> others = new ArrayList<>();
+		others.add("fuck:sdfsdf");
+		others.add("fuck:sdfsdf");
+		others.add("fuck:sdfsdf");
+		sheet.setOthers(others);
+		Map<String,Object> m1 = new HashMap<>();
+		m1.put("t1","12");
+		m1.put("t2","sdasdfds");
+		m1.put("t3","中文");
+		m1.put("t4",123);
+		m1.put("t5",new Date());
+		m1.put("t6",123.9910203);
+		List<Map<String,Object>> body = new ArrayList<>();
+		body.add(m1);
+		body.add(m1);
+		body.add(m1);
+		body.add(m1);
+		body.add(m1);
+		sheet.setBody(body);
+		sheets.add(sheet);
+		we.buildStream(response).write(sheets,ep.new LoadSheet<Map<String,Object>>(){
+			@Override
+			public String[] loadBody(Map<String, Object> obj, int titleLength) {
+				String [] objs = new String[titleLength];
+				objs[0]=obj.get("t1")+"";
+				objs[1]=obj.get("t2")+"";
+				objs[2]=obj.get("t3")+"";
+				objs[3]=obj.get("t4")+"";
+				objs[4]=obj.get("t5")+"";
+				objs[5]=obj.get("t6")+"";
+				return objs;
+			}
+
+			@Override
+			public CellStyle bodyStyle(Workbook wb) {
+				CellStyle cellStyle = wb.createCellStyle();
+				Font font = wb.createFont();
+				font.setFontName("宋体");
+				font.setBold(false);//粗体显示
+				cellStyle.setFont(font);
+				cellStyle.setWrapText(true);
+				return cellStyle;
+			}
+
+			@Override
+			public CellStyle titleStyle(Workbook wb) {
+				return null;
+			}
+		});
+	}
 
 	/**
 	 * 上传文件
