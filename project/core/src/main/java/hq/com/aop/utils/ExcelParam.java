@@ -269,7 +269,7 @@ public class ExcelParam {
         public abstract CellStyle bodyStyle(Workbook wb);
 
         /**
-         * 标题栏样式
+         * 标题栏样式(可不设置，采用默认样式)
          * @return
          */
         public abstract CellStyle titleStyle(Workbook wb);
@@ -301,8 +301,7 @@ public class ExcelParam {
         }
 
         /**
-         * 设置其他描述信息实体信息
-         * @description: 根据业务可重写此方法，以适应变化
+         * 设置其他描述信息实体信息（可重写此方法，以适应业务变化）
          * @param wb Workbook
          * @param sheet sheet
          * @param other 其他描述信息
