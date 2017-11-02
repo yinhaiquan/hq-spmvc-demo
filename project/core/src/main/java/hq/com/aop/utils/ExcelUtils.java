@@ -436,81 +436,82 @@ public class ExcelUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        /**测试生成Excel文件*/
-        ExcelUtils.WriteExcel we = new ExcelUtils.WriteExcel();
-        ExcelParam ep = new ExcelParam();
-        List<ExcelParam.WriteParam> sheets = new ArrayList<>();
-        ExcelParam.WriteParam sheet = ep.new WriteParam();
-        sheet.setSheetHead("测试");
-        sheet.setSheetName("超过规定数据");
-        List<String> title = new ArrayList<>();
-        title.add("呵呵1");
-        title.add("呵呵2");
-        title.add("呵呵3");
-        title.add("呵呵4");
-        title.add("呵呵5");
-        title.add("呵呵6");
-        sheet.setTitles(title);
-        List<String> others = new ArrayList<>();
-        others.add("fuck:sdfsdf");
-        others.add("fuck:sdfsdf");
-        others.add("fuck:sdfsdf");
-        sheet.setOthers(others);
-        Map<String,Object> m1 = new HashMap<>();
-        m1.put("t1","12");
-        m1.put("t2","sdasdfds");
-        m1.put("t3","中文");
-        m1.put("t4",123);
-        m1.put("t5",new Date());
-        m1.put("t6",123.9910203);
-        List<Map<String,Object>> body = new ArrayList<>();
-        body.add(m1);
-        body.add(m1);
-        body.add(m1);
-        body.add(m1);
-        body.add(m1);
-        sheet.setBody(body);
-        sheets.add(sheet);
-        we.buildStream(new FileOutputStream("g:/123.xlsx")).write(sheets,ep.new LoadSheet<Map<String,Object>>(){
-            @Override
-            public String[] loadBody(Map<String, Object> obj, int titleLength) {
-                String [] objs = new String[titleLength];
-                objs[0]=obj.get("t1")+"";
-                objs[1]=obj.get("t2")+"";
-                objs[2]=obj.get("t3")+"";
-                objs[3]=obj.get("t4")+"";
-                objs[4]=obj.get("t5")+"";
-                objs[5]=obj.get("t6")+"";
-                return objs;
-            }
-
-            @Override
-            public CellStyle bodyStyle(Workbook wb) {
-                CellStyle cellStyle = wb.createCellStyle();
-                Font font = wb.createFont();
-                font.setFontName("宋体");
-                font.setBold(false);//粗体显示
-                cellStyle.setFont(font);
-                cellStyle.setWrapText(true);
-                return cellStyle;
-            }
-
-            @Override
-            public CellStyle titleStyle(Workbook wb) {
-                return null;
-            }
-        });
-
+//        /**测试生成Excel文件*/
+//        ExcelUtils.WriteExcel we = new ExcelUtils.WriteExcel();
 //        ExcelParam ep = new ExcelParam();
-//        ExcelParam.ReadInParam readInParam = ep.new ReadInParam();
-//        readInParam.setFileName("C:\\Users\\kidy\\Desktop\\rmb\\rechargeConfimetemplate2.xlsx");
-//        readInParam.setHead(true);
-//        readInParam.setOthers(true);
-//        readInParam.setRows(2);
-//        readInParam.setTitle(true);
-//        List<ExcelParam.ReadOutSheetInfo> list = new ArrayList<>();
-//        ExcelUtils.ReadExcel.read(readInParam,list);
-//        System.out.println(list);
+//        List<ExcelParam.WriteParam> sheets = new ArrayList<>();
+//        ExcelParam.WriteParam sheet = ep.new WriteParam();
+//        sheet.setSheetHead("测试");
+//        sheet.setSheetName("超过规定数据");
+//        List<String> title = new ArrayList<>();
+//        title.add("呵呵1");
+//        title.add("呵呵2");
+//        title.add("呵呵3");
+//        title.add("呵呵4");
+//        title.add("呵呵5");
+//        title.add("呵呵6");
+//        sheet.setTitles(title);
+//        List<String> others = new ArrayList<>();
+//        others.add("fuck:sdfsdf");
+//        others.add("fuck:sdfsdf");
+//        others.add("fuck:sdfsdf");
+//        sheet.setOthers(others);
+//        Map<String,Object> m1 = new HashMap<>();
+//        m1.put("t1","12");
+//        m1.put("t2","sdasdfds");
+//        m1.put("t3","中文");
+//        m1.put("t4",123);
+//        m1.put("t5",new Date());
+//        m1.put("t6",123.9910203);
+//        List<Map<String,Object>> body = new ArrayList<>();
+//        body.add(m1);
+//        body.add(m1);
+//        body.add(m1);
+//        body.add(m1);
+//        body.add(m1);
+//        sheet.setBody(body);
+//        sheets.add(sheet);
+//        we.buildStream(new FileOutputStream("g:/123.xlsx")).write(sheets,ep.new LoadSheet<Map<String,Object>>(){
+//            @Override
+//            public String[] loadBody(Map<String, Object> obj, int titleLength) {
+//                String [] objs = new String[titleLength];
+//                objs[0]=obj.get("t1")+"";
+//                objs[1]=obj.get("t2")+"";
+//                objs[2]=obj.get("t3")+"";
+//                objs[3]=obj.get("t4")+"";
+//                objs[4]=obj.get("t5")+"";
+//                objs[5]=obj.get("t6")+"";
+//                return objs;
+//            }
+//
+//            @Override
+//            public CellStyle bodyStyle(Workbook wb) {
+//                CellStyle cellStyle = wb.createCellStyle();
+//                Font font = wb.createFont();
+//                font.setFontName("宋体");
+//                font.setBold(false);//粗体显示
+//                cellStyle.setFont(font);
+//                cellStyle.setWrapText(true);
+//                return cellStyle;
+//            }
+//
+//            @Override
+//            public CellStyle titleStyle(Workbook wb) {
+//                return null;
+//            }
+//        });
+
+        /**测试读取Excel文件*/
+        ExcelParam ep = new ExcelParam();
+        ExcelParam.ReadInParam readInParam = ep.new ReadInParam();
+        readInParam.setFileName("C:\\Users\\kidy\\Desktop\\rmb\\rechargeConfimetemplate2.xlsx");
+        readInParam.setHead(true);
+        readInParam.setOthers(true);
+        readInParam.setRows(2);
+        readInParam.setTitle(true);
+        List<ExcelParam.ReadOutSheetInfo> list = new ArrayList<>();
+        ExcelUtils.ReadExcel.read(readInParam,list);
+        System.out.println(list);
     }
 
 }
