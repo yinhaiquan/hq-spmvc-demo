@@ -49,14 +49,13 @@ public class LoginController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/login",
-            method = {RequestMethod.POST, RequestMethod.GET},
-            headers = "Accept=application/x-www-form-urlencoded;charset=utf-8",
-            consumes = "application/x-www-form-urlencoded;charset=utf-8",
-            produces = "application/json;charset=utf-8")
+            method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public OutParam login(@RequestParam("name") String name, @RequestParam("password") String password, HttpServletRequest request) throws IllegalOptionException {
         try {
             //验证码验证
+            String JSID = request.getHeader("Cookie");
+            System.out.println(JSID);
             System.out.println(request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY));
             UsernamePasswordToken np = new UsernamePasswordToken(name, password);
             SecurityUtils.getSubject().login(np);

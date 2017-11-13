@@ -82,7 +82,7 @@
                 /demo/**=anon
                 /favicon.ico*=anon
                 <!--/**/fk.html*=authc,roles[fuck]-->
-                /handler/**=anon
+                <!--/handler/**=anon-->
                 /file/**=anon
                 /resource/**=anon
                 /** = authc

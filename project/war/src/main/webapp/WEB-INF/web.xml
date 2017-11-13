@@ -59,10 +59,10 @@
       <filter-name>authorFilter</filter-name>
       <url-pattern>*.html</url-pattern>
     </filter-mapping>-->
-    <!--<filter-mapping>
+    <filter-mapping>
         <filter-name>shiroFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>-->
+    </filter-mapping>
     <!-- 连接池 启用 Web 监控统计功能    start-->
     <description>访问监控页面：http://ip:port/projectName/druid/index.html</description>
     <filter>
