@@ -11,6 +11,7 @@ import hq.com.exception.IllegalOptionException;
 import hq.com.exception.IncorrectCredentialsException;
 import hq.com.exception.UnknownAccountException;
 import hq.com.jpa.dto.ShiroUserDto;
+import hq.com.vo.Error;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -44,11 +46,13 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/error",
             method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
-    public OutParam error(){
-        OutParam op = new OutParam();
-        op.setCode(10001);
-        op.setDesc("无权限访问");
-        return op;
+    public Error error(){
+        Error error = new Error();
+        error.setCode(10001);
+        error.setDate(new Date());
+        error.setDesc("You are not authorized to visit, please contact the platform customer service");
+        error.setName("Without authorization limit");
+        return error;
     }
 
     /**
