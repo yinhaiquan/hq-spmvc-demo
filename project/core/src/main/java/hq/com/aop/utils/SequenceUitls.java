@@ -50,7 +50,7 @@ public final class SequenceUitls {
         char [] result = new char[length];
         for (int i = 0; i < length; i++) {
             Double index =  Math.random()*Math.pow(10,base);
-            result[i] = chars[index>CHARACTERS.length()?index.intValue()>>1:index.intValue()];
+            result[i] = chars[index.intValue()%length];
         }
         return new String(result);
     }
