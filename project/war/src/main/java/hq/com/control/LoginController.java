@@ -41,6 +41,16 @@ public class LoginController extends BaseController {
     @Autowired
     private Producer captchaProducer = null;
 
+    @RequestMapping(value = "/error",
+            method = {RequestMethod.POST, RequestMethod.GET})
+    @ResponseBody
+    public OutParam error(){
+        OutParam op = new OutParam();
+        op.setCode(10001);
+        op.setDesc("无权限访问");
+        return op;
+    }
+
     /**
      * 登录验证
      *
