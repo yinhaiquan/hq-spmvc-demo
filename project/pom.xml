@@ -12,6 +12,7 @@
         <module>api</module>
         <module>datacenter</module>
         <module>core</module>
+        <module>exception</module>
     </modules>
     <packaging>pom</packaging>
 
