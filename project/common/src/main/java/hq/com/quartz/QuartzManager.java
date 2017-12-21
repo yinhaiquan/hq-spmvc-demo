@@ -79,30 +79,47 @@ public final class QuartzManager {
              */
             Properties props = new Properties();
             props.put("org.quartz.scheduler.instanceName", schedulerId);
-            /*启用 JMX 支持*/
+            /*启用 RMI 支持*/
             props.put("org.quartz.scheduler.rmi.export", true);
-            props.put("org.quartz.scheduler.rmi.proxy", false);
+            props.put("org.quartz.scheduler.rmi.registryHost", "localhost");
+            props.put("org.quartz.scheduler.rmi.registryPort", 1099);
+            props.put("org.quartz.scheduler.rmi.createRegistry", true);
+            props.put("org.quartz.scheduler.rmi.serverPort", 1100);
+            props.put("org.quartz.scheduler.rmi.proxy", true);
             props.put("org.quartz.scheduler.wrapJobExecutionInUserTransaction", false);
             props.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
             props.put("org.quartz.threadPool.threadCount", "10");
             props.put("org.quartz.threadPool.threadPriority", "5");
             props.put("org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread", true);
             props.put("org.quartz.jobStore.misfireThreshold", "60000");
+            /* 默认配置，数据存储于内存中 */
             props.put("org.quartz.jobStore.class", "org.quartz.simpl.RAMJobStore");
+            /* 配置数据库持久化存储 */
+//            props.put("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
+//            props.put("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
+//            props.put("org.quartz.jobStore.useProperties", true);
+//            props.put("org.quartz.jobStore.dataSource","qzDS");
+//            props.put("org.quartz.dataSource.qzDS.driver", "com.mysql.jdbc.Driver");
+//            props.put("org.quartz.dataSource.qzDS.URL", "jdbc:mysql://localhost:3306/quartz");
+//            props.put("org.quartz.dataSource.qzDS.user", "root");
+//            props.put("org.quartz.dataSource.qzDS.password", "123456");
+//            props.put("org.quartz.dataSource.qzDS.maxConnection", 10);
+
             factory.initialize(props);
             Scheduler scheduler = factory.getScheduler();
             JobDetail jobDetail = new JobDetail(jobName,StringUtils.isNotEmpty(jobGroupName)?jobGroupName:DEFAULT_JOB_GROUP_NAME,cls);
             CronTrigger cronTrigger = new CronTrigger(jobName,StringUtils.isNotEmpty(triggerGroupName)?triggerGroupName:DEFAULT_TRIGGER_GROUP_NAME);
             cronTrigger.setCronExpression(time);
-            /**添加局部job监听器*/
-            jobDetail.addJobListener(jobName+JOB_LISTENER_SUFFIX);
-            scheduler.addJobListener(new QuartzJobListener(jobName+JOB_LISTENER_SUFFIX));
-            /**添加局部tritgger监听器*/
-            cronTrigger.addTriggerListener(jobName+TRIGGER_LISTENER_SUFFIX);
-            scheduler.addTriggerListener(new QuartzTriggerListener(jobName+TRIGGER_LISTENER_SUFFIX));
+//            /**添加局部job监听器*/
+//            jobDetail.addJobListener(jobName+JOB_LISTENER_SUFFIX);
+//            scheduler.addJobListener(new QuartzJobListener(jobName+JOB_LISTENER_SUFFIX));
+//            /**添加局部tritgger监听器*/
+//            cronTrigger.addTriggerListener(jobName+TRIGGER_LISTENER_SUFFIX);
+//            scheduler.addTriggerListener(new QuartzTriggerListener(jobName+TRIGGER_LISTENER_SUFFIX));
             scheduler.scheduleJob(jobDetail,cronTrigger);
             map.put(schedulerId,scheduler);
         } catch (Exception e){
+            e.printStackTrace();
             log.info("添加定时任务抛出异常:{}",e.getMessage());
         }
     }
