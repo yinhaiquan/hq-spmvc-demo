@@ -12,5 +12,5 @@ public interface HelloMBean {
     void setName(String name);
     void printStr();
     String getFFFFFUCK();
-    void show();
+    String show();
 }

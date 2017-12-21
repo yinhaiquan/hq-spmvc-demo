@@ -38,7 +38,8 @@ public class Hello implements HelloMBean {
     }
 
     @Override
-    public void show() {
+    public String show() {
         System.out.println(name);
+        return name;
     }
 }

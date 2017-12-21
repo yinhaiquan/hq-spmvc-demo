@@ -43,8 +43,8 @@ public class HelloAgent {
 
     public static void main(String[] args) throws MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException, IOException, InterruptedException {
 //        showHtml();
-//        showJconsole();
-        testNotify();
+        showJconsole();
+//        testNotify();
         System.out.println("running.....");
     }
 
@@ -72,7 +72,7 @@ public class HelloAgent {
      */
     public static void showJconsole() throws IOException, MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException {
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        String addr = "127.0.0.1:8080";
+        String addr = "127.0.0.1:8087";
         JMXServiceURL address = new JMXServiceURL("service:jmx:rmi://"+addr+ "/jndi/rmi://" + addr + "/jmxrmi");
 
         Map<String,Object> jmxEnvironment = new HashMap<>();
@@ -83,7 +83,7 @@ public class HelloAgent {
 
         RMISocketFactory rmiSocketFactory = RMISocketFactory.getDefaultSocketFactory();
         //RMISocketFactory rmiSocketFactory = new AnchorSocketFactory(ipInterface,"false");
-        LocateRegistry.createRegistry(8080,null,rmiSocketFactory);
+        LocateRegistry.createRegistry(8087,null,rmiSocketFactory);
         jmxEnvironment.put(RMIConnectorServer.RMI_SERVER_SOCKET_FACTORY_ATTRIBUTE,rmiSocketFactory);
 
 
