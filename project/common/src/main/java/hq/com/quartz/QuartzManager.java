@@ -79,7 +79,8 @@ public final class QuartzManager {
              */
             Properties props = new Properties();
             props.put("org.quartz.scheduler.instanceName", schedulerId);
-            props.put("org.quartz.scheduler.rmi.export", false);
+            /*启用 JMX 支持*/
+            props.put("org.quartz.scheduler.rmi.export", true);
             props.put("org.quartz.scheduler.rmi.proxy", false);
             props.put("org.quartz.scheduler.wrapJobExecutionInUserTransaction", false);
             props.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
