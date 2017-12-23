@@ -16,6 +16,7 @@ public class Server {
     public static void main(String[] args) throws RemoteException {
         HelloService helloService = new HelloServiceImpl();
         ServiceProvider provider = new ServiceProvider();
+        /**可实现分布式集群部署服务*/
         provider.publish(helloService,"localhost",1099);
         provider.publish(helloService,"localhost",1029);
     }
