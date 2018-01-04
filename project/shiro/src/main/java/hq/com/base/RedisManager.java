@@ -251,7 +251,7 @@ public class RedisManager {
 
 
     /**
-     *   集群遍历做法
+     *   redis集群遍历每个连接池做法，可通过单个redis节点操作
      *   Set<byte[]> keysMatched = new HashSet<>();
      *   logger.info(jedisCluster.getClusterNodes().size());
      *   Iterator<JedisPool> poolIterator = jedisCluster.getClusterNodes().values().iterator();

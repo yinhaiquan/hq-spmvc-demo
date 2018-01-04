@@ -57,6 +57,24 @@ public class AuthoriztionHandlerRealm extends AuthorizingRealm {
     /**
      * 认证
      *
+     * 获取缓存session列表，并获取session中缓存用户对象信息
+     * Collection<Session> sessions = redisSessionDAO.getActiveSessions();
+     * for (Session session : sessions) {
+     * if (null==session || null==session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY)){
+     * continue;
+     * }
+     * SimplePrincipalCollection su = (SimplePrincipalCollection) session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+     * SecUser sssu = (SecUser) su.getPrimaryPrincipal();
+     * logger.info(String.format("被冻结用户[%s]----遍历已登录session用户信息[%s]",secUser.getLoginName(),sssu.getLoginName()));
+     * if (secUser.getLoginName().equals(sssu.getLoginName())) {
+     * logger.info(String.format("用户[%s]登录session信息已被清除",secUser.getLoginName()));
+     * redisSessionDAO.delete(session);
+     * break;
+     * }
+     * }
+     *
+     *
+     *
      * @param authenticationToken
      * @return
      * @throws AuthenticationException
