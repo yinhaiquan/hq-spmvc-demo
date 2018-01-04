@@ -249,6 +249,27 @@ public class RedisManager {
         return dbSize;
     }
 
+
+    /**
+     *   集群遍历做法
+     *   Set<byte[]> keysMatched = new HashSet<>();
+     *   logger.info(jedisCluster.getClusterNodes().size());
+     *   Iterator<JedisPool> poolIterator = jedisCluster.getClusterNodes().values().iterator();
+     *   while (poolIterator.hasNext()) {
+     *   JedisPool pool = poolIterator.next();
+     *   Jedis jedis = pool.getResource();
+     *   try {
+     *   keysMatched.addAll(jedis.keys(pattern.getBytes()));
+     *   } catch (Exception ex) {
+     *   logger.error("Exception in cache service: {} ", ex);
+     *   } finally {
+     *   jedis.close();
+     *   }
+     *   }
+     *     return keysMatched;
+     * @param pattern
+     * @return
+     */
     public Set<byte[]> keys(String pattern) {
         Set<byte[]> keys = null;
         JedisCommands jedisCommands = jedisTemplate.getResource();
