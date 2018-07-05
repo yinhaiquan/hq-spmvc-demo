@@ -70,7 +70,7 @@ public class ExcelUtils {
                     ExcelParam.ReadOutSheetInfo sheetInfo = ep.new ReadOutSheetInfo();
                     Sheet sheet = wb.getSheetAt(i);
                     sheetInfo.setSheetName(sheet.getSheetName());
-                    List<Map<String,String>> sheetList = new ArrayList<>();
+                    List<Map<String,Object>> sheetList = new ArrayList<>();
                     List<String> titles = new ArrayList<>();
                     int rowSize = sheet.getLastRowNum()+1;
                     int index = 0;
@@ -116,7 +116,7 @@ public class ExcelUtils {
                         }
                         int cellSize = row.getLastCellNum();
                         //数据行
-                        Map<String,String> rowData = new HashMap<>();
+                        Map<String,Object> rowData = new HashMap<>();
                         for (int k = 0; k < cellSize; k++) {
                             Cell cell = row.getCell(k);
                             String key = StringUtils.isEmpty(titles)?"row"+k:titles.get(k);
@@ -392,10 +392,35 @@ public class ExcelUtils {
             }
             for (int i=0;i<sheetInfo.getBody().size();i++){
                 Row row = sheet.createRow(index+1);
-                String [] objs = loadSheet.loadBody(sheetInfo.getBody().get(i),titleLength);
-                for (int j=0;j<objs.length;j++) {
+                List<ExcelParam.Col> objs = loadSheet.loadBody(sheetInfo.getBody().get(i),titleLength);
+                for (int j=0;j<objs.size();j++) {
                     Cell cell = row.createCell(j);
-                    cell.setCellValue(objs[j]);
+                    ExcelParam.Col col = objs.get(j);
+                    switch (col.getCdt()){
+                        case DATE:
+                            if (StringUtils.isEmpty(col.getCol())){
+                                cell.setCellValue("");
+                            } else {
+                                cell.setCellValue(DateUtils.stringToDate(String.valueOf(col.getCol()),col.getDataFormart()));
+                            }
+                            break;
+                        case STRING:
+                            if (StringUtils.isEmpty(col.getCol())){
+                                cell.setCellValue("");
+                            } else {
+                                cell.setCellValue(String.valueOf(col.getCol()));
+                            }
+                            break;
+                        case DOUBLE:
+                            if (StringUtils.isEmpty(col.getCol())){
+                                cell.setCellValue("");
+                            } else {
+                                cell.setCellValue(Double.valueOf(col.getCol()+""));
+                            }
+                            break;
+                        default:
+                            cell.setCellValue(col.getCol()+"");
+                    }
                     if (StringUtils.isNotEmpty(loadSheet.bodyStyle(wb))){
                         cell.setCellStyle(loadSheet.bodyStyle(wb));
                     }
@@ -436,82 +461,100 @@ public class ExcelUtils {
     }
 
     public static void main(String[] args) throws IOException {
-//        /**测试生成Excel文件*/
-//        ExcelUtils.WriteExcel we = new ExcelUtils.WriteExcel();
-//        ExcelParam ep = new ExcelParam();
-//        List<ExcelParam.WriteParam> sheets = new ArrayList<>();
-//        ExcelParam.WriteParam sheet = ep.new WriteParam();
-//        sheet.setSheetHead("测试");
-//        sheet.setSheetName("超过规定数据");
-//        List<String> title = new ArrayList<>();
-//        title.add("呵呵1");
-//        title.add("呵呵2");
-//        title.add("呵呵3");
-//        title.add("呵呵4");
-//        title.add("呵呵5");
-//        title.add("呵呵6");
-//        sheet.setTitles(title);
-//        List<String> others = new ArrayList<>();
-//        others.add("fuck:sdfsdf");
-//        others.add("fuck:sdfsdf");
-//        others.add("fuck:sdfsdf");
-//        sheet.setOthers(others);
-//        Map<String,Object> m1 = new HashMap<>();
-//        m1.put("t1","12");
-//        m1.put("t2","sdasdfds");
-//        m1.put("t3","中文");
-//        m1.put("t4",123);
-//        m1.put("t5",new Date());
-//        m1.put("t6",123.9910203);
-//        List<Map<String,Object>> body = new ArrayList<>();
-//        body.add(m1);
-//        body.add(m1);
-//        body.add(m1);
-//        body.add(m1);
-//        body.add(m1);
-//        sheet.setBody(body);
-//        sheets.add(sheet);
-//        we.buildStream(new FileOutputStream("g:/123.xlsx")).write(sheets,ep.new LoadSheet<Map<String,Object>>(){
-//            @Override
-//            public String[] loadBody(Map<String, Object> obj, int titleLength) {
-//                String [] objs = new String[titleLength];
-//                objs[0]=obj.get("t1")+"";
-//                objs[1]=obj.get("t2")+"";
-//                objs[2]=obj.get("t3")+"";
-//                objs[3]=obj.get("t4")+"";
-//                objs[4]=obj.get("t5")+"";
-//                objs[5]=obj.get("t6")+"";
-//                return objs;
-//            }
-//
-//            @Override
-//            public CellStyle bodyStyle(Workbook wb) {
-//                CellStyle cellStyle = wb.createCellStyle();
-//                Font font = wb.createFont();
-//                font.setFontName("宋体");
-//                font.setBold(false);//粗体显示
-//                cellStyle.setFont(font);
-//                cellStyle.setWrapText(true);
-//                return cellStyle;
-//            }
-//
-//            @Override
-//            public CellStyle titleStyle(Workbook wb) {
-//                return null;
-//            }
-//        });
+        /**测试生成Excel文件*/
+        ExcelUtils.WriteExcel we = new ExcelUtils.WriteExcel();
+        ExcelParam ep = new ExcelParam();
+        List<ExcelParam.WriteParam> sheets = new ArrayList<>();
+        ExcelParam.WriteParam sheet = ep.new WriteParam();
+        sheet.setSheetHead("测试");
+        sheet.setSheetName("超过规定数据");
+        List<String> title = new ArrayList<>();
+        title.add("呵呵1");
+        title.add("呵呵2");
+        title.add("呵呵3");
+        title.add("呵呵4");
+        title.add("呵呵5");
+        title.add("呵呵6");
+        sheet.setTitles(title);
+        List<String> others = new ArrayList<>();
+        others.add("fuck:sdfsdf");
+        others.add("fuck:sdfsdf");
+        others.add("fuck:sdfsdf");
+        sheet.setOthers(others);
+        Map<String,Object> m1 = new HashMap<>();
+        m1.put("t1","12");
+        m1.put("t2","sdasdfds");
+        m1.put("t3","中文");
+        m1.put("t4",123);
+        m1.put("t5","2018-02-02 12:12:12");
+        m1.put("t6",123.9910203);
+        List<Map<String,Object>> body = new ArrayList<>();
+        body.add(m1);
+        body.add(m1);
+        body.add(m1);
+        body.add(m1);
+        body.add(m1);
+        sheet.setBody(body);
+        sheets.add(sheet);
+        we.buildStream(new FileOutputStream("E:\\123.xls")).write(sheets,ep.new LoadSheet<Map<String,Object>>(){
+            @Override
+            public List<ExcelParam.Col> loadBody(Map<String, Object> obj, int titleLength) {
+                List<ExcelParam.Col> list = new ArrayList<>();
+                ExcelParam.Col col1 = new ExcelParam.Col();
+                col1.setCdt(ExcelParam.ColDataType.STRING);
+                col1.setCol(obj.get("t1"));
+                list.add(col1);
+                ExcelParam.Col col2 = new ExcelParam.Col();
+                col2.setCdt(ExcelParam.ColDataType.STRING);
+                col2.setCol(obj.get("t2"));
+                list.add(col2);
+                ExcelParam.Col col3 = new ExcelParam.Col();
+                col3.setCdt(ExcelParam.ColDataType.STRING);
+                col3.setCol(obj.get("t3"));
+                list.add(col3);
+                ExcelParam.Col col4 = new ExcelParam.Col();
+                col4.setCdt(ExcelParam.ColDataType.DOUBLE);
+                col4.setCol(obj.get("t4"));
+                list.add(col4);
+                ExcelParam.Col col5 = new ExcelParam.Col();
+                col5.setCdt(ExcelParam.ColDataType.DATE);
+                col5.setCol(obj.get("t5"));
+                list.add(col5);
+                ExcelParam.Col col6 = new ExcelParam.Col();
+                col6.setCdt(ExcelParam.ColDataType.DOUBLE);
+                col6.setCol(obj.get("t6"));
+                list.add(col6);
+                return list;
+            }
+
+            @Override
+            public CellStyle bodyStyle(Workbook wb) {
+                CellStyle cellStyle = wb.createCellStyle();
+                Font font = wb.createFont();
+                font.setFontName("宋体");
+                font.setBold(false);//粗体显示
+                cellStyle.setFont(font);
+                cellStyle.setWrapText(true);
+                return cellStyle;
+            }
+
+            @Override
+            public CellStyle titleStyle(Workbook wb) {
+                return null;
+            }
+        });
 
         /**测试读取Excel文件*/
-        ExcelParam ep = new ExcelParam();
-        ExcelParam.ReadInParam readInParam = ep.new ReadInParam();
-        readInParam.setFileName("C:\\Users\\kidy\\Desktop\\rmb\\rechargeConfimetemplate2.xlsx");
-        readInParam.setHead(true);
-        readInParam.setOthers(true);
-        readInParam.setRows(2);
-        readInParam.setTitle(true);
-        List<ExcelParam.ReadOutSheetInfo> list = new ArrayList<>();
-        ExcelUtils.ReadExcel.read(readInParam,list);
-        System.out.println(list);
+//        ExcelParam ep = new ExcelParam();
+//        ExcelParam.ReadInParam readInParam = ep.new ReadInParam();
+//        readInParam.setFileName("C:\\Users\\kidy\\Desktop\\rmb\\rechargeConfimetemplate2.xlsx");
+//        readInParam.setHead(true);
+//        readInParam.setOthers(true);
+//        readInParam.setRows(2);
+//        readInParam.setTitle(true);
+//        List<ExcelParam.ReadOutSheetInfo> list = new ArrayList<>();
+//        ExcelUtils.ReadExcel.read(readInParam,list);
+//        System.out.println(list);
     }
 
 }

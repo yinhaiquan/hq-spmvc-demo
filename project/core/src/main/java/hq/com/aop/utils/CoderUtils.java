@@ -1,5 +1,6 @@
 package hq.com.aop.utils;
 
+import org.apache.commons.codec.binary.Hex;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -137,9 +138,14 @@ public class CoderUtils {
     }
 
     public static void main(String[] args) throws Exception {
-        String str = "sdf234234水电费sdf";
-        System.out.println(encryptMD5ToString(str));
-        System.out.println(encryptMD5ToString(str+"0000"));
+          String str = "123sdjfh";
+          byte [] datas = encryptMD5(str);
+          byte [] datas2 = MessageDigest.getInstance("MD5").digest(str.getBytes());
+          System.out.println(byteToString(datas));
+          System.out.println(new String(Hex.encodeHex(datas2)));
+//        String str = "sdf234234水电费sdf";
+//        System.out.println(encryptMD5ToString(str));
+//        System.out.println(encryptMD5ToString(str+"0000"));
 //        String base64 = encryptBase64(str.getBytes());
 //        System.out.println(base64);
 //        System.out.println(new String(decryptBase64(base64),"UTF-8"));

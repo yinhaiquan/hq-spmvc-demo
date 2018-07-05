@@ -27,12 +27,12 @@ public class ExcelParam {
         /**标题列表*/
         private List<String> titles;
         /**数据体*/
-        private List<Map<String,String>> body;
+        private List<Map<String,Object>> body;
 
         public ReadOutSheetInfo() {
         }
 
-        public ReadOutSheetInfo(String sheetName, String sheetHead, List<String> others, List<String> titles, List<Map<String, String>> body) {
+        public ReadOutSheetInfo(String sheetName, String sheetHead, List<String> others, List<String> titles, List<Map<String, Object>> body) {
             this.sheetName = sheetName;
             this.sheetHead = sheetHead;
             this.others = others;
@@ -72,11 +72,11 @@ public class ExcelParam {
             this.titles = titles;
         }
 
-        public List<Map<String, String>> getBody() {
+        public List<Map<String, Object>> getBody() {
             return body;
         }
 
-        public void setBody(List<Map<String, String>> body) {
+        public void setBody(List<Map<String, Object>> body) {
             this.body = body;
         }
 
@@ -170,6 +170,43 @@ public class ExcelParam {
         }
     }
 
+    public enum ColDataType {
+        DOUBLE,STRING,DATE
+    }
+
+    public static class Col {
+        private ColDataType cdt;
+        private Object col;
+        private String dataFormart = DateUtils.YYYY_MM_DD_HH_MM_SS;
+
+        public Col() {
+        }
+
+        public ColDataType getCdt() {
+            return cdt;
+        }
+
+        public void setCdt(ColDataType cdt) {
+            this.cdt = cdt;
+        }
+
+        public Object getCol() {
+            return col;
+        }
+
+        public void setCol(Object col) {
+            this.col = col;
+        }
+
+        public String getDataFormart() {
+            return dataFormart;
+        }
+
+        public void setDataFormart(String dataFormart) {
+            this.dataFormart = dataFormart;
+        }
+    }
+
     /**
      * 写参数类
      */
@@ -260,7 +297,7 @@ public class ExcelParam {
          * @param obj 数据体信息
          * @param titleLength 标题长度
          */
-        public abstract String[] loadBody(T obj, int titleLength);
+        public abstract List<Col> loadBody(T obj, int titleLength);
 
         /**
          * body样式
